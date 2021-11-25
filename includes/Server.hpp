@@ -28,12 +28,12 @@ class Server {
 
 		Server(Server const& src);
 
-		string			_port;
-		string			_pwd;
-		string			_host;
-		string			_port_nwk;
-		string			_pwd_nwk;
-		struct addrinfo _addrinfo;
+		string				_port;
+		string				_pwd;
+		string				_host;
+		string				_port_nwk;
+		string				_pwd_nwk;
+		struct addrinfo *	_hints;
 };
 
 ostream & operator<<(ostream & stream, Server &Server);

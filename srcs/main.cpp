@@ -2,7 +2,7 @@
 
 int main( int argc, char *argv[] ) {
 
-    parser_res p;
+    map<string, string> p;
 
     try {
         p = parser( argc, argv );
@@ -14,13 +14,13 @@ int main( int argc, char *argv[] ) {
 
     Server ircserv;
 
-    if ( p.new_network ) {
-        ircserv = Server(p.port, p.pwd, p.host, p.port_nwk, p.pwd_nwk);
+    if ( p.size() > 2 ) {
+        ircserv = Server(p["port"], p["pwd"], p["host"], p["port_nwk"], p["pwd_nwk"]);
     } else {
-        ircserv = Server(p.port, p.pwd);
+        ircserv = Server(p["port"], p["pwd"]);
     }
 
-    cout << ircserv << endl;
+    cout << ircserv;
 
     return 0;
 }
