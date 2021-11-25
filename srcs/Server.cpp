@@ -1,29 +1,34 @@
 #include "headers.hpp"
 
-Server::Server( void ) {}
+Server::Server( void ) {
+
+}
 
 Server::Server(string port, string pwd) : 
         _port(port), 
         _pwd(pwd),
-        _host("new_network"),
+        _host("localhost"),
         _port_nwk("0"),
         _pwd_nwk("")
 {
-
+    this->setServinfo();
+    this->setSocket();
 }
 
-Server::Server(string port, string pwd, string host="new_network", string port_nwk="0", string pwd_nwk="") : 
+Server::Server(string port, string pwd, string host="localhost", string port_nwk="0", string pwd_nwk="") : 
         _port(port), 
         _pwd(pwd),
         _host(host),
         _port_nwk(port_nwk),
         _pwd_nwk(pwd_nwk)
 {
-
+    this->setServinfo();
+    this->setSocket();
 }
 
 Server::~Server() {
-
+    
+    freeaddrinfo(_servinfo);
 }
 
 Server & Server::operator=(Server const & src) {
@@ -56,6 +61,32 @@ string const & Server::getPortNetwork() const {
 
 string const & Server::getPasswordNetwork() const {
 	return _pwd_nwk;
+}
+
+void				Server::setServinfo() {
+
+    memset(&_hints, 0, sizeof _hints);
+    _hints.ai_family = AF_UNSPEC;
+    _hints.ai_socktype = SOCK_STREAM;
+    _hints.ai_flags = AI_PASSIVE;
+    if ((_status = getaddrinfo(_host.c_str(), _port.c_str(), &_hints, &_servinfo)) != 0) {
+        //throw system_error(EFAULT, generic_category());
+        fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(_status));
+        exit(1);
+    }
+}
+
+void				Server::setSocket() {
+
+    _socket = socket(_servinfo->ai_family,
+                        _servinfo->ai_socktype,
+                        _servinfo->ai_protocol);
+    if (_socket == -1) {
+        throw system_error(EFAULT, generic_category());
+    }
+    // Add error management: socket() return -1 on error and
+    //    errno is set to the error's value.
+    // --> throw an exception printing strerror.
 }
 
 ostream & operator<<(ostream & stream, Server &Server) {

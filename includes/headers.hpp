@@ -11,6 +11,9 @@
 # include <sys/socket.h>
 # include <netdb.h>
 
+#include <errno.h>
+#include <system_error>
+
 using namespace std;
 
 # include "utils.hpp"

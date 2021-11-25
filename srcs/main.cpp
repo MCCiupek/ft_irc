@@ -12,15 +12,20 @@ int main( int argc, char *argv[] ) {
         return 1;
     }
 
-    Server ircserv;
-
-    if ( p.size() > 2 ) {
-        ircserv = Server(p["port"], p["pwd"], p["host"], p["port_nwk"], p["pwd_nwk"]);
-    } else {
-        ircserv = Server(p["port"], p["pwd"]);
+    try {
+        Server ircserv;
+        if ( p.size() > 2 ) {
+            ircserv = Server(p["port"], p["pwd"], p["host"], p["port_nwk"], p["pwd_nwk"]);
+        } else {
+            ircserv = Server(p["port"], p["pwd"]);
+        }
+        cout << ircserv;
     }
-
-    cout << ircserv;
+    catch (system_error& e)
+    {
+        cerr << "Error: " << e.code() << " - " << e.what() << '\n';
+        return 1;
+    }
 
     return 0;
 }

@@ -24,16 +24,22 @@ class Server {
 		string const &		getPortNetwork() const;
 		string const &		getPasswordNetwork() const;
 
+		void				setServinfo();
+		void				setSocket();
+
 	private:
 
 		Server(Server const& src);
 
+		int					_status;
+		int					_socket;
 		string				_port;
 		string				_pwd;
 		string				_host;
 		string				_port_nwk;
 		string				_pwd_nwk;
-		struct addrinfo *	_hints;
+		struct addrinfo 	_hints;
+		struct addrinfo *	_servinfo;
 };
 
 ostream & operator<<(ostream & stream, Server &Server);
