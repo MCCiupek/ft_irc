@@ -4,11 +4,11 @@
 # include "headers.hpp"
 
 struct parser_res {
-        int     port;
+        string     port;
         string  pwd;
         int     new_network;
         string  host;
-        int     port_nwk;
+        string     port_nwk;
         string  pwd_nwk;
 };
 

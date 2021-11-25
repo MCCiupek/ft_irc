@@ -12,27 +12,28 @@ class Server {
 	public:
 
 		Server();
-		Server(int port, string pwd);
-		Server(int port, string pwd, string host, int port_nwk, string pwd_nwk); 
+		Server(string port, string pwd);
+		Server(string port, string pwd, string host, string port_nwk, string pwd_nwk); 
         virtual ~Server(); 
 
 		Server & operator=(Server const& src); 
 
-		int						getPort() const;
-		std::string const &		getPassword() const;
-		std::string const &		getHost() const;
-		int						getPortNetwork() const;
-		std::string const &		getPasswordNetwork() const;
+		string const &		getPort() const;
+		string const &		getPassword() const;
+		string const &		getHost() const;
+		string const &		getPortNetwork() const;
+		string const &		getPasswordNetwork() const;
 
 	private:
 
 		Server(Server const& src);
 
-		int		_port;
-		string	_pwd;
-		string	_host;
-		int		_port_nwk;
-		string	_pwd_nwk;
+		string			_port;
+		string			_pwd;
+		string			_host;
+		string			_port_nwk;
+		string			_pwd_nwk;
+		struct addrinfo _addrinfo;
 };
 
 ostream & operator<<(ostream & stream, Server &Server);

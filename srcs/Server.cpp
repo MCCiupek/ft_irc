@@ -2,17 +2,17 @@
 
 Server::Server( void ) {}
 
-Server::Server(int port, string pwd) : 
+Server::Server(string port, string pwd) : 
         _port(port), 
         _pwd(pwd),
         _host("new_network"),
-        _port_nwk(0),
+        _port_nwk("0"),
         _pwd_nwk("")
 {
 
 }
 
-Server::Server(int port, string pwd, string host="new_network", int port_nwk=0, string pwd_nwk="") : 
+Server::Server(string port, string pwd, string host="new_network", string port_nwk="0", string pwd_nwk="") : 
         _port(port), 
         _pwd(pwd),
         _host(host),
@@ -38,7 +38,7 @@ Server & Server::operator=(Server const & src) {
 	return *this;
 }
 
-int Server::getPort() const {
+string const & Server::getPort() const {
 	return _port;
 }
 
@@ -50,7 +50,7 @@ string const & Server::getHost() const {
 	return _host;
 }
 
-int Server::getPortNetwork() const {
+string const & Server::getPortNetwork() const {
 	return _port_nwk;
 }
 

@@ -10,12 +10,7 @@ parser_res parser( int n_params, char *params[] ) {
         throw eUsage();
     }
 
-    res.port = std::atoi(params[1 + res.new_network]);
-
-    if ( res.port <= 0 ) {
-        throw ePort();
-    }
-
+    res.port = params[1 + res.new_network];
     res.pwd = params[2 + res.new_network];
 
     if (n_params == 4) {
@@ -27,12 +22,7 @@ parser_res parser( int n_params, char *params[] ) {
             throw eUsage();
 
         res.host = v[0];
-
-        res.port_nwk = std::stoi(v[1]);
-        if ( res.port_nwk <= 0 ) {
-            throw ePort();
-        }
-
+        res.port_nwk = v[1];
         res.pwd_nwk = v[2];
     }
 
