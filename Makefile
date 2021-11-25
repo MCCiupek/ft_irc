@@ -10,7 +10,9 @@ DIR_SRCS =		./srcs/
 
 SRC =			main.cpp \
 				errors.cpp \
-				utils.cpp
+				utils.cpp \
+				parsing.cpp \
+				Server.cpp
 
 SRCS =			$(addprefix $(DIR_SRCS), $(SRC))
 

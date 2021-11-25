@@ -1,16 +1,23 @@
 #include "headers.hpp"
 
 int main( int argc, char *argv[] ) {
-    if ( argc != 4 ) {
-        return display_usage();
+
+    parser_res p;
+
+    try {
+        p = parser( argc, argv );
     }
-    int     port = atoi(argv[2]);
-    string  pwd = argv[3];
-    vector<string> v = ft_split(argv[1], ":");
-    for (size_t i=0; i < v.size(); i++) {
-        cout << v[i] << endl; 
+    catch (const exception& e) {
+        cerr << e.what() << endl;
+        return 1;
     }
-    cout << "port: " << port << endl;
-    cout << "pwd: " << pwd << endl;
+
+    Server ircserv(p.port, p.pwd);
+    if ( p.new_network ) {
+        Server ircserv(p.port, p.pwd, p.host, p.port_nwk, p.pwd_nwk);
+    }
+
+    cout << ircserv << endl;
+
     return 0;
 }
