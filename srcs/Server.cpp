@@ -1,8 +1,13 @@
 #include "headers.hpp"
 
+Server::Server( void ) {}
+
 Server::Server(int port, string pwd) : 
         _port(port), 
-        _pwd(pwd)
+        _pwd(pwd),
+        _host("new_network"),
+        _port_nwk(0),
+        _pwd_nwk("")
 {
 
 }
@@ -19,6 +24,18 @@ Server::Server(int port, string pwd, string host="new_network", int port_nwk=0, 
 
 Server::~Server() {
 
+}
+
+Server & Server::operator=(Server const & src) {
+
+    if (this != &src) {
+		this->_port = src.getPort();
+        this->_pwd = src.getPassword();
+        this->_host = src.getHost();
+        this->_port_nwk = src.getPortNetwork();
+        this->_pwd_nwk = src.getPasswordNetwork();
+    }
+	return *this;
 }
 
 int Server::getPort() const {

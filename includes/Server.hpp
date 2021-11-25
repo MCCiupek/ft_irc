@@ -10,9 +10,13 @@
 class Server {
 
 	public:
+
+		Server();
 		Server(int port, string pwd);
 		Server(int port, string pwd, string host, int port_nwk, string pwd_nwk); 
         virtual ~Server(); 
+
+		Server & operator=(Server const& src); 
 
 		int						getPort() const;
 		std::string const &		getPassword() const;
@@ -22,15 +26,13 @@ class Server {
 
 	private:
 
-		Server();
 		Server(Server const& src);
-		Server & operator=(Server const& src); 
 
-		int				_port;
-		const string	_pwd;
-		const string	_host;
-		int				_port_nwk;
-		const string	_pwd_nwk;
+		int		_port;
+		string	_pwd;
+		string	_host;
+		int		_port_nwk;
+		string	_pwd_nwk;
 };
 
 ostream & operator<<(ostream & stream, Server &Server);

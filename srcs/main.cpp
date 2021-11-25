@@ -12,9 +12,12 @@ int main( int argc, char *argv[] ) {
         return 1;
     }
 
-    Server ircserv(p.port, p.pwd);
+    Server ircserv;
+
     if ( p.new_network ) {
-        Server ircserv(p.port, p.pwd, p.host, p.port_nwk, p.pwd_nwk);
+        ircserv = Server(p.port, p.pwd, p.host, p.port_nwk, p.pwd_nwk);
+    } else {
+        ircserv = Server(p.port, p.pwd);
     }
 
     cout << ircserv << endl;

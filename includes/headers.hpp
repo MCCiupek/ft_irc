@@ -4,8 +4,11 @@
 # include <iostream>
 # include <vector>
 # include <string>
-
 # include <exception>
+
+# include <sys/types.h>
+# include <sys/socket.h>
+# include <netdb.h>
 
 using namespace std;
 
