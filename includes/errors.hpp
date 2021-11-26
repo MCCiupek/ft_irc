@@ -8,7 +8,10 @@ class eExc : public exception {
 	public:
 
 		eExc(string str) : _strerror(str.c_str()) {};
-		const char * what() const throw() { return _strerror; }
+		const char * what() const throw() { return _strerror; };
+
+	private:
+
 		const char * _strerror;
 };
 

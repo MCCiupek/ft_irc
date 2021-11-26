@@ -70,6 +70,7 @@ void				Server::setServinfo() {
     _hints.ai_socktype = SOCK_STREAM;
     _hints.ai_flags = AI_PASSIVE;
     if ((_status = getaddrinfo(_host.c_str(), _port.c_str(), &_hints, &_servinfo)) != 0) {
+        errno = _status;
         throw eExc(gai_strerror(_status));
     }
 }
