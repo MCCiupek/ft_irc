@@ -5,7 +5,7 @@ map<string, string> parser( int n_params, char *params[] ) {
     map<string, string> res;
 
     if ( n_params != 4 && n_params != 3 ) {
-        throw eUsage();
+        throw eExc("Usage: ./ircserv [host:port_network:password_network] <port> <password>");
     }
 
     res["port"] = params[1 + (n_params == 4)];
@@ -15,7 +15,7 @@ map<string, string> parser( int n_params, char *params[] ) {
 
         vector<string> v = ft_split(params[1], ":");
         if ( v.size() != 3 )
-            throw eUsage();
+            throw eExc("Usage: ./ircserv [host:port_network:password_network] <port> <password>");
 
         res["host"] = v[0];
         res["port_nwk"] = v[1];

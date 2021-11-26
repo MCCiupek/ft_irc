@@ -70,9 +70,7 @@ void				Server::setServinfo() {
     _hints.ai_socktype = SOCK_STREAM;
     _hints.ai_flags = AI_PASSIVE;
     if ((_status = getaddrinfo(_host.c_str(), _port.c_str(), &_hints, &_servinfo)) != 0) {
-        //throw system_error(EFAULT, generic_category());
-        fprintf(stderr, "getaddrinfo error: %s\n", gai_strerror(_status));
-        exit(1);
+        throw eExc(gai_strerror(_status));
     }
 }
 
@@ -82,11 +80,8 @@ void				Server::setSocket() {
                         _servinfo->ai_socktype,
                         _servinfo->ai_protocol);
     if (_socket == -1) {
-        throw system_error(EFAULT, generic_category());
+        throw eExc(strerror(errno));
     }
-    // Add error management: socket() return -1 on error and
-    //    errno is set to the error's value.
-    // --> throw an exception printing strerror.
 }
 
 ostream & operator<<(ostream & stream, Server &Server) {

@@ -21,9 +21,8 @@ int main( int argc, char *argv[] ) {
         }
         cout << ircserv;
     }
-    catch (system_error& e)
-    {
-        cerr << "Error: " << e.code() << " - " << e.what() << '\n';
+    catch (const exception& e) {
+        cerr << "Error: " << e.what() << endl;
         return 1;
     }
 

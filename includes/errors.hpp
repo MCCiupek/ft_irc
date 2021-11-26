@@ -3,14 +3,14 @@
 
 # include "headers.hpp"
 
-class eUsage : public std::exception { 
+class eExc : public exception {
+	
 	public:
-		const char * what() const throw() { return "Usage: ./ircserv [host:port_network:password_network] <port> <password>"; } };
 
-class ePort : public std::exception { 
-	public:
-		const char * what() const throw() { return "Port must be a positive integer."; } };
-
+		eExc(string str) : _strerror(str.c_str()) {};
+		const char * what() const throw() { return _strerror; }
+		const char * _strerror;
+};
 
 int display_usage( void );
 
