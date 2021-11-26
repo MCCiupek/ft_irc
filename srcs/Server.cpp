@@ -13,6 +13,7 @@ Server::Server(string port, string pwd) :
 {
     this->setServinfo();
     this->setSocket();
+    this->bindPort();
 }
 
 Server::Server(string port, string pwd, string host="localhost", string port_nwk="0", string pwd_nwk="") : 
@@ -24,6 +25,7 @@ Server::Server(string port, string pwd, string host="localhost", string port_nwk
 {
     this->setServinfo();
     this->setSocket();
+    this->bindPort();
 }
 
 Server::~Server() {
@@ -69,7 +71,7 @@ void				Server::setServinfo() {
     _hints.ai_family = AF_UNSPEC;
     _hints.ai_socktype = SOCK_STREAM;
     _hints.ai_flags = AI_PASSIVE;
-    if ((_status = getaddrinfo(_host.c_str(), _port.c_str(), &_hints, &_servinfo)) != 0) {
+    if ((_status = getaddrinfo(_host.c_str(), _port_nwk.c_str(), &_hints, &_servinfo)) != 0) {
         errno = _status;
         throw eExc(gai_strerror(_status));
     }
@@ -77,10 +79,17 @@ void				Server::setServinfo() {
 
 void				Server::setSocket() {
 
-    _socket = socket(_servinfo->ai_family,
+    _sockfd = socket(_servinfo->ai_family,
                         _servinfo->ai_socktype,
                         _servinfo->ai_protocol);
-    if (_socket == -1) {
+    if (_sockfd == -1) {
+        throw eExc(strerror(errno));
+    }
+}
+
+void				Server::bindPort() {
+
+    if (bind(_sockfd, _servinfo->ai_addr, _servinfo->ai_addrlen) == -1) {
         throw eExc(strerror(errno));
     }
 }

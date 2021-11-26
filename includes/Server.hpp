@@ -26,13 +26,14 @@ class Server {
 
 		void				setServinfo();
 		void				setSocket();
+		void				bindPort();
 
 	private:
 
 		Server(Server const& src);
 
 		int					_status;
-		int					_socket;
+		int					_sockfd;
 		string				_port;
 		string				_pwd;
 		string				_host;

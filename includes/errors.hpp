@@ -7,7 +7,7 @@ class eExc : public exception {
 	
 	public:
 
-		eExc(string str) : _strerror(str.c_str()) {};
+		eExc(const char * str) : _strerror(str) {};
 		const char * what() const throw() { return _strerror; };
 
 	private:
