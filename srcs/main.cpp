@@ -6,13 +6,7 @@ int main( int argc, char *argv[] ) {
 
     try {
         p = parser( argc, argv );
-    }
-    catch (const exception& e) {
-        cerr << e.what() << endl;
-        return 1;
-    }
 
-    try {
         Server ircserv;
         if ( p.size() > 2 ) {
             ircserv = Server(p["port"], p["pwd"], p["host"], p["port_nwk"], p["pwd_nwk"]);
@@ -20,6 +14,7 @@ int main( int argc, char *argv[] ) {
             ircserv = Server(p["port"], p["pwd"]);
         }
         cout << ircserv;
+        ircserv.initConn();
     }
     catch (const exception& e) {
         cerr << "Error: " << e.what() << endl;

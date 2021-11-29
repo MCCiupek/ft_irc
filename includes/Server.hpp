@@ -2,6 +2,7 @@
 # define SERVER_HPP
 
 # include "headers.hpp"
+# define BACKLOG 5
 
 // ************************************************************************** //
 //                            	Server Class                                  //
@@ -24,23 +25,30 @@ class Server {
 		string const &		getPortNetwork() const;
 		string const &		getPasswordNetwork() const;
 
+		void				initConn();
+
 		void				setServinfo();
 		void				setSocket();
 		void				bindPort();
+		void				listenHost();
+		void				acceptConn();
 
 	private:
 
 		Server(Server const& src);
 
-		int					_status;
-		int					_sockfd;
-		string				_port;
-		string				_pwd;
-		string				_host;
-		string				_port_nwk;
-		string				_pwd_nwk;
-		struct addrinfo 	_hints;
-		struct addrinfo *	_servinfo;
+		int						_status;
+		int						_sockfd;
+		int						_newfd;
+		int						_servinfo_is_set;
+		string					_port;
+		string					_pwd;
+		string					_host;
+		string					_port_nwk;
+		string					_pwd_nwk;
+		struct addrinfo 		_hints;
+		struct addrinfo *		_servinfo;
+		struct sockaddr_storage	_host_addr;
 };
 
 ostream & operator<<(ostream & stream, Server &Server);
