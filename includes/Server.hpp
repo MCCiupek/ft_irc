@@ -40,7 +40,6 @@ class Server {
 		int						_status;
 		int						_sockfd;
 		int						_newfd;
-		int						_servinfo_is_set;
 		string					_port;
 		string					_pwd;
 		string					_host;
