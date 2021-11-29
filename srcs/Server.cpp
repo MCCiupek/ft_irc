@@ -86,7 +86,6 @@ void				Server::setServinfo() {
         cout << gai_strerror(_status) << endl;
         throw eExc(gai_strerror(_status));
     }
-    _servinfo_is_set = 1;
     cout << "OK" << endl;
 }
 
