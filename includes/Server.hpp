@@ -44,6 +44,7 @@ class Server {
 		int						_status;
 		int						_sockfd;
 		int						_newfd;
+		int						_fd_count;
 		char *					_s;
 		string					_port;
 		string					_pwd;
@@ -54,7 +55,7 @@ class Server {
 		struct addrinfo *		_servinfo;
 		struct sockaddr_storage	_host_addr;
 		struct sigaction 		_sa;
-		struct pollfd			_poll;
+		struct pollfd *			_poll;
 };
 
 ostream & operator<<(ostream & stream, Server &Server);
