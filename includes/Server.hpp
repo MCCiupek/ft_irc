@@ -3,6 +3,7 @@
 
 # include "headers.hpp"
 # define BACKLOG 5
+# define MAXBUFLEN 128
 
 // ************************************************************************** //
 //                            	Server Class                                  //
@@ -26,12 +27,14 @@ class Server {
 		string const &		getPasswordNetwork() const;
 
 		void				initConn();
+		void				run();
 
 		void				setServinfo();
 		int					setSocket( struct addrinfo * p );
 		int					bindPort( struct addrinfo * p );
 		void				listenHost();
 		void				setSA();
+		void				receive();
 		void				acceptConn();
 
 	private:
@@ -51,6 +54,7 @@ class Server {
 		struct addrinfo *		_servinfo;
 		struct sockaddr_storage	_host_addr;
 		struct sigaction 		_sa;
+		struct pollfd			_poll;
 };
 
 ostream & operator<<(ostream & stream, Server &Server);

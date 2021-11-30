@@ -17,7 +17,7 @@ int main( int argc, char *argv[] ) {
         ircserv.initConn();
     }
     catch (const exception& e) {
-        cerr << "Error: " << e.what() << endl;
+        cerr << BOLDRED << "Error: " << RESET << e.what() << endl;
         return errno;
     }
 

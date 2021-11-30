@@ -67,26 +67,37 @@ void				Server::initConn() {
     struct addrinfo * p;
 
     this->setServinfo();
-    for( p = _servinfo; p != NULL; p = p->ai_next ) {
-        if (this->setSocket(p))
+    for ( p = _servinfo; p != NULL; p = p->ai_next ) {
+        if ( this->setSocket(p) )
             continue ;
-        if (this->bindPort(p))
+        if ( this->bindPort(p) )
             continue ;
         break ;
     }
     freeaddrinfo(_servinfo);
 
-    if (!p)
+    if ( !p ) {
         throw eExc("server: failed to bind");
+    }
     this->listenHost();
-    this->setSA();
 
-    cout << "server: waiting for connections..." << endl;
+    _poll.fd = _sockfd;
+	_poll.events = POLLIN;
+
+    std::cout << BOLDGREEN  << "Server init success!!" << RESET << std::endl;
+	std::cout << YELLOW << "Listening for clients ..." << RESET << std::endl;
+    
+    //this->receive();
+
+    /*cout << "server: waiting for connections..." << endl;
 
     while (42) {
 
         this->acceptConn();
-    }
+        close(_newfd); 
+    }*/
+
+    //close(_sockfd);
 }
 
 void				Server::setServinfo() {
@@ -97,11 +108,11 @@ void				Server::setServinfo() {
     _hints.ai_socktype = SOCK_STREAM;
     _hints.ai_flags = AI_PASSIVE;
     if ((_status = getaddrinfo(_host.c_str(), _port.c_str(), &_hints, &_servinfo)) != 0) {
+        cout << RED << "KO" << RESET << endl;
         errno = _status;
-        cout << gai_strerror(_status) << endl;
-        throw eExc(gai_strerror(_status));
+        throw eExc("getaddrinfo: nodename nor servname provided, or not known");
     }
-    cout << "OK" << endl;
+    cout << GREEN << "OK" << RESET << endl;
 }
 
 int				Server::setSocket( struct addrinfo * p ) {
@@ -113,13 +124,18 @@ int				Server::setSocket( struct addrinfo * p ) {
                         p->ai_socktype,
                         p->ai_protocol);
     if (_sockfd == -1) {
+        cout << RED << "KO" << RESET << endl;
         return 1;
     }
-    if (setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &yes,
-                sizeof(int)) == -1) {
-            throw eExc(strerror(errno));
+    if (setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+        cout << RED << "KO" << RESET << endl;
+        throw eExc(strerror(errno));
     }
-    cout << "OK" << endl;
+    if (fcntl(_sockfd, F_SETFL, O_NONBLOCK) == -1) {
+		cout << RED << "KO" << RESET << endl;
+        throw eExc(strerror(errno));
+    }
+    cout << GREEN << "OK" << RESET << endl;
     return 0;
 }
 
@@ -127,10 +143,11 @@ int				Server::bindPort( struct addrinfo * p ) {
 
     cout << "Binding port " << _port << "...";
     if (bind(_sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+        cout << RED << "KO" << RESET << endl;
         close(_sockfd);
         return 1;
     }
-    cout << "OK" << endl;
+    cout << GREEN << "OK" << RESET << endl;
     return 0;
 }
 
@@ -138,27 +155,35 @@ void				Server::listenHost() {
 
     cout << "listenning...";
     if (listen(_sockfd, BACKLOG) == -1) {
+        cout << RED << "KO" << RESET << endl;
         throw eExc(strerror(errno));
     }
-    cout << "OK " << endl;
+    cout << GREEN << "OK" << RESET << endl;
 }
 
-
-void				Server::setSA() {
+void				Server::receive() {
     
-    _sa.sa_handler = sigchld_handler;
-    sigemptyset(&_sa.sa_mask);
-    _sa.sa_flags = SA_RESTART;
-    if (sigaction(SIGCHLD, &_sa, NULL) == -1) {
+    char        buf[MAXBUFLEN];
+    int         numbytes;
+    socklen_t   addr_len;
+
+    cout << "server: waiting to recv..." << endl;
+
+    addr_len = sizeof _host_addr;
+    if ((numbytes = recv(_sockfd, buf, MAXBUFLEN-1 , 0)) == -1) {
         throw eExc(strerror(errno));
     }
+    buf[numbytes] = '\0';
+
+    cout << "listener: packet contains \"" << buf << "\"" << endl;
 }
+
 
 void				Server::acceptConn() {
 
     socklen_t addr_size = sizeof _host_addr;
     _newfd = accept(_sockfd, (struct sockaddr *)&_host_addr, &addr_size);
-    if (_newfd == -1) {
+    if ( _newfd == -1 ) {
         throw eExc(strerror(errno));
     }
     _s = inet_ntoa(get_in_addr((struct sockaddr *)&_host_addr));

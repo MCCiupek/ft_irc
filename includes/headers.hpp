@@ -15,10 +15,13 @@
 # include <signal.h>
 # include <errno.h>
 # include <system_error>
+# include <fcntl.h>
+# include <poll.h>
 
 using namespace std;
 
 # include "utils.hpp"
+# include "colors.hpp"
 # include "errors.hpp"
 # include "parsing.hpp"
 
