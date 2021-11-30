@@ -15,3 +15,8 @@ vector<string> ft_split(string str, string sep) {
     res.push_back(str.substr(start, end - start));
     return res;
 }
+
+struct in_addr get_in_addr(struct sockaddr *sa) {
+    
+    return ((struct sockaddr_in*)sa)->sin_addr;
+}

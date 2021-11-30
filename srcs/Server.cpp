@@ -28,9 +28,6 @@ Server::Server(string port, string pwd, string host="localhost", string port_nwk
 
 Server::~Server() {
     
-    if ( _servinfo ) {
-        freeaddrinfo(_servinfo);
-    }
 }
 
 Server & Server::operator=(Server const & src) {
@@ -67,16 +64,34 @@ string const & Server::getPasswordNetwork() const {
 
 void				Server::initConn() {
 
+    struct addrinfo * p;
+
     this->setServinfo();
-    this->setSocket();
-    this->bindPort();
+    for( p = _servinfo; p != NULL; p = p->ai_next ) {
+        if (this->setSocket(p))
+            continue ;
+        if (this->bindPort(p))
+            continue ;
+        break ;
+    }
+    freeaddrinfo(_servinfo);
+
+    if (!p)
+        throw eExc("server: failed to bind");
     this->listenHost();
-    this->acceptConn();
+    this->setSA();
+
+    cout << "server: waiting for connections..." << endl;
+
+    while (42) {
+
+        this->acceptConn();
+    }
 }
 
 void				Server::setServinfo() {
 
-    cout << "Setting-up server informations...";
+    cout << "Gathering server informations...";
     memset(&_hints, 0, sizeof _hints);
     _hints.ai_family = AF_UNSPEC;
     _hints.ai_socktype = SOCK_STREAM;
@@ -89,25 +104,34 @@ void				Server::setServinfo() {
     cout << "OK" << endl;
 }
 
-void				Server::setSocket() {
+int				Server::setSocket( struct addrinfo * p ) {
 
-    cout << "Setting-up socket...";
-    _sockfd = socket(_servinfo->ai_family,
-                        _servinfo->ai_socktype,
-                        _servinfo->ai_protocol);
+    int yes=1;
+
+    cout << "Creating socket...";
+    _sockfd = socket(p->ai_family,
+                        p->ai_socktype,
+                        p->ai_protocol);
     if (_sockfd == -1) {
-        throw eExc(strerror(errno));
+        return 1;
+    }
+    if (setsockopt(_sockfd, SOL_SOCKET, SO_REUSEADDR, &yes,
+                sizeof(int)) == -1) {
+            throw eExc(strerror(errno));
     }
     cout << "OK" << endl;
+    return 0;
 }
 
-void				Server::bindPort() {
+int				Server::bindPort( struct addrinfo * p ) {
 
-    cout << "Binding port " << _port_nwk << "...";
-    if (bind(_sockfd, _servinfo->ai_addr, _servinfo->ai_addrlen) == -1) {
-        throw eExc(strerror(errno));
+    cout << "Binding port " << _port << "...";
+    if (bind(_sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+        close(_sockfd);
+        return 1;
     }
     cout << "OK" << endl;
+    return 0;
 }
 
 void				Server::listenHost() {
@@ -116,18 +140,30 @@ void				Server::listenHost() {
     if (listen(_sockfd, BACKLOG) == -1) {
         throw eExc(strerror(errno));
     }
-    cout << "OK" << endl;
+    cout << "OK " << endl;
+}
+
+
+void				Server::setSA() {
+    
+    _sa.sa_handler = sigchld_handler;
+    sigemptyset(&_sa.sa_mask);
+    _sa.sa_flags = SA_RESTART;
+    if (sigaction(SIGCHLD, &_sa, NULL) == -1) {
+        throw eExc(strerror(errno));
+    }
 }
 
 void				Server::acceptConn() {
 
-    cout << "accepting connexion...";
     socklen_t addr_size = sizeof _host_addr;
     _newfd = accept(_sockfd, (struct sockaddr *)&_host_addr, &addr_size);
     if (_newfd == -1) {
         throw eExc(strerror(errno));
     }
-    cout << "OK" << endl;
+    _s = inet_ntoa(get_in_addr((struct sockaddr *)&_host_addr));
+    cout << "server: got connection from " << _s << endl;
+    close(_newfd);
 }
 
 ostream & operator<<(ostream & stream, Server &Server) {

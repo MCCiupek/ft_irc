@@ -13,7 +13,7 @@ int main( int argc, char *argv[] ) {
         } else {
             ircserv = Server(p["port"], p["pwd"]);
         }
-        cout << ircserv;
+        //cout << ircserv;
         ircserv.initConn();
     }
     catch (const exception& e) {

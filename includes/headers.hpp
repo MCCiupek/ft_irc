@@ -9,10 +9,12 @@
 
 # include <sys/types.h>
 # include <sys/socket.h>
+# include <arpa/inet.h>
 # include <netdb.h>
-
-#include <errno.h>
-#include <system_error>
+# include <unistd.h>
+# include <signal.h>
+# include <errno.h>
+# include <system_error>
 
 using namespace std;
 

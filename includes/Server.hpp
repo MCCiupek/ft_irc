@@ -28,9 +28,10 @@ class Server {
 		void				initConn();
 
 		void				setServinfo();
-		void				setSocket();
-		void				bindPort();
+		int					setSocket( struct addrinfo * p );
+		int					bindPort( struct addrinfo * p );
 		void				listenHost();
+		void				setSA();
 		void				acceptConn();
 
 	private:
@@ -40,6 +41,7 @@ class Server {
 		int						_status;
 		int						_sockfd;
 		int						_newfd;
+		char *					_s;
 		string					_port;
 		string					_pwd;
 		string					_host;
@@ -48,6 +50,7 @@ class Server {
 		struct addrinfo 		_hints;
 		struct addrinfo *		_servinfo;
 		struct sockaddr_storage	_host_addr;
+		struct sigaction 		_sa;
 };
 
 ostream & operator<<(ostream & stream, Server &Server);

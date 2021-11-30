@@ -16,5 +16,6 @@ class eExc : public exception {
 };
 
 int display_usage( void );
+void sigchld_handler(int s);
 
 #endif
