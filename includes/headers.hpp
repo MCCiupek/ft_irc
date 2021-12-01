@@ -1,6 +1,10 @@
 #ifndef HEADERS_HPP
 # define HEADERS_HPP
 
+# define BACKLOG 5
+# define MAXCLI 5
+# define MAXBUFLEN 128
+
 # include <iostream>
 # include <vector>
 # include <map>

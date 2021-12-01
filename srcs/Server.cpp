@@ -87,10 +87,8 @@ void				Server::initConn() {
 
 void				Server::run() {
 
-	int     fd_size = 5;
-	char    buf[256];
+	int     fd_size = MAXCLI;
 	int     sender_fd = _sockfd;
-	int     nbytes = 0;
 
 	_poll = (struct pollfd *)malloc(sizeof *_poll * fd_size);
 	_poll[0].fd = _sockfd;
@@ -101,9 +99,8 @@ void				Server::run() {
 
 		int poll_count = poll(_poll, _fd_count, -1);
 
-		if (poll_count == -1) {
+		if (poll_count == -1)
 			throw eExc(strerror(errno));
-		}
 
 		for ( int i=0; i < _fd_count; i++ ) {
 
@@ -113,28 +110,10 @@ void				Server::run() {
 					this->acceptConn();
 					add_to_pfds(&_poll, _newfd, &_fd_count, &fd_size);
 				} else {
-					// use htons/ntohs/etc to serialize/deserialize data bf send()/recv()
-					nbytes = recv(_poll[i].fd, buf, sizeof buf, 0);
-					sender_fd = _poll[i].fd;
-					if ( nbytes <= 0 ) {
-						if (nbytes == 0) {
-							cout << "pollserver: socket " << sender_fd << " hung up" << endl;
-						} else {
-							throw eExc(strerror(errno));
-						}
-						close(_poll[i].fd);
-						del_from_pfds(_poll, i, &_fd_count);
-					}
+					sender_fd = this->receiveData(i);
 				}
 			} else {
-				for ( int j = 0; j < _fd_count; j++ ) {
-					int dest_fd = _poll[j].fd;
-					if ( dest_fd != _sockfd && dest_fd != sender_fd ) {
-						if ( send(dest_fd, buf, nbytes, 0) == -1 ) {
-							throw eExc(strerror(errno));
-						}
-					}
-				}
+				this->sendData(i);
 			}
 		}
 	}
@@ -201,23 +180,36 @@ void				Server::listenHost() {
 	cout << GREEN << "OK" << RESET << endl;
 }
 
-void				Server::receive() {
+int				Server::receiveData( int i ) {
 	
-	char        buf[MAXBUFLEN];
-	int         numbytes;
-	socklen_t   addr_len;
+	char    buf[MAXBUFLEN];
+	int 	nbytes = recv(_poll[i].fd, buf, sizeof buf, 0);
+	int 	sender_fd = _poll[i].fd;
 
-	cout << "server: waiting to recv..." << endl;
-
-	addr_len = sizeof _host_addr;
-	if ((numbytes = recv(_sockfd, buf, MAXBUFLEN-1 , 0)) == -1) {
-		throw eExc(strerror(errno));
+	if (nbytes <= 0) {
+		close(_poll[i].fd);
+		del_from_pfds(_poll, i, &_fd_count);
+		if (nbytes == 0)
+			cout << "pollserver: socket " << sender_fd << " hung up" << endl;
+		if (nbytes < 0)
+			throw eExc(strerror(errno));
 	}
-	buf[numbytes] = '\0';
-
-	cout << "listener: packet contains \"" << buf << "\"" << endl;
+	return sender_fd;
 }
 
+int				Server::sendData( int i ) {
+	
+	int		dest_fd;
+	char    buf[MAXBUFLEN];
+
+	for ( int j = 0; j < _fd_count; j++ ) {
+		dest_fd = _poll[j].fd;
+		if ( dest_fd != _sockfd && dest_fd != _poll[i].fd )
+			if ( send(dest_fd, buf, MAXBUFLEN-1, 0) == -1 )
+				throw eExc(strerror(errno));
+	}
+	return 0;
+}
 
 void				Server::acceptConn() {
 

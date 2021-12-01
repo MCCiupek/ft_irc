@@ -8,11 +8,6 @@ map<string, string> parser( int n_params, char *params[] ) {
         throw eExc("Usage: ./ircserv [host:port_network:password_network] <port> <password>");
     }
 
-    /*
-    All ports below 1024 are RESERVED (unless you’re the superuser)! 
-    You can have any port number above that, right up to 65535 
-    (provided they aren’t already being used by another program).
-    */
     res["port"] = params[1 + (n_params == 4)];
     res["pwd"] = params[2 + (n_params == 4)];
 

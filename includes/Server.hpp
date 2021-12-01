@@ -2,8 +2,6 @@
 # define SERVER_HPP
 
 # include "headers.hpp"
-# define BACKLOG 5
-# define MAXBUFLEN 128
 
 // ************************************************************************** //
 //                            	Server Class                                  //
@@ -16,7 +14,7 @@ class Server {
 		Server();
 		Server(string port, string pwd);
 		Server(string port, string pwd, string host, string port_nwk, string pwd_nwk); 
-        virtual ~Server(); 
+		virtual ~Server(); 
 
 		Server & operator=(Server const& src); 
 
@@ -33,8 +31,8 @@ class Server {
 		int					setSocket( struct addrinfo * p );
 		int					bindPort( struct addrinfo * p );
 		void				listenHost();
-		void				setSA();
-		void				receive();
+		int					receiveData( int i );
+		int					sendData( int i );
 		void				acceptConn();
 
 	private:
@@ -54,7 +52,6 @@ class Server {
 		struct addrinfo 		_hints;
 		struct addrinfo *		_servinfo;
 		struct sockaddr_storage	_host_addr;
-		struct sigaction 		_sa;
 		struct pollfd *			_poll;
 };
 
