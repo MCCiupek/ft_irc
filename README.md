@@ -22,7 +22,7 @@ IRC client programs connect to an IRC server to access a specific channel. IRC s
 
 ![image](https://user-images.githubusercontent.com/51337012/144290715-b1f46bfe-f05e-41a3-b971-a3d97006d374.png)
 
-## Documentation
+## Sources
 
 * [Beej's Guide to Network Programming](http://beej.us/guide/bgnet/html/)
 * [Tutorial: How To Make An IRC Server Connection](https://oramind.com/tutorial-how-to-make-an-irc-server-connection/)
