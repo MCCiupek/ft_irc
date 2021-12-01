@@ -20,6 +20,8 @@ Internet Relay Chat or IRC is a textual communication protocol on the Internet. 
 
 IRC client programs connect to an IRC server to access a specific channel. IRC servers are connected between them to provide a global network with unique channels.
 
+![image](https://user-images.githubusercontent.com/51337012/144290715-b1f46bfe-f05e-41a3-b971-a3d97006d374.png)
+
 ## Documentation
 
 * [Beej's Guide to Network Programming](http://beej.us/guide/bgnet/html/)
