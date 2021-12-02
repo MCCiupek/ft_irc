@@ -104,10 +104,11 @@ void				Server::run() {
 		for ( int i=0; i < _fd_count; i++ ) {
 
 			if ( _poll[i].revents & POLLIN ) {
-
+				
 				if ( _poll[i].fd == _sockfd ) {
 					this->acceptConn();
 					add_to_pfds(&_poll, _newfd, &_fd_count, &fd_size);
+					break ;
 				} else {
 					this->receiveData(i);
 					this->sendData(i);
