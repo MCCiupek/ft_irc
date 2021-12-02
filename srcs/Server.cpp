@@ -187,12 +187,14 @@ int				Server::receiveData( int i ) {
 	nbytes = recv(_poll[i].fd, buf, BUFSIZE - 1, 0);
 	if (nbytes <= 0) {
 		if (nbytes == 0)
-			cout << "Client #" << _poll[i].fd << " gone away" << endl;
+			cout << BOLDWHITE << "❌ Client #" << _poll[i].fd << " gone away" << RESET << endl;
 		close(_poll[i].fd);
 		del_from_pfds(_poll, i, &_fd_count);
 		if (nbytes < 0)
 			throw eExc(strerror(errno));
+		return 1;
 	}
+	cout << "Client #" << _poll[i].fd << ": " << buf;
 	return 0;
 }
 
@@ -219,9 +221,9 @@ void				Server::acceptConn() {
 	if ( _newfd == -1 ) {
 		throw eExc(strerror(errno));
 	}
-	cout << "New client #" << _newfd
+	cout << BOLDWHITE << "✅ New client #" << _newfd
 		 << " from " << inet_ntoa(host_addr.sin_addr)
-		 << ":" << ntohs(host_addr.sin_port) << endl;
+		 << ":" << ntohs(host_addr.sin_port) << RESET << endl;
 }
 
 ostream & operator<<(ostream & stream, Server &Server) {
