@@ -15,7 +15,7 @@ Server::Server(string port, string pwd) :
 
 }
 
-Server::Server(string port, string pwd, string host="localhost", string port_nwk="0", string pwd_nwk="") : 
+Server::Server(string port, string pwd, string host="localhost", string port_nwk="127.0.0.1", string pwd_nwk="") : 
 		_port(port), 
 		_pwd(pwd),
 		_host(host),
@@ -88,7 +88,6 @@ void				Server::initConn() {
 void				Server::run() {
 
 	int     fd_size = MAXCLI;
-	int     sender_fd = _sockfd;
 
 	_poll = (struct pollfd *)malloc(sizeof *_poll * fd_size);
 	_poll[0].fd = _sockfd;
@@ -110,10 +109,9 @@ void				Server::run() {
 					this->acceptConn();
 					add_to_pfds(&_poll, _newfd, &_fd_count, &fd_size);
 				} else {
-					sender_fd = this->receiveData(i);
+					this->receiveData(i);
+					this->sendData(i);
 				}
-			} else {
-				this->sendData(i);
 			}
 		}
 	}
@@ -123,7 +121,7 @@ void				Server::setServinfo() {
 
 	cout << "Gathering server informations...";
 	memset(&_hints, 0, sizeof _hints);
-	_hints.ai_family = AF_UNSPEC;
+	_hints.ai_family = AF_INET;
 	_hints.ai_socktype = SOCK_STREAM;
 	_hints.ai_flags = AI_PASSIVE;
 	if ((_status = getaddrinfo(_host.c_str(), _port.c_str(), &_hints, &_servinfo)) != 0) {
@@ -182,30 +180,31 @@ void				Server::listenHost() {
 
 int				Server::receiveData( int i ) {
 	
-	char    buf[MAXBUFLEN];
-	int 	nbytes = recv(_poll[i].fd, buf, sizeof buf, 0);
-	int 	sender_fd = _poll[i].fd;
+	char    buf[BUFSIZE];
+	int 	nbytes;
 
+	memset(buf, 0, BUFSIZE);
+	nbytes = recv(_poll[i].fd, buf, BUFSIZE - 1, 0);
 	if (nbytes <= 0) {
 		close(_poll[i].fd);
 		del_from_pfds(_poll, i, &_fd_count);
 		if (nbytes == 0)
-			cout << "pollserver: socket " << sender_fd << " hung up" << endl;
+			cout << "Client #" << _poll[i].fd << " gone away" << endl;
 		if (nbytes < 0)
 			throw eExc(strerror(errno));
 	}
-	return sender_fd;
+	return 0;
 }
 
 int				Server::sendData( int i ) {
 	
 	int		dest_fd;
-	char    buf[MAXBUFLEN];
+	char    buf[BUFSIZE];
 
 	for ( int j = 0; j < _fd_count; j++ ) {
 		dest_fd = _poll[j].fd;
 		if ( dest_fd != _sockfd && dest_fd != _poll[i].fd )
-			if ( send(dest_fd, buf, MAXBUFLEN-1, 0) == -1 )
+			if ( send(dest_fd, buf, BUFSIZE - 1, 0) == -1 )
 				throw eExc(strerror(errno));
 	}
 	return 0;
@@ -213,13 +212,16 @@ int				Server::sendData( int i ) {
 
 void				Server::acceptConn() {
 
-	socklen_t addr_size = sizeof _host_addr;
-	_newfd = accept(_sockfd, (struct sockaddr *)&_host_addr, &addr_size);
+	struct sockaddr_in	host_addr;
+
+	socklen_t addr_size = sizeof host_addr;
+	_newfd = accept(_sockfd, (struct sockaddr *)&host_addr, &addr_size);
 	if ( _newfd == -1 ) {
 		throw eExc(strerror(errno));
 	}
-	_s = inet_ntoa(get_in_addr((struct sockaddr *)&_host_addr));
-	cout << "server: got connection from " << _s << endl;
+	cout << "New client #" << _newfd
+		 << " from " << inet_ntoa(host_addr.sin_addr)
+		 << ":" << ntohs(host_addr.sin_port) << endl;
 }
 
 ostream & operator<<(ostream & stream, Server &Server) {

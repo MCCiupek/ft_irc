@@ -3,7 +3,7 @@
 
 # define BACKLOG 5
 # define MAXCLI 5
-# define MAXBUFLEN 128
+# define BUFSIZE 128
 
 # include <iostream>
 # include <vector>
