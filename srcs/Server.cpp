@@ -186,10 +186,10 @@ int				Server::receiveData( int i ) {
 	memset(buf, 0, BUFSIZE);
 	nbytes = recv(_poll[i].fd, buf, BUFSIZE - 1, 0);
 	if (nbytes <= 0) {
-		close(_poll[i].fd);
-		del_from_pfds(_poll, i, &_fd_count);
 		if (nbytes == 0)
 			cout << "Client #" << _poll[i].fd << " gone away" << endl;
+		close(_poll[i].fd);
+		del_from_pfds(_poll, i, &_fd_count);
 		if (nbytes < 0)
 			throw eExc(strerror(errno));
 	}
