@@ -4,6 +4,8 @@ int main( int argc, char *argv[] ) {
 
 	map<string, string> p;
 
+	define_errors();
+
 	try {
 		p = parser( argc, argv );
 

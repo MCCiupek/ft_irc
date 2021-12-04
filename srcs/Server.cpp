@@ -15,7 +15,8 @@ Server::Server(string port, string pwd) :
 
 }
 
-Server::Server(string port, string pwd, string host="localhost", string port_nwk="127.0.0.1", string pwd_nwk="") : 
+Server::Server(string port, string pwd, string host="localhost",
+	string port_nwk="127.0.0.1", string pwd_nwk="") : 
 		_port(port), 
 		_pwd(pwd),
 		_host(host),
@@ -62,75 +63,40 @@ string const & Server::getPasswordNetwork() const {
 	return _pwd_nwk;
 }
 
-void				Server::initConn() {
-
-	struct addrinfo * p;
-
-	this->setServinfo();
-	for ( p = _servinfo; p != NULL; p = p->ai_next ) {
-		if ( this->setSocket(p) )
-			continue ;
-		if ( this->bindPort(p) )
-			continue ;
-		break ;
-	}
-	freeaddrinfo(_servinfo);
-
-	if ( !p ) {
-		throw eExc("server: failed to bind");
-	}
-	this->listenHost();
-
-	std::cout << BOLDGREEN  << "Server init success!!" << RESET << std::endl;
-	std::cout << YELLOW << "Listening for clients ..." << RESET << std::endl;
+map<int, User> &Server::getUsers() {
+	return _users;
 }
 
-void				Server::run() {
+ostream & operator<<(ostream & stream, Server &Server) {
 
-	int     fd_size = MAXCLI;
-
-	_poll = (struct pollfd *)malloc(sizeof *_poll * fd_size);
-	_poll[0].fd = _sockfd;
-	_poll[0].events = POLLIN;
-	_fd_count = 1;
-
-	for ( ;; ) {
-
-		int poll_count = poll(_poll, _fd_count, -1);
-
-		if (poll_count == -1)
-			throw eExc(strerror(errno));
-
-		for ( int i=0; i < _fd_count; i++ ) {
-
-			if ( _poll[i].revents & POLLIN ) {
-				
-				if ( _poll[i].fd == _sockfd ) {
-					this->acceptConn();
-					add_to_pfds(&_poll, _newfd, &_fd_count, &fd_size);
-					break ;
-				} else {
-					this->receiveData(i);
-					this->sendData(i);
-				}
-			}
-		}
-	}
+	stream << "port: " << Server.getPort() << endl;
+	stream << "pwd: " << Server.getPassword() << endl;
+	stream << "host: " << Server.getHost() << endl;
+	stream << "port network: " << Server.getPortNetwork() << endl;
+	stream << "pwd network: " << Server.getPasswordNetwork() << endl;
+	return stream;
 }
 
-void				Server::setServinfo() {
+void				Server::listenHost() {
 
-	cout << "Gathering server informations...";
-	memset(&_hints, 0, sizeof _hints);
-	_hints.ai_family = AF_INET;
-	_hints.ai_socktype = SOCK_STREAM;
-	_hints.ai_flags = AI_PASSIVE;
-	if ((_status = getaddrinfo(_host.c_str(), _port.c_str(), &_hints, &_servinfo)) != 0) {
+	cout << "listenning...";
+	if (listen(_sockfd, BACKLOG) == -1) {
 		cout << RED << "KO" << RESET << endl;
-		errno = _status;
-		throw eExc("getaddrinfo: nodename nor servname provided, or not known");
+		throw eExc(strerror(errno));
 	}
 	cout << GREEN << "OK" << RESET << endl;
+}
+
+int				Server::bindPort( struct addrinfo * p ) {
+
+	cout << "Binding port " << _port << "...";
+	if (bind(_sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+		cout << RED << "KO" << RESET << endl;
+		close(_sockfd);
+		return 1;
+	}
+	cout << GREEN << "OK" << RESET << endl;
+	return 0;
 }
 
 int				Server::setSocket( struct addrinfo * p ) {
@@ -157,26 +123,56 @@ int				Server::setSocket( struct addrinfo * p ) {
 	return 0;
 }
 
-int				Server::bindPort( struct addrinfo * p ) {
+void				Server::setServinfo() {
 
-	cout << "Binding port " << _port << "...";
-	if (bind(_sockfd, p->ai_addr, p->ai_addrlen) == -1) {
+	cout << "Gathering server informations...";
+	memset(&_hints, 0, sizeof _hints);
+	_hints.ai_family = AF_INET;
+	_hints.ai_socktype = SOCK_STREAM;
+	_hints.ai_flags = AI_PASSIVE;
+	if ((_status = getaddrinfo(_host.c_str(), _port.c_str(), &_hints, &_servinfo)) != 0) {
 		cout << RED << "KO" << RESET << endl;
-		close(_sockfd);
-		return 1;
+		errno = _status;
+		throw eExc("getaddrinfo: nodename nor servname provided, or not known");
 	}
 	cout << GREEN << "OK" << RESET << endl;
-	return 0;
 }
 
-void				Server::listenHost() {
+void				Server::initConn() {
 
-	cout << "listenning...";
-	if (listen(_sockfd, BACKLOG) == -1) {
-		cout << RED << "KO" << RESET << endl;
-		throw eExc(strerror(errno));
+	struct addrinfo * p;
+
+	this->setServinfo();
+	for ( p = _servinfo; p != NULL; p = p->ai_next ) {
+		if ( this->setSocket(p) )
+			continue ;
+		if ( this->bindPort(p) )
+			continue ;
+		break ;
 	}
-	cout << GREEN << "OK" << RESET << endl;
+	freeaddrinfo(_servinfo);
+
+	if ( !p ) {
+		throw eExc("server: failed to bind");
+	}
+	this->listenHost();
+
+	std::cout << BOLDGREEN  << "Server init success!!" << RESET << std::endl;
+	std::cout << YELLOW << "Listening for clients ..." << RESET << std::endl;
+}
+
+int				Server::sendData( int i ) {
+	
+	int		dest_fd;
+	char    buf[BUFSIZE];
+
+	for ( int j = 0; j < _fd_count; j++ ) {
+		dest_fd = _poll[j].fd;
+		if ( dest_fd != _sockfd && dest_fd != _poll[i].fd )
+			if ( send(dest_fd, buf, BUFSIZE - 1, 0) == -1 )
+				throw eExc(strerror(errno));
+	}
+	return 0;
 }
 
 int				Server::receiveData( int i ) {
@@ -195,21 +191,10 @@ int				Server::receiveData( int i ) {
 			throw eExc(strerror(errno));
 		return 1;
 	}
+
+	parsing(ft_split(buf, " "), _users[i], *this);
+
 	cout << "Client #" << _poll[i].fd << ": " << buf;
-	return 0;
-}
-
-int				Server::sendData( int i ) {
-	
-	int		dest_fd;
-	char    buf[BUFSIZE];
-
-	for ( int j = 0; j < _fd_count; j++ ) {
-		dest_fd = _poll[j].fd;
-		if ( dest_fd != _sockfd && dest_fd != _poll[i].fd )
-			if ( send(dest_fd, buf, BUFSIZE - 1, 0) == -1 )
-				throw eExc(strerror(errno));
-	}
 	return 0;
 }
 
@@ -222,17 +207,60 @@ void				Server::acceptConn() {
 	if ( _newfd == -1 ) {
 		throw eExc(strerror(errno));
 	}
+
+	// inet_ntoa()
+	// function converts the Internet host address in, given in network
+	// byte order, to a string in IPv4 dotted-decimal notation.
 	cout << BOLDWHITE << "✅ New client #" << _newfd
 		 << " from " << inet_ntoa(host_addr.sin_addr)
 		 << ":" << ntohs(host_addr.sin_port) << RESET << endl;
 }
 
-ostream & operator<<(ostream & stream, Server &Server) {
+void				Server::run() {
 
-	stream << "port: " << Server.getPort() << endl;
-	stream << "pwd: " << Server.getPassword() << endl;
-	stream << "host: " << Server.getHost() << endl;
-	stream << "port network: " << Server.getPortNetwork() << endl;
-	stream << "pwd network: " << Server.getPasswordNetwork() << endl;
-	return stream;
+	int     fd_size = MAXCLI;
+
+	_poll = (struct pollfd *)malloc(sizeof *_poll * fd_size);
+	_poll[0].fd = _sockfd;
+	_poll[0].events = POLLIN;
+	_fd_count = 1;
+
+	while (1) {
+
+		int poll_count = poll(_poll, _fd_count, -1);
+
+		if (poll_count == -1)
+			throw eExc(strerror(errno));
+
+		for ( int i = 0; i < _fd_count; i++ ) {
+			// If something happened on fd i
+			if ( _poll[i].revents & POLLIN ) {
+				// New connection / New user
+				if ( _poll[i].fd == _sockfd )
+				{
+					this->acceptConn();
+					// Add new fd that made the connection
+					add_to_pfds(&_poll, _newfd, &_fd_count, &fd_size);
+					// Register new user
+					cout << "new user = " << _newfd << endl;
+					_users[i + 1] = User(_newfd);
+					break ;
+				}
+				else
+				{
+					cout << "fd = " << i << endl;
+					this->receiveData(i);
+					// this->sendData(i);
+				}
+			}
+		}
+	}
+}
+
+bool				Server::is_registered( User usr )
+{
+	if (_users.find(usr.getFd()) != _users.end())
+		return true;
+	
+	return false;
 }
