@@ -3,6 +3,12 @@
 
 # include "headers.hpp"
 
+# define ERR_NONICKNAMEGIVEN	431
+# define ERR_ERRONEUSNICKNAME	432
+# define ERR_NICKNAMEINUSE		433
+# define ERR_NEEDMOREPARAMS		461
+# define ERR_ALREADYREGISTRED	462
+
 class eExc : public exception {
 	
 	public:
@@ -15,6 +21,10 @@ class eExc : public exception {
 		const char * _strerror;
 };
 
-int display_usage( void );
+extern map<int, string>		err;	// errors list
+
+int		display_usage( void );
+void    define_errors( void );
+void    send_error( User u, int errn, string cmd );
 
 #endif

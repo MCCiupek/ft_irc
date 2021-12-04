@@ -9,35 +9,9 @@
 
 class Server {
 
-	public:
-
-		Server();
-		Server(string port, string pwd);
-		Server(string port, string pwd, string host, string port_nwk, string pwd_nwk); 
-		virtual ~Server(); 
-
-		Server & operator=(Server const& src); 
-
-		string const &		getPort() const;
-		string const &		getPassword() const;
-		string const &		getHost() const;
-		string const &		getPortNetwork() const;
-		string const &		getPasswordNetwork() const;
-
-		void				initConn();
-		void				run();
-
-		void				setServinfo();
-		int					setSocket( struct addrinfo * p );
-		int					bindPort( struct addrinfo * p );
-		void				listenHost();
-		int					receiveData( int i );
-		int					sendData( int i );
-		void				acceptConn();
-
 	private:
 
-		Server(Server const& src);
+		/*								MEMBERS VARIABLES							*/
 
 		int						_status;
 		int						_sockfd;
@@ -49,8 +23,50 @@ class Server {
 		string					_port_nwk;
 		string					_pwd_nwk;
 		struct addrinfo 		_hints;
-		struct addrinfo *		_servinfo;
-		struct pollfd *			_poll;
+		struct addrinfo			*_servinfo;
+		struct pollfd			*_poll;
+		map<int, User>			_users;
+
+		/*								CONSTRUCTORS								*/
+
+		Server(Server const& src);
+
+		/*								MEMBERS FUNCTIONS							*/
+
+		void					setServinfo( void );
+		int						setSocket( struct addrinfo * p );
+		int						bindPort( struct addrinfo * p );
+		void					listenHost( void );
+		int						receiveData( int i );
+		int						sendData( int i );
+		void					acceptConn( void );
+
+	public:
+
+		/*								CONSTRUCTORS								*/
+
+		Server( void );
+		Server(string port, string pwd);
+		Server(string port, string pwd, string host, string port_nwk, string pwd_nwk); 
+		virtual ~Server( void ); 
+
+		Server & operator=(Server const& src); 
+
+		/*								GETTERS										*/
+
+		string const 			&getPort( void ) const;
+		string const 			&getPassword( void ) const;
+		string const 			&getHost( void ) const;
+		string const 			&getPortNetwork( void ) const;
+		string const 			&getPasswordNetwork( void ) const;
+		map<int, User>			&getUsers( void );
+
+		/*								MEMBERS FUNCTIONS							*/
+
+		void					initConn( void );
+		void					run( void );
+		bool					is_registered( User usr );
+
 };
 
 ostream & operator<<(ostream & stream, Server &Server);

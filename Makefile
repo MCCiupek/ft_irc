@@ -1,26 +1,51 @@
-CC		=		clang++
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2021/12/03 19:40:40 by fmanetti          #+#    #+#              #
+#    Updated: 2021/12/03 20:51:35 by fmanetti         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
 
-FLAGS	=		-Wall -Wextra -Werror -std=c++98
+CC				=		clang++
 
-RM =			rm -rf
+FLAGS			=		-Wall -Wextra -Werror -std=c++98
+FSANITIZE		=		-fsanitize=address -g3
 
-DIR_HEADERS =	./includes/
+RM				=		rm -rf
 
-DIR_SRCS =		./srcs/
+DIR_HEADERS		=		./includes/
 
-SRC =			main.cpp \
-				errors.cpp \
-				utils.cpp \
-				parsing.cpp \
-				Server.cpp
+HEADER			=		colors.hpp		\
+						errors.hpp		\
+						headers.hpp		\
+						parsing.hpp		\
+						Server.hpp		\
+						User.hpp		\
+						utils.hpp
 
-SRCS =			$(addprefix $(DIR_SRCS), $(SRC))
+HEADERS			=		$(addprefix $(DIR_HEADERS), $(HEADER))
 
-OBJS =			$(SRCS:.cpp=.o)
+DIR_SRCS		=		./srcs/
 
-NAME =			ircserv
+SRC				=		main.cpp		\
+						errors.cpp		\
+						utils.cpp		\
+						parsing.cpp		\
+						Server.cpp		\
+						nick.cpp		\
+						user.cpp
 
-UNAME := 		$(shell uname)
+SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))
+
+OBJS			=		$(SRCS:.cpp=.o)
+
+NAME			=		ircserv
+
+UNAME			:=		$(shell uname)
 
 ifeq ($(UNAME),Darwin)
 	OS = -D MACOS
@@ -32,11 +57,11 @@ endif
 
 all:			$(NAME)
 
-$(NAME) :		echoCL $(OBJS) echoOK echoCS
-				$(CC) $(FLAGS) $(OS) $(OBJS) -o $(NAME)
+$(NAME) :		echoCL $(OBJS) $(HEADERS) echoOK echoCS
+				$(CC) $(FLAGS) $(FSANITIZE) $(OS) $(OBJS) -o $(NAME)
 
 %.o: %.cpp
-				$(CC) $(FLAGS) $(OS) -I $(DIR_HEADERS) -c $< -o $@
+				$(CC) $(FLAGS) $(FSANITIZE) $(OS) -I $(DIR_HEADERS) -c $< -o $@
 				printf "$(GREEN)██"
 
 norme:			fclean
@@ -83,6 +108,6 @@ echoOK:
 echoCS :
 	printf "$(GREEN)===> Compilation Success$(NC)\n"
 echoCLEAN :
-	printf "$(PURPLE)$(NAME) ===> Cleanning$(NC)\n"
+	printf "$(PURPLE)$(NAME) ===> Cleaning$(NC)\n"
 echoFCLEAN :
-	printf "$(PURPLE)$(NAME) ===> Cleanning Exec & Lib$(NC)\n"
+	printf "$(PURPLE)$(NAME) ===> Cleaning Exec & Lib$(NC)\n"
