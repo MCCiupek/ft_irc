@@ -38,3 +38,15 @@ void del_from_pfds(struct pollfd pfds[], int i, int *fd_count) {
     pfds[i] = pfds[*fd_count-1];
     (*fd_count)--;
 }
+
+ostream &operator<<(ostream & stream, const User &User) {
+
+	stream << "User: { ";
+	stream << "fd: " << User.getFd() << ", ";
+	stream << "username: " << User.getNick() << ", ";
+	stream << "hostname: " << User.getUsername() << ", ";
+	stream << "servername: " << User.getServername() << ", ";
+	stream << "realname: " << User.getRealName() << ", ";
+	stream << " }";
+	return stream;
+}

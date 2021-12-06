@@ -37,5 +37,4 @@ using namespace std;
 void		nick( vector<string> args, User &usr, Server &srv );
 void		user( vector<string> args, User &usr, Server &srv );
 
-
 #endif

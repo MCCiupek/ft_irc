@@ -179,12 +179,14 @@ int				Server::receiveData( int i ) {
 	
 	char    buf[BUFSIZE];
 	int 	nbytes;
+	string	nick = _users[_poll[i].fd].getNick();
 
 	memset(buf, 0, BUFSIZE);
 	nbytes = recv(_poll[i].fd, buf, BUFSIZE - 1, 0);
 	if (nbytes <= 0) {
 		if (nbytes == 0)
-			cout << BOLDWHITE << "❌ Client #" << _poll[i].fd << " gone away" << RESET << endl;
+			cout << BOLDWHITE << "❌ " << nick << " gone away" << RESET << endl;
+			//cout << BOLDWHITE << "❌ Client #" << _poll[i].fd << " gone away" << RESET << endl;
 		close(_poll[i].fd);
 		del_from_pfds(_poll, i, &_fd_count);
 		if (nbytes < 0)
@@ -192,9 +194,11 @@ int				Server::receiveData( int i ) {
 		return 1;
 	}
 
-	parsing(ft_split(buf, " "), _users[i], *this);
-
-	cout << "Client #" << _poll[i].fd << ": " << buf;
+	if (parsing(ft_split(buf, " "), _users[_poll[i].fd], *this))
+		return 1;
+	
+	//cout << "Client #" << _poll[i].fd << ": " << buf;
+	cout << nick << ": " << buf;
 	return 0;
 }
 
@@ -242,25 +246,31 @@ void				Server::run() {
 					// Add new fd that made the connection
 					add_to_pfds(&_poll, _newfd, &_fd_count, &fd_size);
 					// Register new user
-					cout << "new user = " << _newfd << endl;
-					_users[i + 1] = User(_newfd);
+					// cout << "new user = " << _newfd << endl;
+					//_users[i + 1] = User(_newfd);
+					_users[_newfd] = User(_newfd);
 					break ;
 				}
 				else
 				{
-					cout << "fd = " << i << endl;
-					this->receiveData(i);
-					// this->sendData(i);
+					// cout << "fd = " << i << endl;
+					if (!this->receiveData(i))
+						this->sendData(i);
 				}
 			}
 		}
 	}
 }
 
-bool				Server::is_registered( User usr )
+int				Server::is_registered( User usr )
 {
-	if (_users.find(usr.getFd()) != _users.end())
-		return true;
+	//cout << _users << endl;
+	for (map<int, User>::const_iterator it = _users.begin(); it != _users.end(); ++it) {
+		if ((it->second).getFd() == usr.getFd())
+			return it->first;
+	}
+	//if (_users.find(usr.getFd()) != _users.end())
+	//	return true;
 	
-	return false;
+	return -1;
 }
