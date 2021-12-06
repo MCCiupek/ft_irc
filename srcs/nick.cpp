@@ -61,7 +61,10 @@ void		nick( vector<string> args, User &usr, Server &srv )
 		}
 
 	if (srv.is_registered(usr)) {
-		cout << MAGENTA << usr.getNick() << ": Nick changed to " << args[1] << RESET << endl;
+		string	nick = usr.getNick();
+		if (nick == "")
+			nick = "Client #" + to_string(usr.getFd());
+		cout << MAGENTA << nick << ": Nick changed to " << args[1] << RESET << endl;
 		usr.setNick(args[1]);
 	}
 	// else

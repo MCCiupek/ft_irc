@@ -27,7 +27,7 @@ class User
 		{
 		}
 
-		User( int fd ) : _fd(fd), _nick("Client #" + to_string(fd)), _username(""), _hostname(""),
+		User( int fd ) : _fd(fd), _nick(""), _username(""), _hostname(""),
 			_servername(""), _realname("")
 		{
 		}

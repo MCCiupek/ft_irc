@@ -181,6 +181,8 @@ int				Server::receiveData( int i ) {
 	int 	nbytes;
 	string	nick = _users[_poll[i].fd].getNick();
 
+	if (nick == "")
+		nick = "Client #" + to_string(_poll[i].fd);
 	memset(buf, 0, BUFSIZE);
 	nbytes = recv(_poll[i].fd, buf, BUFSIZE - 1, 0);
 	if (nbytes <= 0) {
