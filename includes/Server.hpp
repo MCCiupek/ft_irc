@@ -65,7 +65,7 @@ class Server {
 
 		void					initConn( void );
 		void					run( void );
-		bool					is_registered( User usr );
+		int						is_registered( User usr );
 
 };
 

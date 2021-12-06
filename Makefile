@@ -13,7 +13,7 @@
 CC				=		clang++
 
 FLAGS			=		-Wall -Wextra -Werror -std=c++98
-FSANITIZE		=		-fsanitize=address -g3
+FSANITIZE		=		#-fsanitize=address -g3
 
 RM				=		rm -rf
 

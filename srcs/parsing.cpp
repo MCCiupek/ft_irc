@@ -33,10 +33,10 @@ string				to_upper( string s )
 	return (s);
 }
 
-void				parsing( vector<string> args, User &usr, Server &srv )
+int				parsing( vector<string> args, User &usr, Server &srv )
 {
-	(void)usr;
-	(void)srv;
+	//(void)usr;
+	//(void)srv;
 
 	args[0] = to_upper(args[0]);
 
@@ -44,15 +44,21 @@ void				parsing( vector<string> args, User &usr, Server &srv )
 	if (args.size() == 1)
 		args[0].pop_back();
 	
-	cout << args[0] << endl;
+	//cout << args[0] << endl;
 
 	map<string, FnPtr>	m;
 
 	m["NICK"] = nick;
 	m["USER"] = user;
 
-	cout << usr.getFd() << endl;
+	//cout << usr.getFd() << endl;
+	//cout << m << endl;
 
 	// Call function
-	m[args[0]](args, usr, srv);
+	if ( m.count(args[0]) > 0 ) {
+		m[args[0]](args, usr, srv);
+		return 1;
+	}
+
+	return 0;
 }

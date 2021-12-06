@@ -47,6 +47,7 @@ void		nick( vector<string> args, User &usr, Server &srv )
 		send_error(usr, ERR_ERRONEUSNICKNAME, implode(args.begin() + 1, args.end()));
 		return ;
 	}
+	args[1].pop_back();
 	if (srv.is_registered(usr) && usr.getNick() == args[1])
 		return ;
 
@@ -59,8 +60,10 @@ void		nick( vector<string> args, User &usr, Server &srv )
 			return ;
 		}
 
-	if (srv.is_registered(usr))
+	if (srv.is_registered(usr)) {
+		cout << MAGENTA << usr.getNick() << ": Nick changed to " << args[1] << RESET << endl;
 		usr.setNick(args[1]);
+	}
 	// else
 	// 	user();
 }
