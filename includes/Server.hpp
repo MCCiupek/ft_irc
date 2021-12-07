@@ -38,7 +38,6 @@ class Server {
 		int						bindPort( struct addrinfo * p );
 		void					listenHost( void );
 		int						receiveData( int i );
-		int						sendData( int i );
 		void					acceptConn( void );
 
 	public:
@@ -64,6 +63,7 @@ class Server {
 		/*								MEMBERS FUNCTIONS							*/
 
 		void					initConn( void );
+		int						sendData( int fd, const char * str=NULL );
 		void					run( void );
 		int						is_registered( User usr );
 

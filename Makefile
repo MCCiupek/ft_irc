@@ -25,7 +25,8 @@ HEADER			=		colors.hpp		\
 						parsing.hpp		\
 						Server.hpp		\
 						User.hpp		\
-						utils.hpp
+						utils.hpp		\
+						cmd.hpp
 
 HEADERS			=		$(addprefix $(DIR_HEADERS), $(HEADER))
 
@@ -36,8 +37,10 @@ SRC				=		main.cpp		\
 						utils.cpp		\
 						parsing.cpp		\
 						Server.cpp		\
-						nick.cpp		\
-						user.cpp
+						cmd/nick.cpp	\
+						cmd/user.cpp	\
+						cmd/ping.cpp	\
+						cmd/pong.cpp
 
 SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))
 

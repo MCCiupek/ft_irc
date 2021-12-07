@@ -17,6 +17,8 @@ class User
 		string		_hostname;
 		string		_servername;
 		string		_realname;
+		time_t *	_last_act;
+		bool		_ping_status;
 
 	public:
 
@@ -92,6 +94,16 @@ class User
 			return _realname;
 		}
 
+		time_t 	*			getLastAct( void ) const
+		{
+			return _last_act;
+		}
+
+		bool const			&getPingStatus( void ) const
+		{
+			return _ping_status;
+		}
+
 		/*								SETTERS										*/
 
 		void				setFd( int fd )
@@ -123,6 +135,17 @@ class User
 		{
 			_realname = realname;
 		}
+
+		void				setLastAct( time_t last_act )
+		{
+			_last_act = &last_act;
+		}
+
+		void				setPingStatus( bool ping_status )
+		{
+			_ping_status = ping_status;
+		}
+
 
 		/*								MEMBERS FUNCTIONS							*/
 };

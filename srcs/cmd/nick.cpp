@@ -1,7 +1,5 @@
 #include "headers.hpp"
 
-# include "User.hpp"
-
 /*
 	Command: NICK
 	Parameters: <nickname>

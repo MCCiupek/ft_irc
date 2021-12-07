@@ -14,6 +14,7 @@
 # include <iterator>
 # include <cerrno>
 # include <cstring>
+# include <ctime>
 
 # include <sys/types.h>
 # include <sys/socket.h>
@@ -33,8 +34,6 @@ using namespace std;
 # include "errors.hpp"
 # include "parsing.hpp"
 # include "Server.hpp"
-
-void		nick( vector<string> args, User &usr, Server &srv );
-void		user( vector<string> args, User &usr, Server &srv );
+# include "cmd.hpp"
 
 #endif

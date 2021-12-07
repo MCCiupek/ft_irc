@@ -161,14 +161,16 @@ void				Server::initConn() {
 	std::cout << YELLOW << "Listening for clients ..." << RESET << std::endl;
 }
 
-int				Server::sendData( int i ) {
+int				Server::sendData( int fd, const char * str ) {
 	
 	int		dest_fd;
 	char    buf[BUFSIZE];
 
+	if ( str )
+		strcpy(buf, str);
 	for ( int j = 0; j < _fd_count; j++ ) {
 		dest_fd = _poll[j].fd;
-		if ( dest_fd != _sockfd && dest_fd != _poll[i].fd )
+		if ( dest_fd != _sockfd && dest_fd != fd )
 			if ( send(dest_fd, buf, BUFSIZE - 1, 0) == -1 )
 				throw eExc(strerror(errno));
 	}
@@ -257,7 +259,7 @@ void				Server::run() {
 				{
 					// cout << "fd = " << i << endl;
 					if (!this->receiveData(i))
-						this->sendData(i);
+						this->sendData( _poll[i].fd );
 				}
 			}
 		}

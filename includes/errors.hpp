@@ -3,6 +3,8 @@
 
 # include "headers.hpp"
 
+# define ERR_NOSUCHSERVER		402
+# define ERR_NOORIGIN			409
 # define ERR_NONICKNAMEGIVEN	431
 # define ERR_ERRONEUSNICKNAME	432
 # define ERR_NICKNAMEINUSE		433

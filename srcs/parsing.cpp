@@ -50,6 +50,8 @@ int				parsing( vector<string> args, User &usr, Server &srv )
 
 	m["NICK"] = nick;
 	m["USER"] = user;
+	m["PING"] = ping;
+	m["PONG"] = pong;
 
 	//cout << usr.getFd() << endl;
 	//cout << m << endl;
