@@ -34,6 +34,7 @@ using namespace std;
 # include "errors.hpp"
 # include "parsing.hpp"
 # include "Server.hpp"
+# include "Channel.hpp"
 # include "cmd.hpp"
 
 #endif

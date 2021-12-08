@@ -7,5 +7,6 @@ void		nick( vector<string> args, User &usr, Server &srv );
 void		user( vector<string> args, User &usr, Server &srv );
 void		ping( vector<string> args, User &usr, Server &srv );
 void		pong( vector<string> args, User &usr, Server &srv );
+void		who( vector<string> args, User &usr, Server &srv );
 
 #endif

@@ -26,6 +26,7 @@ class Server {
 		struct addrinfo			*_servinfo;
 		struct pollfd			*_poll;
 		map<int, User>			_users;
+		vector<Channel*>		_channels;
 
 		/*								CONSTRUCTORS								*/
 
@@ -37,6 +38,7 @@ class Server {
 		int						setSocket( struct addrinfo * p );
 		int						bindPort( struct addrinfo * p );
 		void					listenHost( void );
+		int						sendData( int fd );
 		int						receiveData( int i );
 		void					acceptConn( void );
 
@@ -63,7 +65,6 @@ class Server {
 		/*								MEMBERS FUNCTIONS							*/
 
 		void					initConn( void );
-		int						sendData( int fd, const char * str=NULL );
 		void					run( void );
 		int						is_registered( User usr );
 

@@ -161,13 +161,11 @@ void				Server::initConn() {
 	std::cout << YELLOW << "Listening for clients ..." << RESET << std::endl;
 }
 
-int				Server::sendData( int fd, const char * str ) {
+int				Server::sendData( int fd ) {
 	
 	int		dest_fd;
 	char    buf[BUFSIZE];
 
-	if ( str )
-		strcpy(buf, str);
 	for ( int j = 0; j < _fd_count; j++ ) {
 		dest_fd = _poll[j].fd;
 		if ( dest_fd != _sockfd && dest_fd != fd )

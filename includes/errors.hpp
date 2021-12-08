@@ -3,6 +3,9 @@
 
 # include "headers.hpp"
 
+# define RPL_WHOREPLY			352
+# define RPL_ENDOFWHO			315
+
 # define ERR_NOSUCHSERVER		402
 # define ERR_NOORIGIN			409
 # define ERR_NONICKNAMEGIVEN	431

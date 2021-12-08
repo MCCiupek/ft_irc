@@ -19,25 +19,31 @@ class User
 		string		_realname;
 		time_t *	_last_act;
 		bool		_ping_status;
+		bool		_is_oper;
+		bool		_is_away;
+		bool		_is_visible;
 
 	public:
 
 		/*								CONSTRUCTORS								*/
 
 		User( void ) : _fd(-1), _nick(""), _username(""), _hostname(""),
-			_servername(""), _realname("")
+			_servername(""), _realname(""), _ping_status(false), _is_oper(false),
+			_is_away(false), _is_visible(true)
 		{
 		}
 
 		User( int fd ) : _fd(fd), _nick(""), _username(""), _hostname(""),
-			_servername(""), _realname("")
+			_servername(""), _realname(""), _ping_status(false), _is_oper(false),
+			_is_away(false), _is_visible(true)
 		{
 		}
 
 		User( int fd, string nick, string username, string hostname,
-			string servername, string realname ) : _fd(fd), _nick(nick),
+			string servername, string realname, bool ping_status, bool is_oper ) : _fd(fd), _nick(nick),
 			_username(username), _hostname(hostname), _servername(servername),
-			_realname(realname)
+			_realname(realname), _ping_status(ping_status), _is_oper(is_oper),
+			_is_away(false), _is_visible(true)
 		{
 		}
 
@@ -104,6 +110,21 @@ class User
 			return _ping_status;
 		}
 
+		bool const			&getIsOper( void ) const
+		{
+			return _is_oper;
+		}
+
+		bool const			&getIsAway( void ) const
+		{
+			return _is_away;
+		}
+
+		bool const			&getIsVisible( void ) const
+		{
+			return _is_visible;
+		}
+
 		/*								SETTERS										*/
 
 		void				setFd( int fd )
@@ -144,6 +165,21 @@ class User
 		void				setPingStatus( bool ping_status )
 		{
 			_ping_status = ping_status;
+		}
+
+		void				setIsOper( bool is_oper )
+		{
+			_is_oper = is_oper;
+		}
+
+		void				setIsAway( bool is_away )
+		{
+			_is_away = is_away;
+		}
+
+		void				setIsVisible( bool is_visible )
+		{
+			_is_visible = is_visible;
 		}
 
 

@@ -15,7 +15,6 @@ int main( int argc, char *argv[] ) {
 		} else {
 			ircserv = Server(p["port"], p["pwd"]);
 		}
-		//cout << ircserv;
 		ircserv.initConn();
 		ircserv.run();
 	}

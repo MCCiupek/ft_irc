@@ -35,6 +35,6 @@ void		ping( vector<string> args, User &usr, Server &srv ) {
 		send_error(usr, ERR_NOSUCHSERVER, args[2]);
 		return ;
 	}
-	string answer = ":" + srv.getHost() + " PONG " + srv.getHost() + " " + args[1] + "\n";
-	srv.sendData(usr.getFd(), answer.c_str());
+	string reply = ":" + srv.getHost() + " PONG " + srv.getHost() + " " + args[1] + "\n";
+	send(usr.getFd(), reply.c_str(), reply.length(), 0);
 }
