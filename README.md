@@ -6,6 +6,8 @@
 
 The objective of this project is to write a custom IRC server working with a real IRC client. 
 
+IRC is one of the earliest network protocols for text messaging and multi-participant chatting. It remains a popular standard and still sees heavy use in certain communities, specially the open source software community.
+
 Internet is ruled by solid and standards protocols that allow a strong interaction between every connected computer. Hence our IRC server will have to respect these protocols.
 
 ## Skills
