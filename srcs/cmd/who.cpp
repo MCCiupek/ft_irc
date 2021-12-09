@@ -72,8 +72,8 @@ static bool		has_permission(const string &query, User &usr, User &cli, Server &s
 
 	get_infos(query, nick, user, host);
 	if ((ft_match(cli.getNick(), nick) && ft_match(cli.getUsername(), user) && ft_match(cli.getHostname(), host))
-		&& ((cli.getIsVisible() == true || /*user_on_same_channel(*cli, *usr) ||*/ &cli == &usr)
-				|| usr.getIsOper() == true))
+		&& ((cli.isVisible() == true || /*user_on_same_channel(*cli, *usr) ||*/ &cli == &usr)
+				|| usr.isOper() == true))
 		return true;
 	return false;
 }
@@ -84,7 +84,7 @@ static int	who_client(const std::string &query, User &usr, Server &srv, char c) 
 
 	for ( map<int, User>::iterator it = cli_list.begin(); it != cli_list.end(); ++it ) {
 		User cli = it->second;
-		if ( c == 'o' && cli.getIsOper() )
+		if ( c == 'o' && cli.isOper() )
 			continue ;
 		else if ( has_permission(query, usr, cli, srv) == true ) {
 			
@@ -99,19 +99,22 @@ static int	who_client(const std::string &query, User &usr, Server &srv, char c) 
 				reply += "G";
 			else
 				reply += "H";
-			if ( cli.getIsOper() )
+			if ( cli.isOper() )
 				reply += "*";
 			reply += " ";
 			reply += string(":0") + " ";
 			reply += cli.getRealName();
 		
-			send(usr.getFd(), reply.c_str(), reply.length(), 0);
+			send_reply(usr, 352, RPL_WHOREPLY(reply));
 		}
 	}
+	send_reply(usr, 315, RPL_ENDOFWHO(query));
 	return 1;
 }
 
 int				who_channel(const std::string &query, User &usr, Server &srv, char c) {
+	
+	// TODO: Implement who channel
 	(void)query;
 	(void)usr;
 	(void)srv;
@@ -121,6 +124,7 @@ int				who_channel(const std::string &query, User &usr, Server &srv, char c) {
 
 void		who( vector<string> args, User &usr, Server &srv ) {
 
+	// TODO: handle multiple <name> calls
 	string	mask = "#&!+";
 	char	opt = 'n';
 

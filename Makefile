@@ -37,11 +37,14 @@ SRC				=		main.cpp		\
 						utils.cpp		\
 						parsing.cpp		\
 						Server.cpp		\
+						Channel.cpp		\
 						cmd/nick.cpp	\
 						cmd/user.cpp	\
 						cmd/ping.cpp	\
 						cmd/pong.cpp	\
-						cmd/who.cpp
+						cmd/who.cpp		\
+						cmd/mode.cpp	\
+						cmd/join.cpp
 
 SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))
 

@@ -7,6 +7,8 @@
 //                            	Server Class                                  //
 // ************************************************************************** //
 
+class Channel;
+
 class Server {
 
 	private:
@@ -67,6 +69,8 @@ class Server {
 		void					initConn( void );
 		void					run( void );
 		int						is_registered( User usr );
+		Channel *				getChannelByName( string channel );
+		Channel *				getChannelByKey( string key );
 
 };
 

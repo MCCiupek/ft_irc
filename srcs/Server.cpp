@@ -276,3 +276,21 @@ int				Server::is_registered( User usr )
 	
 	return -1;
 }
+
+Channel *				Server::getChannelByName( string channel ) {
+
+	for (vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
+		if ( (*it)->getName() == channel )
+			return *it;
+	}
+	return NULL;
+}
+
+Channel *				Server::getChannelByKey( string key ) {
+
+	for (vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
+		if ( (*it)->getHasKey() && (*it)->getKey() == key )
+			return *it;
+	}
+	return NULL;
+}

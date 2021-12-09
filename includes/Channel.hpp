@@ -7,6 +7,8 @@
 //                            	Channel Class                                 //
 // ************************************************************************** //
 
+class Server;
+
 class Channel {
 
 	private:
@@ -21,6 +23,7 @@ class Channel {
         bool			_has_topic;
         vector<User*>	_members;
         User*			_channel_oper;
+		string			_mode;
 
 		/*								CONSTRUCTORS								*/
 
@@ -49,6 +52,7 @@ class Channel {
 		bool const 				&getHasTopic( void ) const;
 		vector<User*> const 	&getMembers( void ) const;
 		User *					getOperator( void );
+		string const			&getMode( void ) const;
 
 		/*								SETTERS										*/
 
@@ -56,6 +60,7 @@ class Channel {
         void    				setKey(string const & key);
         void    				setTopic(string const & topic);
         void    				unsetTopic();
+		void					setMode( string mode );
 
 		/*								MEMBERS FUNCTIONS							*/
 
