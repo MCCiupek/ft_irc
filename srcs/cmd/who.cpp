@@ -68,6 +68,7 @@ static bool		has_permission(const string &query, User &usr, User &cli, Server &s
 	string nick;
 	string user;
 	string host;
+	(void)srv;
 
 	get_infos(query, nick, user, host);
 	if ((ft_match(cli.getNick(), nick) && ft_match(cli.getUsername(), user) && ft_match(cli.getHostname(), host))
@@ -78,41 +79,44 @@ static bool		has_permission(const string &query, User &usr, User &cli, Server &s
 }
 
 static int	who_client(const std::string &query, User &usr, Server &srv, char c) {
-	
+
 	map<int, User>			cli_list = srv.getUsers();
 
-	for (map<int, User>::iterator it = cli_list.begin(); it != cli_list.end(); ++it) {
+	for ( map<int, User>::iterator it = cli_list.begin(); it != cli_list.end(); ++it ) {
 		User cli = it->second;
-		if (c == 'o' && cli.getIsOper())
-			;
-		else if (has_permission(query, usr, cli, srv) == true)
-		{
-			std::string reply;
+		if ( c == 'o' && cli.getIsOper() )
+			continue ;
+		else if ( has_permission(query, usr, cli, srv) == true ) {
+			
+			string reply;
 
 			reply += string("*") + " ";
 			reply += cli.getUsername() + " ";
 			reply += cli.getHostname() + " ";
 			reply += srv.getHost() + " ";
 			reply += cli.getNick() + " ";
-			{
-				if (cli.getIsAway())
-					reply += "G";
-				else
-					reply += "H";
-				if (cli.getIsOper())
-					reply += "*";
-				reply += " ";
-			}
+			if ( cli.getIsAway() )
+				reply += "G";
+			else
+				reply += "H";
+			if ( cli.getIsOper() )
+				reply += "*";
+			reply += " ";
 			reply += string(":0") + " ";
 			reply += cli.getRealName();
 		
 			send(usr.getFd(), reply.c_str(), reply.length(), 0);
 		}
 	}
+	return 1;
 }
 
 int				who_channel(const std::string &query, User &usr, Server &srv, char c) {
-
+	(void)query;
+	(void)usr;
+	(void)srv;
+	(void)c;
+	return 0;
 }
 
 void		who( vector<string> args, User &usr, Server &srv ) {

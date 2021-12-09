@@ -40,7 +40,8 @@ SRC				=		main.cpp		\
 						cmd/nick.cpp	\
 						cmd/user.cpp	\
 						cmd/ping.cpp	\
-						cmd/pong.cpp
+						cmd/pong.cpp	\
+						cmd/who.cpp
 
 SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))
 

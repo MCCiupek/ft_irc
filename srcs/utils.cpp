@@ -51,8 +51,10 @@ bool ft_match( string const &str, string const &pattern ) {
 }
 
 void get_infos(const string &str, string &nickname, string &username, string &hostname) {
-	size_t			pos;
-	unsigned char	count = 0;
+	
+	//size_t			pos;
+	//unsigned char	count = 0;
+	(void)str;
 	
 	nickname = "*";
 	username = "*";

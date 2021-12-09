@@ -29,12 +29,12 @@
 using namespace std;
 
 # include "User.hpp"
+# include "Channel.hpp"
 # include "utils.hpp"
 # include "colors.hpp"
 # include "errors.hpp"
 # include "parsing.hpp"
 # include "Server.hpp"
-# include "Channel.hpp"
 # include "cmd.hpp"
 
 #endif
