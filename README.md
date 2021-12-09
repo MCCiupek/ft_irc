@@ -30,3 +30,4 @@ IRC client programs connect to an IRC server to access a specific channel. IRC s
 * [Internet Relay Chat: Server Protocol](https://www.irchelp.org/protocol/rfc/rfc2813.txt)
 * [How sockets work](https://www.ibm.com/docs/en/i/7.2?topic=programming-how-sockets-work)
 * [Internet Relay Chat: Client Protocol used by irssi](https://datatracker.ietf.org/doc/html/rfc1459)
+* [The UChicago χ-Projects: chirc](http://chi.cs.uchicago.edu/chirc/irc.html)
