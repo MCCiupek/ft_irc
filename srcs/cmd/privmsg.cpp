@@ -27,11 +27,29 @@
 		RPL_AWAY
 */
 
-void		privmsg( vector<string> args, User &usr, Server &srv ) {
+void		send_privmsg( string recv, string txt, User &usr, Server &srv ) {
 
 	string 	mask = "$#";
 	User *	receiver;
 	
+	if ( mask.find(recv[0], 0) == string::npos ) {
+		receiver = srv.getUserByNick(recv);
+		if ( !receiver ) {
+			send_error(usr, ERR_NOSUCHNICK, recv);
+			return ;
+		}
+		string msg = txt + "\n";
+		send(receiver->getFd(), &msg, msg.length(), 0);
+	}
+	else {
+		// TODO: find users by server/channel and loop over matching users.
+		// Check that usr is oper.
+		return;
+	}
+}
+
+void		privmsg( vector<string> args, User &usr, Server &srv ) {
+
 	if (args.size() < 2) {
 		send_error(usr, ERR_NORECIPIENT, args[0]);
 		return ;
@@ -40,17 +58,9 @@ void		privmsg( vector<string> args, User &usr, Server &srv ) {
 		send_error(usr, ERR_NOTEXTTOSEND, args[0]);
 		return ;
 	}
-	if ( mask.find(args[1][0], 0) == string::npos ) {
-		receiver = srv.getUserByNick(args[1]);
-		if ( !receiver ) {
-			send_error(usr, ERR_NOSUCHNICK, args[0]);
-			return ;
-		}
-		string msg = args[2] + "\n";
-		send(receiver->getFd(), &msg, msg.length(), 0);
-	}
-	else {
-		// TODO: find users by server/channel and loop over matching users.
-		// Check that usr is oper.
-	}
+
+	vector<string> recvs = ft_split(args[1], ",");
+
+	for (vector<string>::iterator it = recvs.begin(); it != recvs.end(); it++)
+		send_privmsg(*it, args[2], usr, srv);
 }
