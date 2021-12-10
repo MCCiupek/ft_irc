@@ -38,7 +38,7 @@ int				parsing( vector<string> args, User &usr, Server &srv )
 	//(void)usr;
 	//(void)srv;
 
-	args[0] = to_upper(args[0]);
+	transform(args[0].begin(), args[0].end(), args[0].begin(), ::toupper);
 
 	// Remove \n at the end of command
 	if (args.size() == 1)
