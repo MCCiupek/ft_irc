@@ -55,6 +55,7 @@ int				parsing( vector<string> args, User &usr, Server &srv )
 	m["JOIN"] = join;
 	m["MODE"] = ping;
 	m["WHO"] = who;
+	m["PRIVMSG"] = privmsg;
 
 	//cout << usr.getFd() << endl;
 	//cout << m << endl;

@@ -294,3 +294,13 @@ Channel *				Server::getChannelByKey( string key ) {
 	}
 	return NULL;
 }
+
+User *				Server::getUserByNick( string nick ) {
+
+	for (map<int, User>::iterator it = _users.begin(); it != _users.end(); ++it) {
+		User * usr = &it->second;
+		if ( usr->getNick() == nick )
+			return usr;
+	}
+	return NULL;
+}

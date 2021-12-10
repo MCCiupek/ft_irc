@@ -193,14 +193,14 @@ void		usr_mode( vector<string> args, User &usr, Server &srv ) {
 
 void		mode( vector<string> args, User &usr, Server &srv ) {
 	
-	string cnl_id = "#&";
+	string mask = "#&!+";
 
 	if (args.size() < 2) {
 		send_error(usr, ERR_NEEDMOREPARAMS, args[0]);
 		return ;
 	}
 
-	if ( cnl_id.find(args[0]) != string::npos )
+	if ( mask.find(args[0]) != string::npos )
 		cnl_mode(args, usr, srv);
 	else
 		usr_mode(args, usr, srv);
