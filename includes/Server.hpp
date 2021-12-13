@@ -13,6 +13,7 @@ class Server {
 
 		/*								MEMBERS VARIABLES							*/
 
+		string					_name;
 		int						_status;
 		int						_sockfd;
 		int						_newfd;
@@ -26,6 +27,7 @@ class Server {
 		struct addrinfo			*_servinfo;
 		struct pollfd			*_poll;
 		map<int, User>			_users;
+		string					_motd;
 
 		/*								CONSTRUCTORS								*/
 
@@ -47,19 +49,22 @@ class Server {
 
 		Server( void );
 		Server(string port, string pwd);
-		Server(string port, string pwd, string host, string port_nwk, string pwd_nwk); 
+		Server(string port, string pwd, string host, string port_nwk, string pwd_nwk,
+			string motd);
 		virtual ~Server( void ); 
 
 		Server & operator=(Server const& src); 
 
 		/*								GETTERS										*/
 
+		string const			&getName( void ) const;
 		string const 			&getPort( void ) const;
 		string const 			&getPassword( void ) const;
 		string const 			&getHost( void ) const;
 		string const 			&getPortNetwork( void ) const;
 		string const 			&getPasswordNetwork( void ) const;
-		map<int, User>			&getUsers( void );
+		map<int, User> const	&getUsers( void ) const;
+		string const			&getMotd( void ) const;
 
 		/*								MEMBERS FUNCTIONS							*/
 

@@ -17,25 +17,26 @@ class User
 		string		_hostname;
 		string		_servername;
 		string		_realname;
+		bool		_isset;			// If USER command is been used
 
 	public:
 
 		/*								CONSTRUCTORS								*/
 
 		User( void ) : _fd(-1), _nick(""), _username(""), _hostname(""),
-			_servername(""), _realname("")
+			_servername(""), _realname(""), _isset(false)
 		{
 		}
 
-		User( int fd ) : _fd(fd), _nick("Client #" + to_string(fd)), _username(""), _hostname(""),
-			_servername(""), _realname("")
+		User( int fd ) : _fd(fd), _nick(""), _username(""), _hostname(""),
+			_servername(""), _realname(""), _isset(false)
 		{
 		}
 
 		User( int fd, string nick, string username, string hostname,
 			string servername, string realname ) : _fd(fd), _nick(nick),
 			_username(username), _hostname(hostname), _servername(servername),
-			_realname(realname)
+			_realname(realname), _isset(false)
 		{
 		}
 
@@ -92,6 +93,11 @@ class User
 			return _realname;
 		}
 
+		bool const			&getIsSet( void ) const
+		{
+			return _isset;
+		}
+
 		/*								SETTERS										*/
 
 		void				setFd( int fd )
@@ -122,6 +128,11 @@ class User
 		void				setRealName( string realname )
 		{
 			_realname = realname;
+		}
+
+		void				setIsSet( bool isset )
+		{
+			_isset = isset;
 		}
 
 		/*								MEMBERS FUNCTIONS							*/

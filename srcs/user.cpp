@@ -23,7 +23,7 @@ void	user( vector<string> args, User &usr, Server &srv )
 		send_error(usr, ERR_NEEDMOREPARAMS, args[0]);
 		return ;
 	}
-	if (srv.is_registered(usr))
+	if (usr.getIsSet())
 	{
 		send_error(usr, ERR_ALREADYREGISTRED, usr.getNick());
 		return ;
@@ -33,4 +33,11 @@ void	user( vector<string> args, User &usr, Server &srv )
 	usr.setHostname(args[2]);
 	usr.setServername(args[3]);
 	usr.setRealName(args[4]);
+	usr.setIsSet(true);
+
+	if (!usr.getNick().empty())
+	{
+		cout << GREEN << "User #" << usr.getFd() << " registred as " << usr.getNick() << RESET << endl;
+		messageoftheday(srv, usr);
+	}
 }
