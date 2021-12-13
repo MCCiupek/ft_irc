@@ -27,32 +27,37 @@ void    define_errors( void )
 
 void    send_error( User u, int errn, string arg )
 {
-    string  buf = ":irc.local ";
+	ostringstream s;
+    //string  buf = ":irc.local ";
 
-	buf += to_string(errn);
-	buf += " * ";
-	buf += arg;
-	buf += err[errn];
-	buf += "\r\n";
+	s << ":irc.local " << errn << " * " << arg << err[errn] << "\r\n";
+	// buf += itoa(errn);//.c_str();
+	// buf += " * ";
+	// buf += arg;
+	// buf += err[errn];
+	// buf += "\r\n";
 
-	char *str = &buf[0];
+	//char *str = &buf[0];
+	string msg = s.str();
 
-	if ( send(u.getFd(), str, buf.size(), 0) == -1 )
+	if ( send(u.getFd(), &msg[0], msg.size(), 0) == -1 )
 		throw eExc(strerror(errno));
 }
 
 void    send_reply( User u, int rpln, string reply )
 {
-    string  buf = ":irc.local ";
+	ostringstream s;
+    //string  buf = ":irc.local ";
 
-	buf += to_string(rpln);
-	buf += " ";
-	buf += u.getNick();
-	buf += " ";
-	buf += reply;
+	s << ":irc.local " << rpln << " " << u.getNick() << " " << reply;
+	// buf += itoa(rpln);//.c_str();
+	// buf += " ";
+	// buf += u.getNick();
+	// buf += " ";
+	// buf += reply;
 
-	char *str = &buf[0];
+	string msg = s.str();
 
-	if ( send(u.getFd(), str, buf.size(), 0) == -1 )
+	if ( send(u.getFd(), &msg[0], msg.size(), 0) == -1 )
 		throw eExc(strerror(errno));
 }

@@ -35,6 +35,8 @@ bool		is_alpha( string s )
 
 void		nick( vector<string> args, User &usr, Server &srv )
 {
+	ostringstream s;
+
 	if (args.size() == 1)
 	{
 		send_error(usr, ERR_NEEDMOREPARAMS, args[0]);
@@ -45,7 +47,8 @@ void		nick( vector<string> args, User &usr, Server &srv )
 		send_error(usr, ERR_ERRONEUSNICKNAME, implode(args.begin() + 1, args.end()));
 		return ;
 	}
-	args[1].pop_back();
+	//args[1].pop_back(); --> C++11
+	args[1].erase(args[1].end() - 1);
 	if (srv.is_registered(usr) && usr.getNick() == args[1])
 		return ;
 
@@ -60,8 +63,10 @@ void		nick( vector<string> args, User &usr, Server &srv )
 
 	if (srv.is_registered(usr)) {
 		string	nick = usr.getNick();
-		if (nick == "")
-			nick = "Client #" + to_string(usr.getFd());
+		if (nick == "") {
+			s << "Client #" << usr.getFd();
+			nick = s.str();
+		}
 		cout << MAGENTA << nick << ": Nick changed to " << args[1] << RESET << endl;
 		usr.setNick(args[1]);
 	}

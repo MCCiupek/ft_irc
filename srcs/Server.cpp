@@ -177,12 +177,15 @@ int				Server::sendData( int fd ) {
 
 int				Server::receiveData( int i ) {
 	
-	char    buf[BUFSIZE];
-	int 	nbytes;
-	string	nick = _users[_poll[i].fd].getNick();
+	char    		buf[BUFSIZE];
+	int 			nbytes;
+	ostringstream	s;
+	string			nick = _users[_poll[i].fd].getNick();
 
-	if (nick == "")
-		nick = "Client #" + to_string(_poll[i].fd);
+	if (nick == "") {
+		s << "Client #" << _poll[i].fd;
+		nick = s.str();
+	}
 	memset(buf, 0, BUFSIZE);
 	nbytes = recv(_poll[i].fd, buf, BUFSIZE - 1, 0);
 	if (nbytes <= 0) {

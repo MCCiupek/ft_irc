@@ -42,7 +42,8 @@ int				parsing( vector<string> args, User &usr, Server &srv )
 
 	// Remove \n at the end of command
 	if (args.size() == 1)
-		args[0].pop_back();
+		args[0].erase(args[0].end() - 1);
+		// args[0].pop_back(); --> C++11
 	
 	//cout << args[0] << endl;
 
