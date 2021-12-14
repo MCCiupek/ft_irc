@@ -21,6 +21,7 @@ class User
 		time_t *	_last_act;
 		bool		_ping_status;
 		bool		_is_away;
+		bool		_isset;			// If USER command is been used
 
 	public:
 
@@ -28,13 +29,13 @@ class User
 
 		User( void ) : _fd(-1), _nick(""), _username(""), _hostname(""),
 			_servername(""), _realname(""), _mode(""), _ping_status(false),
-			_is_away(false)
+			_is_away(false), _isset(false)
 		{
 		}
 
 		User( int fd ) : _fd(fd), _nick(""), _username(""), _hostname(""),
 			_servername(""), _realname(""), _mode(""), _ping_status(false),
-			_is_away(false)
+			_is_away(false), _isset(false)
 		{
 		}
 
@@ -42,7 +43,7 @@ class User
 			string servername, string realname, string mode, bool ping_status ) : _fd(fd), _nick(nick),
 			_username(username), _hostname(hostname), _servername(servername),
 			_realname(realname), _mode(mode), _ping_status(ping_status),
-			_is_away(false)
+			_is_away(false), _isset(false)
 		{
 		}
 
@@ -118,6 +119,11 @@ class User
 		{
 			return _is_away;
 		}
+		
+		bool const			&getIsSet( void ) const
+		{
+			return _isset;
+		}
 
 		/*								SETTERS										*/
 
@@ -171,6 +177,11 @@ class User
 			_is_away = is_away;
 		}
 
+
+		void				setIsSet( bool isset )
+		{
+			_isset = isset;
+		}
 
 		/*								MEMBERS FUNCTIONS							*/
 		

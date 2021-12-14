@@ -6,7 +6,7 @@
 #    By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/03 19:40:40 by fmanetti          #+#    #+#              #
-#    Updated: 2021/12/03 20:51:35 by fmanetti         ###   ########.fr        #
+#    Updated: 2021/12/13 19:08:17 by fmanetti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -45,7 +45,8 @@ SRC				=		main.cpp		\
 						cmd/who.cpp		\
 						cmd/mode.cpp	\
 						cmd/join.cpp	\
-						cmd/privmsg.cpp
+						cmd/privmsg.cpp	\
+						conf.cpp
 
 SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))
 

@@ -16,6 +16,7 @@ void    define_errors( void )
 	err[ERR_NOORIGIN] = ":No origin specified";
 	err[ERR_NORECIPIENT] = " :No recipient given";
 	err[ERR_NOTEXTTOSEND] = " :No text to send";
+	err[ERR_NOMOTD] = " :MOTD File is missing";
 	err[ERR_NONICKNAMEGIVEN] = " :No nickname given";
 	err[ERR_ERRONEUSNICKNAME] = " :Erroneous nickname";
 	err[ERR_NICKNAMEINUSE] = " :Nickname is already in use";
@@ -48,8 +49,9 @@ void    send_reply( User u, int rpln, string reply )
 {
 	ostringstream s;
     //string  buf = ":irc.local ";
+    //string  buf = ":mfirc ";
 
-	s << ":irc.local " << rpln << " " << u.getNick() << " " << reply;
+	s << ":mfirc " << rpln << " " << u.getNick() << " " << reply;
 	// buf += itoa(rpln);//.c_str();
 	// buf += " ";
 	// buf += u.getNick();

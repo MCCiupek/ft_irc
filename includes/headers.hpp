@@ -4,6 +4,7 @@
 # define BACKLOG 5
 # define MAXCLI 5
 # define BUFSIZE 128
+# define SERVER_VERSION "0.7.13"
 
 # include <iostream>
 # include <vector>
@@ -16,6 +17,7 @@
 # include <cstring>
 # include <ctime>
 # include <algorithm>
+# include <fstream>
 
 # include <sys/types.h>
 # include <sys/socket.h>
@@ -39,5 +41,8 @@ using namespace std;
 # include "parsing.hpp"
 # include "Server.hpp"
 # include "cmd.hpp"
+
+//void		nick( vector<string> args, User &usr, Server &srv );
+//void		user( vector<string> args, User &usr, Server &srv );
 
 #endif

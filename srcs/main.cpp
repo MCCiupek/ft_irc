@@ -11,15 +11,16 @@ int main( int argc, char *argv[] ) {
 
 		Server ircserv;
 		if ( p.size() > 2 ) {
-			ircserv = Server(p["port"], p["pwd"], p["host"], p["port_nwk"], p["pwd_nwk"]);
+			ircserv = Server(p["PORT"], p["PWD"], p["HOST"], p["PORT_NWK"], p["PWD_NWK"],
+				p["MOTD"]);
 		} else {
-			ircserv = Server(p["port"], p["pwd"]);
+			ircserv = Server(p["PORT"], p["PWD"]);
 		}
 		ircserv.initConn();
 		ircserv.run();
 	}
 	catch (const exception& e) {
-		cerr << BOLDRED << "Error: " << RESET << e.what() << endl;
+		cerr << BOLDRED << " " << RESET << e.what() << endl;
 		return errno;
 	}
 

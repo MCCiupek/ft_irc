@@ -24,15 +24,6 @@ string		implode( vector<string>::iterator begin, vector<string>::iterator end )
 	return (str.str());
 }
 
-bool		is_alpha( string s )
-{
-	for (string::iterator it = s.begin(); it != s.end(); it++)
-		if (!isalpha(*it))
-			return true;
-	
-	return false;
-}
-
 void		nick( vector<string> args, User &usr, Server &srv )
 {
 	ostringstream s;
@@ -42,7 +33,7 @@ void		nick( vector<string> args, User &usr, Server &srv )
 		send_error(usr, ERR_NEEDMOREPARAMS, args[0]);
 		return ;
 	}
-	else if (args.size() > 2 || !is_alpha(args[1]))
+	else if (args[1].empty() || args.size() > 2)
 	{
 		send_error(usr, ERR_ERRONEUSNICKNAME, implode(args.begin() + 1, args.end()));
 		return ;
@@ -61,15 +52,21 @@ void		nick( vector<string> args, User &usr, Server &srv )
 			return ;
 		}
 
-	if (srv.is_registered(usr)) {
-		string	nick = usr.getNick();
-		if (nick == "") {
-			s << "Client #" << usr.getFd();
-			nick = s.str();
+	// if (srv.is_registered(usr)) {
+	// 	string	nick = usr.getNick();
+	// 	if (nick == "") {
+	// 		s << "Client #" << usr.getFd();
+	// 		nick = s.str();
+	// 	}
+	// 	cout << MAGENTA << nick << ": Nick changed to " << args[1] << RESET << endl;
+	if (srv.is_registered(usr))
+	{
+		//cout << MAGENTA << usr.getNick() << ": Nick changed to " << args[1] << RESET << endl;
+		if (usr.getIsSet() && usr.getNick().empty())
+		{
+			cout << GREEN << "User #" << usr.getFd() << " registred as " << args[1] << RESET << endl;
+			messageoftheday(srv, usr);
 		}
-		cout << MAGENTA << nick << ": Nick changed to " << args[1] << RESET << endl;
 		usr.setNick(args[1]);
 	}
-	// else
-	// 	user();
 }
