@@ -11,6 +11,7 @@ map<int, string>	err;
 
 void    define_errors( void )
 {
+	err[ERR_NOMOTD] = " :MOTD File is missing";
 	err[ERR_NONICKNAMEGIVEN] = " :No nickname given";
 	err[ERR_ERRONEUSNICKNAME] = " :Erroneous nickname";
 	err[ERR_NEEDMOREPARAMS] = " :Not enough parameters";
@@ -20,7 +21,7 @@ void    define_errors( void )
 
 void    send_error( User u, int errn, string arg )
 {
-    string  buf = ":irc.local ";
+    string  buf = ":mfirc ";
 
 	buf += to_string(errn);
 	buf += " * ";

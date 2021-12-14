@@ -4,27 +4,29 @@ Server::Server( void ) {
 
 }
 
-Server::Server(string port, string pwd) : 
+Server::Server(string port, string pwd) :
+		_name("mfirc"),
 		_port(port), 
 		_pwd(pwd),
 		_host("localhost"),
 		_port_nwk("127.0.0.1"),
 		_pwd_nwk(""),
-		_servinfo(NULL)
+		_servinfo(NULL),
+		_motd("")
 {
-
 }
 
 Server::Server(string port, string pwd, string host="localhost",
-	string port_nwk="127.0.0.1", string pwd_nwk="") : 
+	string port_nwk="127.0.0.1", string pwd_nwk="", string motd="") : 
+		_name("mfirc"),
 		_port(port), 
 		_pwd(pwd),
 		_host(host),
 		_port_nwk(port_nwk),
 		_pwd_nwk(pwd_nwk),
-		_servinfo(NULL)
+		_servinfo(NULL),
+		_motd(motd)
 {
-
 }
 
 Server::~Server() {
@@ -34,13 +36,20 @@ Server::~Server() {
 Server & Server::operator=(Server const & src) {
 
 	if (this != &src) {
+		this->_name = src.getName();
 		this->_port = src.getPort();
 		this->_pwd = src.getPassword();
 		this->_host = src.getHost();
 		this->_port_nwk = src.getPortNetwork();
 		this->_pwd_nwk = src.getPasswordNetwork();
+		this->_motd = src.getMotd();
+		this->_users = src.getUsers();
 	}
 	return *this;
+}
+
+string const & Server::getName() const {
+	return _name;
 }
 
 string const & Server::getPort() const {
@@ -63,12 +72,17 @@ string const & Server::getPasswordNetwork() const {
 	return _pwd_nwk;
 }
 
-map<int, User> &Server::getUsers() {
+map<int, User> const & Server::getUsers() const {
 	return _users;
+}
+
+string const & Server::getMotd() const {
+	return _motd;
 }
 
 ostream & operator<<(ostream & stream, Server &Server) {
 
+	stream << "name: " << Server.getName() << endl;
 	stream << "port: " << Server.getPort() << endl;
 	stream << "pwd: " << Server.getPassword() << endl;
 	stream << "host: " << Server.getHost() << endl;
@@ -187,8 +201,8 @@ int				Server::receiveData( int i ) {
 	nbytes = recv(_poll[i].fd, buf, BUFSIZE - 1, 0);
 	if (nbytes <= 0) {
 		if (nbytes == 0)
-			cout << BOLDWHITE << "❌ " << nick << " gone away" << RESET << endl;
-			//cout << BOLDWHITE << "❌ Client #" << _poll[i].fd << " gone away" << RESET << endl;
+			// cout << BOLDWHITE << "❌ " << nick << " gone away" << RESET << endl;
+			cout << BOLDWHITE << "❌ Client #" << _poll[i].fd << " gone away" << RESET << endl;
 		close(_poll[i].fd);
 		del_from_pfds(_poll, i, &_fd_count);
 		if (nbytes < 0)
@@ -247,15 +261,12 @@ void				Server::run() {
 					this->acceptConn();
 					// Add new fd that made the connection
 					add_to_pfds(&_poll, _newfd, &_fd_count, &fd_size);
-					// Register new user
-					// cout << "new user = " << _newfd << endl;
-					//_users[i + 1] = User(_newfd);
+					// Create new user
 					_users[_newfd] = User(_newfd);
 					break ;
 				}
 				else
 				{
-					// cout << "fd = " << i << endl;
 					if (!this->receiveData(i))
 						this->sendData(i);
 				}
@@ -264,6 +275,7 @@ void				Server::run() {
 	}
 }
 
+//	If fd was registered
 int				Server::is_registered( User usr )
 {
 	//cout << _users << endl;

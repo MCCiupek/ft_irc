@@ -14,6 +14,8 @@
 # include <iterator>
 # include <cerrno>
 # include <cstring>
+# include <ctime>
+# include <fstream>
 
 # include <sys/types.h>
 # include <sys/socket.h>
@@ -33,6 +35,8 @@ using namespace std;
 # include "errors.hpp"
 # include "parsing.hpp"
 # include "Server.hpp"
+
+#define SERVER_VERSION "0.7.13"
 
 void		nick( vector<string> args, User &usr, Server &srv );
 void		user( vector<string> args, User &usr, Server &srv );
