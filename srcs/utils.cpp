@@ -19,6 +19,18 @@ vector<string> ft_split(string str, string sep) {
 	return res;
 }
 
+string ft_join(vector<string> str, string sep, int begin) {
+
+	string  res;
+	
+	 for ( size_t i = begin; i < str.size(); i++ ) {
+		res += str[i];
+		if ( i != str.size() - 1 )
+			res += sep;
+	}
+	return res;
+}
+
 bool ft_match( string const &str, string const &pattern ) {
 
 	int n = str.size();

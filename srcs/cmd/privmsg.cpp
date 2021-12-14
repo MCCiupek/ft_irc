@@ -62,5 +62,6 @@ void		privmsg( vector<string> args, User &usr, Server &srv ) {
 	vector<string> recvs = ft_split(args[1], ",");
 
 	for (vector<string>::iterator it = recvs.begin(); it != recvs.end(); it++)
-		send_privmsg(*it, args[2], usr, srv);
+		//send_privmsg(*it, args[2], usr, srv);
+		send_privmsg(*it, ft_join(args, " ", 2), usr, srv);
 }

@@ -4,6 +4,7 @@
 # include "headers.hpp"
 
 vector<string>  ft_split(string str, string sep);
+string			ft_join(vector<string> str, string sep, int begin=0);
 bool			ft_match( string const &str, string const &pattern );
 
 void get_infos(const string &str, string &nickname, string &username, string &hostname);
