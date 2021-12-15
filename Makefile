@@ -19,16 +19,16 @@ RM				=		rm -rf
 
 DIR_HEADERS		=		./includes/
 
-HEADER			=		colors.hpp		\
-						errors.hpp		\
-						headers.hpp		\
-						parsing.hpp		\
-						Server.hpp		\
-						User.hpp		\
-						utils.hpp		\
-						cmd.hpp
+# HEADER			=		colors.hpp		\
+# 						errors.hpp		\
+# 						headers.hpp		\
+# 						parsing.hpp		\
+# 						Server.hpp		\
+# 						User.hpp		\
+# 						utils.hpp		\
+# 						cmd.hpp
 
-HEADERS			=		$(addprefix $(DIR_HEADERS), $(HEADER))
+# HEADERS			=		$(addprefix $(DIR_HEADERS), $(HEADER))
 
 DIR_SRCS		=		./srcs/
 
@@ -66,7 +66,7 @@ endif
 
 all:			$(NAME)
 
-$(NAME) :		echoCL $(OBJS) $(HEADERS) echoOK echoCS
+$(NAME) :		echoCL $(OBJS) echoOK echoCS
 				$(CC) $(FLAGS) $(FSANITIZE) $(OS) $(OBJS) -o $(NAME)
 
 %.o: %.cpp

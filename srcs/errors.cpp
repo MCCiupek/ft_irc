@@ -11,8 +11,10 @@ map<int, string>	err;
 
 void    define_errors( void )
 {
-	err[ERR_NOSUCHNICK] = " :No such nick/channel";
+	err[ERR_NOSUCHNICK] = " :No such nick";
 	err[ERR_NOSUCHSERVER] = " :No such server";
+	err[ERR_NOSUCHCHANNEL] = " :No such channel";
+	err[ERR_TOOMANYCHANNELS] = " :You have joined too many channels";
 	err[ERR_NOORIGIN] = ":No origin specified";
 	err[ERR_NORECIPIENT] = " :No recipient given";
 	err[ERR_NOTEXTTOSEND] = " :No text to send";
@@ -22,7 +24,12 @@ void    define_errors( void )
 	err[ERR_NICKNAMEINUSE] = " :Nickname is already in use";
 	err[ERR_NEEDMOREPARAMS] = " :Not enough parameters";
 	err[ERR_ALREADYREGISTRED] = " :You may not reregister";
+	err[ERR_CHANNELISFULL] = " :Cannot join channel (+l)";
 	err[ERR_UNKNOWNMODE] = " :is unknown mode char to me";
+	err[ERR_INVITEONLYCHAN] = " :Cannot join channel (+i)";
+	err[ERR_BANNEDFROMCHAN] = " :Cannot join channel (+b)";
+	err[ERR_BADCHANNELKEY] = " :Cannot join channel (+k)";
+	err[ERR_BADCHANMASK] = " :The given channel mask was invalid";
 	err[ERR_USERSDONTMATCH] = " :Cant change mode for other users";
 }
 
@@ -31,6 +38,7 @@ void    send_error( User u, int errn, string arg )
 	ostringstream s;
     //string  buf = ":irc.local ";
 
+	arg = arg.substr(0, arg.length()-1);
 	s << ":irc.local " << errn << " * " << arg << err[errn] << "\r\n";
 	// buf += itoa(errn);//.c_str();
 	// buf += " * ";

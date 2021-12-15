@@ -15,15 +15,16 @@ class Channel {
 
 		/*								MEMBERS VARIABLES							*/
 
-		string			_name;
-        string			_key;
-        bool			_has_key;
-        unsigned int	_nb_members;
-        string			_topic;
-        bool			_has_topic;
-        vector<User*>	_members;
-        User*			_channel_oper;
-		string			_mode;
+		string							_name;
+        string							_key;
+        bool							_has_key;
+        string							_topic;
+        bool							_has_topic;
+        vector<User*>					_members;
+		vector<User*>					_invited_usrs;
+		map< string,vector<string> >	_banned;
+        User*							_channel_oper;
+		string							_mode;
 
 		/*								CONSTRUCTORS								*/
 
@@ -47,7 +48,7 @@ class Channel {
 		string const 			&getName( void ) const;
 		string const 			&getKey( void ) const;
 		bool const 				&getHasKey( void ) const;
-		unsigned int const 		&getNbMembers( void ) const;
+		size_t		 	 		getNbMembers( void ) const;
 		string const 			&getTopic( void ) const;
 		bool const 				&getHasTopic( void ) const;
 		vector<User*> const 	&getMembers( void ) const;
@@ -64,6 +65,13 @@ class Channel {
 
 		/*								MEMBERS FUNCTIONS							*/
 
+		void					addMember( User * usr );
+		void					deleteMember( User * usr );
+		void					ban( string to_ban, string key );
+		bool					isBanned( User const & usr );
+		void					invite( User * usr );
+		bool					isInvited( User const & usr );
+		string					getMembersList( void );
 
 };
 

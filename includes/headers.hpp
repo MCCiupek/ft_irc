@@ -5,6 +5,8 @@
 # define MAXCLI 5
 # define BUFSIZE 128
 # define SERVER_VERSION "0.7.13"
+# define MAX_CHAN_PER_USR 10
+# define MAX_USR_PER_CHAN 10
 
 # include <iostream>
 # include <vector>

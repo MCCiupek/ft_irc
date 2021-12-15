@@ -39,9 +39,65 @@
 		RPL_TOPIC
 */
 
+int		join_channel( string channel, string key, User &usr, Server &srv ) {
+
+	Channel *		cnl;
+
+	if ( channel[0] == '#' ) {
+		cnl = srv.getChannelByName( &channel[1] );
+		if ( cnl == NULL ) {
+			send_error( usr, ERR_NOSUCHCHANNEL, channel );
+			return 1;
+		}
+	} else {
+		send_error( usr, ERR_BADCHANMASK, channel );
+		return 1;
+	}
+	if ( cnl->getHasKey() && cnl->getKey() != key ) {
+		send_error( usr, ERR_BADCHANNELKEY, channel );
+		return 1;
+	}
+	if ( cnl->isBanned( usr ) ) {
+		send_error( usr, ERR_BANNEDFROMCHAN, channel );
+		return 1;
+	}
+	if ( cnl->getNbMembers() == MAX_USR_PER_CHAN ) {
+		send_error( usr, ERR_CHANNELISFULL, channel );
+		return 1;
+	}
+	if ( cnl->getMode().find("i") != string::npos && !cnl->isInvited(usr) ) {
+		send_error( usr, ERR_INVITEONLYCHAN, channel );
+		return 1;
+	}
+	cnl->addMember(&usr);
+	if ( cnl->getHasTopic() )
+		send_reply(usr, 332, RPL_TOPIC(cnl->getName(), cnl->getTopic()));
+	send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), cnl->getMembersList()));
+	send_reply(usr, 366, RPL_ENDOFNAMES(cnl->getName()));
+	return 0;
+}
+
 void		join( vector<string> args, User &usr, Server &srv ) {
 
-	(void)args;
-	(void)usr;
-	(void)srv;
+	vector<string>	chans;
+	
+	if ( args.size() < 2 ) {
+		send_error( usr, ERR_NEEDMOREPARAMS, args[0] );
+		return ;
+	}
+
+	chans = ft_split(args[1], ",");
+	// TO DO : Is the use wildcards authorized ? If so should be implemented here with ft_match.
+
+	vector<string>	keys(chans.size());
+	if (args.size() > 2)
+		keys = ft_split(args[2], ",");
+
+	for (size_t i = 0; i < chans.size(); i++) {
+		if ( i + 1 == MAX_CHAN_PER_USR ) {
+			send_error( usr, ERR_TOOMANYCHANNELS, args[0] );
+			return ;
+		}
+		join_channel(chans[i], keys[i], usr, srv);
+	}
 }
