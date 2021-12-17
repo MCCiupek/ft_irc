@@ -39,16 +39,22 @@
 		RPL_TOPIC
 */
 
+int		create_channel( string channel, string key, User &usr, Server &srv ) {
+
+	Channel	* new_channel = new Channel(channel, key, "", &usr);
+	srv.addChannel( new_channel );
+	usr.addChannel( new_channel );
+	return 0;
+}
+
 int		join_channel( string channel, string key, User &usr, Server &srv ) {
 
 	Channel *		cnl;
 
 	if ( channel[0] == '#' ) {
 		cnl = srv.getChannelByName( &channel[1] );
-		if ( cnl == NULL ) {
-			send_error( usr, ERR_NOSUCHCHANNEL, channel );
-			return 1;
-		}
+		if ( cnl == NULL ) // Create Channel.
+			return create_channel(&channel[1], key, usr, srv);
 	} else {
 		send_error( usr, ERR_BADCHANMASK, channel );
 		return 1;
@@ -65,11 +71,12 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 		send_error( usr, ERR_CHANNELISFULL, channel );
 		return 1;
 	}
-	if ( cnl->getMode().find("i") != string::npos && !cnl->isInvited(usr) ) {
+	if ( cnl->isInviteOnly() && !cnl->isInvited(usr) ) {
 		send_error( usr, ERR_INVITEONLYCHAN, channel );
 		return 1;
 	}
 	cnl->addMember(&usr);
+	usr.addChannel( cnl );
 	if ( cnl->getHasTopic() )
 		send_reply(usr, 332, RPL_TOPIC(cnl->getName(), cnl->getTopic()));
 	send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), cnl->getMembersList()));
@@ -84,6 +91,16 @@ void		join( vector<string> args, User &usr, Server &srv ) {
 	if ( args.size() < 2 ) {
 		send_error( usr, ERR_NEEDMOREPARAMS, args[0] );
 		return ;
+	}
+
+	if (args[1].back() == '\n')
+		args[1] = args[1].substr(0, args[1].length()-1);
+	
+	//cout << args[1] << " == 0: " << (args[1] == "0") << endl;
+	if ( args[1] == "0" ) {
+		//Leave all channels the user is currently a member of.
+		usr.leaveAllChans();
+		return;
 	}
 
 	chans = ft_split(args[1], ",");

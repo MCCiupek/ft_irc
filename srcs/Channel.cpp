@@ -27,6 +27,37 @@ Channel::Channel(string name) :
 	_banned["host"] = banned_hostnames;
 }
 
+Channel::Channel(string name, string key, string topic, User * usr) : 
+		_name(name),
+		_key(key),
+		_has_key(false),
+		_topic(topic),
+		_has_topic(false),
+		_mode("")
+{
+	vector<string> banned_nicks;
+	vector<string> banned_usernames;
+	vector<string> banned_hostnames;
+
+	_banned["nick"] = banned_nicks;
+	_banned["user"] = banned_usernames;
+	_banned["host"] = banned_hostnames;
+
+	if ( key != "" )
+		_has_key = true;
+	
+	if ( topic != "" )
+		_has_topic = true;
+
+	_channel_oper = usr;
+
+	_members.push_back(usr);
+
+	string usr_mode = usr->getMode();
+	if (usr_mode.find('o') == string::npos)
+		usr->setMode(usr_mode + "o");
+}
+
 Channel::~Channel() {
 	
 }
@@ -86,10 +117,12 @@ void    			Channel::setName(string const & name) {
 
 void    			Channel::setKey(string const & key) {
 	_key = key;
+	_has_key = true;
 }
 
 void    			Channel::setTopic(string const & topic) {
 	_topic = topic;
+	_has_topic = true;
 }
 
 void    			Channel::unsetTopic() {
@@ -140,6 +173,11 @@ bool				Channel::isInvited( User const & usr ) {
 	return false;
 }
 
+bool					Channel::isInviteOnly( void ) {
+
+	return this->getMode().find("i") != string::npos;
+}
+
 string				Channel::getMembersList( void ) {
 
 	string reply;
@@ -154,6 +192,11 @@ string				Channel::getMembersList( void ) {
 
 ostream & operator<<(ostream & stream, Channel &Channel) {
 
-	stream << "Channel: " << Channel.getName() << endl;
+	stream << "Channel: " << Channel.getName();
+	stream << " created by " << Channel.getOperator()->getNick();
+	if (Channel.getHasKey())
+		stream << " is private (key: " << Channel.getKey() << ")";
+	else
+		stream << " is public";
 	return stream;
 }

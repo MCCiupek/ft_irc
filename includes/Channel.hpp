@@ -8,6 +8,7 @@
 // ************************************************************************** //
 
 class Server;
+class User;
 
 class Channel {
 
@@ -39,6 +40,7 @@ class Channel {
 
 		Channel( void );
 		Channel(string name);
+		Channel(string name, string key, string topic, User * usr);
 		virtual ~Channel( void ); 
 
 		Channel & operator=(Channel const& src); 
@@ -71,6 +73,7 @@ class Channel {
 		bool					isBanned( User const & usr );
 		void					invite( User * usr );
 		bool					isInvited( User const & usr );
+		bool					isInviteOnly( void );
 		string					getMembersList( void );
 
 };

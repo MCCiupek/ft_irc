@@ -77,6 +77,7 @@ class Server {
 		Channel *				getChannelByName( string channel );
 		Channel *				getChannelByKey( string key );
 		User *					getUserByNick( string nick );
+		void					addChannel( Channel * channel );
 
 };
 

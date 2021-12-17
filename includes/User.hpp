@@ -2,10 +2,13 @@
 # define USER_HPP
 
 # include "headers.hpp"
+# include "Channel.hpp"
 
 // ************************************************************************** //
 //                            	 User Class                                   //
 // ************************************************************************** //
+
+class Channel;
 
 class User
 {
@@ -22,6 +25,7 @@ class User
 		bool		_ping_status;
 		bool		_is_away;
 		bool		_isset;			// If USER command is been used
+		vector<Channel*>	_channels;
 
 	public:
 
@@ -200,6 +204,24 @@ class User
 			// Returns Full-Client Identifier (FCI): <nick>!<user>@<host>
 			return _nick + "!" + _username + "@" + _hostname;
 		}
+
+		void				addChannel( Channel * channel ) {
+			
+			cout << MAGENTA << this->getNick() << " joined channel " << channel->getName() << RESET << endl;
+			_channels.push_back(channel);
+		}
+
+		void				leaveAllChans( void ) {
+			
+			while ( !(_channels.empty()) ) {
+				(*_channels.begin())->deleteMember(this);
+				cout << MAGENTA << this->getNick() << " left channel " << (*_channels.begin())->getName() << RESET << endl;
+				_channels.erase(_channels.begin());
+				// TO DO: transfert channel ownership ?
+			}
+
+		}
+
 };
 
 #endif

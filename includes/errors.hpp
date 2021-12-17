@@ -9,7 +9,7 @@
 # define RPL_ENDOFWHO(name) (name + " :End of WHO list\r\n")
 # define RPL_CHANNELMODEIS(channel, mode) (channel + " " + mode + "\r\n")
 # define RPL_TOPIC(channel, topic) ("#" + channel + " :" + topic + "\r\n")
-# define RPL_NAMREPLY(channel, list) ("#" + channel + " :" + list + "\r\n")
+# define RPL_NAMREPLY(channel, list) ("= #" + channel + " :" + list + "\r\n")
 # define RPL_ENDOFNAMES(channel) ("#" + channel + " :End of NAMES list\r\n")
 
 # define ERR_NOSUCHNICK			401

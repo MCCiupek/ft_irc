@@ -35,10 +35,10 @@
 
 using namespace std;
 
+# include "colors.hpp"
 # include "User.hpp"
 # include "Channel.hpp"
 # include "utils.hpp"
-# include "colors.hpp"
 # include "errors.hpp"
 # include "parsing.hpp"
 # include "Server.hpp"

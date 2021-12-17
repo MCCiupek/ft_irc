@@ -319,3 +319,8 @@ User *				Server::getUserByNick( string nick ) {
 	}
 	return NULL;
 }
+
+void				Server::addChannel( Channel * channel ) {
+	
+	_channels.push_back(channel);
+}
