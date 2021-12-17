@@ -75,6 +75,7 @@ class Channel {
 		bool					isInvited( User const & usr );
 		bool					isInviteOnly( void );
 		string					getMembersList( void );
+		bool					isOnChann( User const & usr );
 
 };
 

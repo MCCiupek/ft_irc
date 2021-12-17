@@ -50,11 +50,13 @@ int		create_channel( string channel, string key, User &usr, Server &srv ) {
 int		join_channel( string channel, string key, User &usr, Server &srv ) {
 
 	Channel *		cnl;
+	string			beg = "#&+!";
 
-	if ( channel[0] == '#' ) {
-		cnl = srv.getChannelByName( &channel[1] );
+
+	if ( beg.find(channel[0]) != string::npos ) {
+		cnl = srv.getChannelByName( channel );
 		if ( cnl == NULL ) // Create Channel.
-			return create_channel(&channel[1], key, usr, srv);
+			return create_channel(channel, key, usr, srv);
 	} else {
 		send_error( usr, ERR_BADCHANMASK, channel );
 		return 1;

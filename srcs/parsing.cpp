@@ -53,6 +53,7 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 	m["MODE"] = ping;
 	m["WHO"] = who;
 	m["PRIVMSG"] = privmsg;
+	m["PART"] = part;
 
 	// Call function
 	if ( m.count(args[0]) > 0 ) {

@@ -46,6 +46,7 @@ SRC				=		main.cpp		\
 						cmd/mode.cpp	\
 						cmd/join.cpp	\
 						cmd/privmsg.cpp	\
+						cmd/part.cpp	\
 						conf.cpp
 
 SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))

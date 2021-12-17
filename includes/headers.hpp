@@ -7,6 +7,9 @@
 # define SERVER_VERSION "0.7.13"
 # define MAX_CHAN_PER_USR 10
 # define MAX_USR_PER_CHAN 10
+# define MAX_CHAN_NAME_LEN 50
+
+# define TRUNC(str, len) (str.substr(0, min(name.length(), (unsigned long)len)))
 
 # include <iostream>
 # include <vector>

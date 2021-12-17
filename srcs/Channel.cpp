@@ -11,7 +11,7 @@ Channel::Channel( void ) {
 }
 
 Channel::Channel(string name) : 
-		_name(name),
+		_name(TRUNC(name, MAX_CHAN_NAME_LEN)),
 		_key(""),
 		_has_key(false),
 		_topic(""),
@@ -28,7 +28,7 @@ Channel::Channel(string name) :
 }
 
 Channel::Channel(string name, string key, string topic, User * usr) : 
-		_name(name),
+		_name(TRUNC(name, MAX_CHAN_NAME_LEN)),
 		_key(key),
 		_has_key(false),
 		_topic(topic),
@@ -188,6 +188,14 @@ string				Channel::getMembersList( void ) {
 			reply += " ";
 	}
 	return reply;
+}
+
+bool				Channel::isOnChann( User const & usr ) {
+	for ( size_t i = 0; i < _members.size(); i++ ) {
+		if ( usr.getNick() == _members[i]->getNick())
+			return true;
+	}
+	return false;
 }
 
 ostream & operator<<(ostream & stream, Channel &Channel) {

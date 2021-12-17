@@ -12,5 +12,6 @@ void		join( vector<string> args, User &usr, Server &srv );
 void		cnl_mode( vector<string> args, User &usr, Server &srv );
 void		usr_mode( vector<string> args, User &usr, Server &srv );
 void		privmsg( vector<string> args, User &usr, Server &srv );
+void		part( vector<string> args, User &usr, Server &srv );
 
 #endif

@@ -211,6 +211,17 @@ class User
 			_channels.push_back(channel);
 		}
 
+		void				leaveChannel( Channel * channel ) {
+			
+			cout << MAGENTA << this->getNick() << " left channel " << channel->getName() << RESET << endl;
+			channel->deleteMember(this);
+			for ( vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++ ) {
+				if ( (*it)->getName() == channel->getName() )
+					_channels.erase(it);
+				// TO DO: transfert channel ownership ?
+			}
+		}
+
 		void				leaveAllChans( void ) {
 			
 			while ( !(_channels.empty()) ) {

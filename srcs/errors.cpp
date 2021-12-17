@@ -22,6 +22,7 @@ void    define_errors( void )
 	err[ERR_NONICKNAMEGIVEN] = " :No nickname given";
 	err[ERR_ERRONEUSNICKNAME] = " :Erroneous nickname";
 	err[ERR_NICKNAMEINUSE] = " :Nickname is already in use";
+	err[ERR_NOTONCHANNEL] = " :You're not on that channel";
 	err[ERR_NEEDMOREPARAMS] = " :Not enough parameters";
 	err[ERR_ALREADYREGISTRED] = " :You may not reregister";
 	err[ERR_CHANNELISFULL] = " :Cannot join channel (+l)";
