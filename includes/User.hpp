@@ -129,6 +129,11 @@ class User
 			return _isset;
 		}
 
+		vector<Channel*>	getChans( void ) const
+		{
+			return _channels;
+		}
+
 		/*								SETTERS										*/
 
 		void				setFd( int fd )

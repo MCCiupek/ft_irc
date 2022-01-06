@@ -59,6 +59,10 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 			send_error( usr, ERR_NOTONCHANNEL, chans[i] );
 			return ;
 		}
+		if ( args.size() > 2 ) {
+			// TO DO: Send part msg to channel
+			// ft_join(args, " ", 2)
+		}
 		usr.leaveChannel(cnl);
 	}
 }
