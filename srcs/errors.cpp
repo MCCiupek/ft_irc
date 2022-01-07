@@ -14,8 +14,10 @@ void    define_errors( void )
 	err[ERR_NOSUCHNICK] = " :No such nick";
 	err[ERR_NOSUCHSERVER] = " :No such server";
 	err[ERR_NOSUCHCHANNEL] = " :No such channel";
+	err[ERR_CANNOTSENDTOCHAN] = " :Cannot send to channel";
 	err[ERR_TOOMANYCHANNELS] = " :You have joined too many channels";
-	err[ERR_NOORIGIN] = ":No origin specified";
+	err[ERR_TOOMANYTARGETS] = " :Duplicate recipients. No message delivered";
+	err[ERR_NOORIGIN] = " :No origin specified";
 	err[ERR_NORECIPIENT] = " :No recipient given";
 	err[ERR_NOTEXTTOSEND] = " :No text to send";
 	err[ERR_NOMOTD] = " :MOTD File is missing";

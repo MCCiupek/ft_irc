@@ -11,11 +11,14 @@
 # define RPL_TOPIC(channel, topic) ("#" + channel + " :" + topic + "\r\n")
 # define RPL_NAMREPLY(channel, list) ("= " + channel + " :" + list + "\r\n")
 # define RPL_ENDOFNAMES(channel) (channel + " :End of NAMES list\r\n")
+# define RPL_AWAY(nick, msg) (nick + " :" + msg + "\r\n")
 
 # define ERR_NOSUCHNICK			401
 # define ERR_NOSUCHSERVER		402
 # define ERR_NOSUCHCHANNEL		403
+# define ERR_CANNOTSENDTOCHAN	404
 # define ERR_TOOMANYCHANNELS	405
+# define ERR_TOOMANYTARGETS		407
 # define ERR_NOORIGIN			409
 # define ERR_NORECIPIENT		411
 # define ERR_NOTEXTTOSEND		411

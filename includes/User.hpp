@@ -21,6 +21,7 @@ class User
 		string		_servername;
 		string		_realname;
 		string		_mode;
+		string		_away_msg;
 		time_t *	_last_act;
 		bool		_ping_status;
 		bool		_is_away;
@@ -32,21 +33,21 @@ class User
 		/*								CONSTRUCTORS								*/
 
 		User( void ) : _fd(-1), _nick(""), _username(""), _hostname(""),
-			_servername(""), _realname(""), _mode(""), _ping_status(false),
+			_servername(""), _realname(""), _mode(""), _away_msg("is away"), _ping_status(false),
 			_is_away(false), _isset(false)
 		{
 		}
 
 		User( int fd ) : _fd(fd), _nick(""), _username(""), _hostname(""),
-			_servername(""), _realname(""), _mode(""), _ping_status(false),
+			_servername(""), _realname(""), _mode(""), _away_msg("is away"), _ping_status(false),
 			_is_away(false), _isset(false)
 		{
 		}
 
 		User( int fd, string nick, string username, string hostname,
-			string servername, string realname, string mode, bool ping_status ) : _fd(fd), _nick(nick),
+			string servername, string realname, string mode, string away_msg, bool ping_status ) : _fd(fd), _nick(nick),
 			_username(username), _hostname(hostname), _servername(servername),
-			_realname(realname), _mode(mode), _ping_status(ping_status),
+			_realname(realname), _mode(mode), _away_msg(away_msg), _ping_status(ping_status),
 			_is_away(false), _isset(false)
 		{
 		}
@@ -107,6 +108,11 @@ class User
 		string const		&getMode( void ) const
 		{
 			return _mode;
+		}
+
+		string const		&getAwayMsg( void ) const
+		{
+			return _away_msg;
 		}
 
 		time_t 	*			getLastAct( void ) const
@@ -181,11 +187,17 @@ class User
 			_ping_status = ping_status;
 		}
 
-		void				setIsAway( bool is_away )
+		void				setAway( string msg="" )
 		{
-			_is_away = is_away;
+			_is_away = true;
+			if ( msg != "" )
+				_away_msg = msg;
 		}
 
+		void				unsetAway( void )
+		{
+			_is_away = false;
+		}
 
 		void				setIsSet( bool isset )
 		{

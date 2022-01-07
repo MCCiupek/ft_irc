@@ -32,4 +32,13 @@ ostream &operator<<(ostream &os, const map<K, V> &m) {
 	return os;
 }
 
+template<typename T>
+bool has_duplicates(vector<T> vec) {
+	vector<T> copy = vec;
+	sort(copy.begin(), copy.end());
+	if ( adjacent_find(copy.begin(), copy.end()) != copy.end() )
+		return true;
+	return false;
+}
+
 #endif

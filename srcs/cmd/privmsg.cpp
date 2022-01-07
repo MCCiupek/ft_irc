@@ -27,72 +27,71 @@
 		RPL_AWAY
 */
 
-void		send_to_all_in_chan( Channel * Chan, string txt ) {
+void		send_to_all_in_chan( Channel * Chan, string txt, User &usr ) {
 	
 	vector<User*> users = Chan->getMembers();
 	for ( size_t i = 0; i < users.size(); i++ ) {
 		string msg = txt + "\n";
 		send(users[i]->getFd(), &msg, msg.length(), 0);
+		if ( users[i]->getIsAway() )
+			send_reply(usr, 301, RPL_AWAY(users[i]->getNick(), users[i]->getAwayMsg()));
 	}
+}
+
+void		send_privmsg_to_usr( string recv, string txt, User &usr, Server &srv ) {
+	
+	User *	receiver;
+	string	msg;
+
+	receiver = srv.getUserByNick(recv);
+	if ( !receiver )
+		return send_error(usr, ERR_NOSUCHNICK, recv);
+	msg = txt + "\n";
+	send(receiver->getFd(), &msg, msg.length(), 0);
+	if ( receiver->getIsAway() )
+		send_reply(usr, 301, RPL_AWAY(receiver->getNick(), receiver->getAwayMsg()));
+}
+
+void		send_privmsg_to_chan( string recv, string txt, User &usr, Server &srv ) {
+	
+	Channel * channel;
+	string	msg;
+
+	channel = srv.getChannelByName(recv);
+	if ( !channel )
+		return send_error(usr, ERR_NOSUCHCHANNEL, recv);
+	if ( channel->getOperator()->getNick() != usr.getNick() )
+		return send_error(usr, ERR_CANNOTSENDTOCHAN, recv);
+	send_to_all_in_chan( channel, txt, usr );
 }
 
 void		send_privmsg( string recv, string txt, User &usr, Server &srv ) {
 
 	string 	mask = "#&+!";
-	User *	receiver;
 	
-	if ( txt.length() == 0 ) {
-		send_error(usr, ERR_NOTEXTTOSEND, recv);
-		return ;
-	}
-	if ( recv.length() == 0 ) {
-		send_error(usr, ERR_NORECIPIENT, recv);
-		return ;
-	}
-	if ( mask.find(recv[0], 0) == string::npos ) {
-		receiver = srv.getUserByNick(recv);
-		if ( !receiver ) {
-			send_error(usr, ERR_NOSUCHNICK, recv);
-			return ;
-		}
-		string msg = txt + "\n";
-		send(receiver->getFd(), &msg, msg.length(), 0);
-	}
-	else {
-		Channel * channel = srv.getChannelByName(recv);
-		if ( !channel ) {
-			send_error(usr, ERR_NOSUCHCHANNEL, recv);
-			return ;
-		}
-		if ( channel->getOperator()->getNick() != usr.getNick() ) {
-			// send_error(usr, ERR_CANNOTSENDTOCHAN, recv);
-			return ;
-		}
-		send_to_all_in_chan( channel, txt );
-	}
+	if ( txt.length() == 0 )
+		return send_error(usr, ERR_NOTEXTTOSEND, recv);
+	if ( recv.length() == 0 )
+		return send_error(usr, ERR_NORECIPIENT, recv);
+	if ( mask.find(recv[0], 0) == string::npos )
+		send_privmsg_to_usr(recv, txt, usr, srv);
+	else
+		send_privmsg_to_chan(recv, txt, usr, srv);
 	return;
 }
 
 void		privmsg( vector<string> args, User &usr, Server &srv ) {
 
-	if (args.size() < 2) {
-		send_error(usr, ERR_NORECIPIENT, args[0]);
-		return ;
-	}
-	if (args.size() == 2) {
-		send_error(usr, ERR_NOTEXTTOSEND, args[0]);
-		return ;
-	}
+	if (args.size() < 2)
+		return send_error(usr, ERR_NORECIPIENT, args[0]);
+	if (args.size() == 2)
+		return send_error(usr, ERR_NOTEXTTOSEND, args[0]);
 
 	vector<string> recvs = ft_split(args[1], ",");
 
-	/* TODO:
-	if (recvs.size() == MAX_RECV) {
-		send_error(usr, ERR_TOOMANYTARGETS, args[0]);
-		return ;
-	} */
+	if (has_duplicates(recvs))
+		return send_error(usr, ERR_TOOMANYTARGETS, args[0]);
 
 	for (vector<string>::iterator it = recvs.begin(); it != recvs.end(); it++)
-		//send_privmsg(*it, args[2], usr, srv);
 		send_privmsg(*it, ft_join(args, " ", 2), usr, srv);
 }
