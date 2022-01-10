@@ -33,6 +33,7 @@ void    define_errors( void )
 	err[ERR_BANNEDFROMCHAN] = " :Cannot join channel (+b)";
 	err[ERR_BADCHANNELKEY] = " :Cannot join channel (+k)";
 	err[ERR_BADCHANMASK] = " :The given channel mask was invalid";
+	err[ERR_UMODEUNKNOWNFLAG] = " :Unknown MODE flag";
 	err[ERR_USERSDONTMATCH] = " :Cant change mode for other users";
 }
 

@@ -105,32 +105,22 @@
 
 void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 
-	string		usr_mode = usr.getMode();
-	string		knw_mode = "opsitnbv";
-	Channel *	cnl;
-
-	if (args[0][0] == '#')
-		cnl = srv.getChannelByName( &args[0][1] );
-	else if (args[0][0] == '&')
-		cnl = srv.getChannelByKey( &args[0][1] );
-	else 
-		cnl = NULL;
-	
-	if ( !cnl ) {
-		send_error(usr, ERR_NOSUCHNICK, args[0]);
-		return ;
-	}
-
-	string		cnl_mode = cnl->getMode();
 	char 		flag = args[1][0];
 	string 		mode = &args[1][1];
+	Channel *	cnl = srv.getChannelByName( args[0] );
+	
+	if ( !cnl )
+		return send_error(usr, ERR_NOSUCHCHANNEL, args[0]);
 
-	for (size_t i = 0; i < mode.size(); i++) {
-		if ( knw_mode.find(mode[i]) == string::npos ) {
-			send_error(usr, ERR_UNKNOWNMODE, args[0]);
-			return ;
-		}
-	}
+	if ( !cnl->isOper(usr) )
+		return send_error(usr, ERR_NOSUCHCHANNEL, args[0]);
+
+	string		cnl_mode = cnl->getMode();
+	string		knw_mode = "opsitnmlbvk";
+
+	for (size_t i = 0; i < mode.size(); i++)
+		if ( knw_mode.find(mode[i]) == string::npos )
+			return send_error(usr, ERR_UNKNOWNMODE, args[0]);
 
 	if ( flag == '+' ) {
 		for (size_t i = 0; i < mode.size(); i++) {
@@ -153,25 +143,20 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 
 void		usr_mode( vector<string> args, User &usr, Server &srv ) {
 
-	(void)srv;
-
-	string	usr_mode = usr.getMode();
-	string	knw_mode = "iswo";
+	User *	target = srv.getUserByNick(args[0]);
 
 	char flag = args[1][0];
 	string mode = &args[1][1];
 
-	if (usr.getNick() != args[0]) {
-		send_error(usr, ERR_USERSDONTMATCH, args[0]);
-		return ;
-	}
+	if ( !target || usr.getNick() != target->getNick() )
+		return send_error(usr, ERR_USERSDONTMATCH, args[0]);
 
-	for (size_t i = 0; i < mode.size(); i++) {
-		if ( knw_mode.find(mode[i]) == string::npos ) {
-			send_error(usr, ERR_UNKNOWNMODE, args[0]);
-			return ;
-		}
-	}
+	string	usr_mode = target->getMode();
+	string	knw_mode = "iswo";
+
+	for (size_t i = 0; i < mode.size(); i++)
+		if ( knw_mode.find(mode[i]) == string::npos )
+			return send_error(usr, ERR_UMODEUNKNOWNFLAG, args[0]);
 
 	if ( flag == '+' ) {
 		for (size_t i = 0; i < mode.size(); i++) {
@@ -186,9 +171,11 @@ void		usr_mode( vector<string> args, User &usr, Server &srv ) {
 				usr_mode.erase(usr_mode.begin() + to_remove);
 		}
 	}
+	else
+		return send_error(usr, ERR_UMODEUNKNOWNFLAG, args[0]);
 
-	usr.setMode(usr_mode);
-	send_reply(usr, 221, RPL_UMODEIS(usr.getMode()));
+	target->setMode(usr_mode);
+	send_reply(usr, 221, RPL_UMODEIS(target->getMode()));
 }
 
 void		mode( vector<string> args, User &usr, Server &srv ) {

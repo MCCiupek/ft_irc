@@ -49,13 +49,16 @@ Channel::Channel(string name, string key, string topic, User * usr) :
 	if ( topic != "" )
 		_has_topic = true;
 
-	_channel_oper = usr;
+	//_channel_oper = usr;
 
-	_members.push_back(usr);
+	//_members.push_back(usr);
+	addMember(usr);
+	addOper(usr);
+	//_oper.push_back(usr);
 
-	string usr_mode = usr->getMode();
+	/*string usr_mode = usr->getMode();
 	if (usr_mode.find('o') == string::npos)
-		usr->setMode(usr_mode + "o");
+		usr->setMode(usr_mode + "o");*/
 }
 
 Channel::~Channel() {
@@ -103,9 +106,13 @@ vector<User*> const	&Channel::getMembers() const {
 	return _members;
 }
 
-User *				Channel::getOperator( void ) {
-	return _channel_oper;
+vector<User*> const	&Channel::getOper() const {
+	return _oper;
 }
+
+/*User *				Channel::getOperator( void ) {
+	return _channel_oper;
+}*/
 
 string const		&Channel::getMode( void ) const {
 	return _mode;
@@ -140,8 +147,23 @@ void				Channel::addMember( User * usr ) {
 void				Channel::deleteMember( User * usr ) {
 	
 	for ( size_t i = 0; i < this->getNbMembers(); i++ ) {
-		if ( usr->getNick() == _members[i]->getNick() )
+		if ( usr->getNick() == _members[i]->getNick() ) {
+			if ( isOper( *usr ) )
+				deleteOper( usr );
 			_members.erase(_members.begin() + i);
+		}
+	}
+}
+
+void				Channel::addOper( User * usr ) {
+	_oper.push_back(usr);
+}
+
+void				Channel::deleteOper( User * usr ) {
+	
+	for ( size_t i = 0; i < this->getNbMembers(); i++ ) {
+		if ( usr->getNick() == _oper[i]->getNick() )
+			_oper.erase(_oper.begin() + i);
 	}
 }
 
@@ -178,6 +200,26 @@ bool					Channel::isInviteOnly( void ) {
 	return this->getMode().find("i") != string::npos;
 }
 
+bool					Channel::isPrivate( void ) {
+
+	return this->getMode().find("p") != string::npos;
+}
+
+bool					Channel::isSecret( void ) {
+
+	return this->getMode().find("s") != string::npos;
+}
+
+bool					Channel::isModerated( void ) {
+
+	return this->getMode().find("m") != string::npos;
+}
+
+bool					Channel::isTopicSettableByOperOnly( void ) {
+
+	return this->getMode().find("t") != string::npos;
+}
+
 string				Channel::getMembersList( void ) {
 
 	string reply;
@@ -198,10 +240,18 @@ bool				Channel::isOnChann( User const & usr ) {
 	return false;
 }
 
+bool				Channel::isOper( User const & usr ) {
+	for ( size_t i = 0; i < _oper.size(); i++ ) {
+		if ( usr.getNick() == _oper[i]->getNick())
+			return true;
+	}
+	return false;
+}
+
 ostream & operator<<(ostream & stream, Channel &Channel) {
 
 	stream << "Channel: " << Channel.getName();
-	stream << " created by " << Channel.getOperator()->getNick();
+	stream << " created by " << Channel.getOper()[0]->getNick();
 	if (Channel.getHasKey())
 		stream << " is private (key: " << Channel.getKey() << ")";
 	else

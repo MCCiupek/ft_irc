@@ -62,7 +62,7 @@ void		send_privmsg_to_chan( string recv, string txt, User &usr, Server &srv ) {
 	channel = srv.getChannelByName(recv);
 	if ( !channel )
 		return send_error(usr, ERR_NOSUCHCHANNEL, recv);
-	if ( channel->getOperator()->getNick() != usr.getNick() )
+	if (!(channel->isOnChann(usr) || channel->isOper(usr)) )
 		return send_error(usr, ERR_CANNOTSENDTOCHAN, recv);
 	send_to_all_in_chan( channel, txt, usr );
 }

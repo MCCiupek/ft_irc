@@ -36,6 +36,7 @@ SRC				=		main.cpp		\
 						errors.cpp		\
 						utils.cpp		\
 						parsing.cpp		\
+						User.cpp		\
 						Server.cpp		\
 						Channel.cpp		\
 						cmd/nick.cpp	\

@@ -24,7 +24,8 @@ class Channel {
         vector<User*>					_members;
 		vector<User*>					_invited_usrs;
 		map< string,vector<string> >	_banned;
-        User*							_channel_oper;
+        //User*							_channel_oper;
+		vector<User*>					_oper;
 		string							_mode;
 
 		/*								CONSTRUCTORS								*/
@@ -54,7 +55,8 @@ class Channel {
 		string const 			&getTopic( void ) const;
 		bool const 				&getHasTopic( void ) const;
 		vector<User*> const 	&getMembers( void ) const;
-		User *					getOperator( void );
+		vector<User*> const		&getOper( void ) const;
+		//User *					getOperator( void );
 		string const			&getMode( void ) const;
 
 		/*								SETTERS										*/
@@ -69,13 +71,20 @@ class Channel {
 
 		void					addMember( User * usr );
 		void					deleteMember( User * usr );
+		void					addOper( User * usr );
+		void					deleteOper( User * usr );
 		void					ban( string to_ban, string key );
 		bool					isBanned( User const & usr );
 		void					invite( User * usr );
 		bool					isInvited( User const & usr );
 		bool					isInviteOnly( void );
+		bool					isPrivate( void );
+		bool					isSecret( void );
+		bool					isModerated( void );
+		bool					isTopicSettableByOperOnly( void );
 		string					getMembersList( void );
 		bool					isOnChann( User const & usr );
+		bool					isOper( User const & usr );
 
 };
 
