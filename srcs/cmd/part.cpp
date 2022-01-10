@@ -50,7 +50,7 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 	chans = ft_split(args[1], ",");
 
 	if ( args.size() > 2 )
-		part_msg = ft_join(args, " ", 2);
+		part_msg = ft_join(args, " ", 2) + "\r\n";
 
 	for (size_t i = 0; i < chans.size(); i++) {
 		cnl = srv.getChannelByName( chans[i] );
