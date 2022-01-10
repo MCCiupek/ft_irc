@@ -26,59 +26,54 @@ IRC client programs connect to an IRC server to access a specific channel. IRC s
 
 ## Handled commands
 
-1. Connection
-- [ ] PASS
-- [x] NICK
-- [x] USER
-- [ ] [SERVER]
-- [ ] OPER
-- [ ] QUIT
-- [ ] [SQUIT]
+- [ ] Connection
+  - [ ] PASS
+  - [x] NICK
+  - [x] USER
+  - [ ] [SERVER]
+  - [ ] OPER
+  - [ ] QUIT
+  - [ ] [SQUIT]
+- [ ] Channel operations
+  - [x] JOIN
+  - [x] PART
+  - [x] MODE
+  - [ ] TOPIC
+  - [ ] NAMES
+  - [ ] LIST
+  - [ ] INVITE
+  - [ ] KICK
+- [ ] Server
+  - [ ] VERSION
+  - [ ] STATS
+  - [ ] [LINKS]
+  - [ ] TIME
+  - [ ] [CONNECT]
+  - [ ] [TRACE]
+  - [ ] ADMIN
+  - [ ] INFO
 
-2. Channel operations
-- [x] JOIN
-- [x] PART
-- [x] MODE
-- [ ] TOPIC
-- [ ] NAMES
-- [ ] LIST
-- [ ] INVITE
-- [ ] KICK
-
-3. Server
-- [ ] VERSION
-- [ ] STATS
-- [ ] [LINKS]
-- [ ] TIME
-- [ ] [CONNECT]
-- [ ] [TRACE]
-- [ ] ADMIN
-- [ ] INFO
-
-4. Sending messages
-- [x] PRIVMSG
-- [ ] NOTICE
-
-5. User
-- [ ] WHO
-- [ ] WHOIS
-- [ ] WHOWAS
-
-6. Miscellaneous
-- [ ] KILL
-- [x] PING
-- [x] PONG
-- [ ] ERROR
-
-7. Optional
-- [ ] AWAY
-- [ ] REHASH
-- [ ] RESTART
-- [ ] SUMMON
-- [ ] USERS
-- [ ] WALLOPS
-- [ ] USERHOST
-- [ ] ISON
+- [ ] Sending messages
+  - [x] PRIVMSG
+  - [ ] NOTICE
+- [ ] User
+  - [ ] WHO
+  - [ ] WHOIS
+  - [ ] WHOWAS
+- [ ] Miscellaneous
+  - [ ] KILL
+  - [x] PING
+  - [x] PONG
+  - [ ] ERROR
+- [ ] Optional
+  - [ ] AWAY
+  - [ ] REHASH
+  - [ ] RESTART
+  - [ ] SUMMON
+  - [ ] USERS
+  - [ ] WALLOPS
+  - [ ] USERHOST
+  - [ ] ISON
 
 
 ## Sources
