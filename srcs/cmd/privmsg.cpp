@@ -31,10 +31,12 @@ void		send_to_all_in_chan( Channel * Chan, string txt, User &usr ) {
 	
 	vector<User*> users = Chan->getMembers();
 	for ( size_t i = 0; i < users.size(); i++ ) {
-		string msg = txt + "\n";
-		send(users[i]->getFd(), &msg, msg.length(), 0);
-		if ( users[i]->getIsAway() )
-			send_reply(usr, 301, RPL_AWAY(users[i]->getNick(), users[i]->getAwayMsg()));
+		if (users[i]->getNick() != usr.getNick()) {
+			string msg = txt + "\n";
+			send(users[i]->getFd(), &msg, msg.length(), 0);
+			if ( users[i]->getIsAway() )
+				send_reply(usr, 301, RPL_AWAY(users[i]->getNick(), users[i]->getAwayMsg()));
+		}
 	}
 }
 

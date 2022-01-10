@@ -36,6 +36,7 @@
 void		part( vector<string> args, User &usr, Server &srv ) {
 
 	vector<string>	chans;
+	string			part_msg = usr.getNick() + " left channel\r\n";
 	Channel *		cnl;
 	
 	if ( args.size() < 2 ) {
@@ -47,7 +48,9 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 		args[1] = args[1].substr(0, args[1].length()-1);
 
 	chans = ft_split(args[1], ",");
-	// TO DO : Is the use wildcards authorized ? If so should be implemented here with ft_match.
+
+	if ( args.size() > 2 )
+		part_msg = ft_join(args, " ", 2);
 
 	for (size_t i = 0; i < chans.size(); i++) {
 		cnl = srv.getChannelByName( chans[i] );
@@ -59,10 +62,7 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 			send_error( usr, ERR_NOTONCHANNEL, chans[i] );
 			return ;
 		}
-		if ( args.size() > 2 ) {
-			// TO DO: Send part msg to channel
-			// ft_join(args, " ", 2)
-		}
+		send_to_all_in_chan(cnl, part_msg, usr);
 		usr.leaveChannel(cnl);
 	}
 }
