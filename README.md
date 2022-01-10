@@ -24,6 +24,63 @@ IRC client programs connect to an IRC server to access a specific channel. IRC s
 
 ![image](https://user-images.githubusercontent.com/51337012/144290715-b1f46bfe-f05e-41a3-b971-a3d97006d374.png)
 
+## Handled commands
+
+1. Connection
+- [ ] PASS
+- [x] NICK
+- [x] USER
+- [ ] [SERVER]
+- [ ] OPER
+- [ ] QUIT
+- [ ] [SQUIT]
+
+2. Channel operations
+- [x] JOIN
+- [x] PART
+- [x] MODE
+- [ ] TOPIC
+- [ ] NAMES
+- [ ] LIST
+- [ ] INVITE
+- [ ] KICK
+
+3. Server
+- [ ] VERSION
+- [ ] STATS
+- [ ] [LINKS]
+- [ ] TIME
+- [ ] [CONNECT]
+- [ ] [TRACE]
+- [ ] ADMIN
+- [ ] INFO
+
+4. Sending messages
+- [x] PRIVMSG
+- [ ] NOTICE
+
+5. User
+- [ ] WHO
+- [ ] WHOIS
+- [ ] WHOWAS
+
+6. Miscellaneous
+- [ ] KILL
+- [x] PING
+- [x] PONG
+- [ ] ERROR
+
+7. Optional
+- [ ] AWAY
+- [ ] REHASH
+- [ ] RESTART
+- [ ] SUMMON
+- [ ] USERS
+- [ ] WALLOPS
+- [ ] USERHOST
+- [ ] ISON
+
+
 ## Sources
 
 * [Beej's Guide to Network Programming](http://beej.us/guide/bgnet/html/)
