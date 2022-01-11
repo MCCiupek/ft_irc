@@ -56,11 +56,11 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 		cnl = srv.getChannelByName( chans[i] );
 		if ( cnl == NULL ) {
 			send_error( usr, ERR_NOSUCHCHANNEL, chans[i] );
-			return ;
+			continue ;
 		}
 		if ( !cnl->isOnChann(usr) ) {
 			send_error( usr, ERR_NOTONCHANNEL, chans[i] );
-			return ;
+			continue ;
 		}
 		send_to_all_in_chan(cnl, part_msg, usr);
 		usr.leaveChannel(cnl);
