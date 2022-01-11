@@ -54,6 +54,7 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 	m["WHO"] = who;
 	m["PRIVMSG"] = privmsg;
 	m["PART"] = part;
+	m["TOPIC"] = topic;
 
 	// Call function
 	if ( m.count(args[0]) > 0 ) {

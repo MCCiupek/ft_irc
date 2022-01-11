@@ -42,7 +42,7 @@ void    send_error( User u, int errn, string arg )
 	ostringstream s;
     //string  buf = ":irc.local ";
 
-	if (arg.back() == '\n')
+	if (*(arg.end() - 1) == '\n')
 		arg = arg.substr(0, arg.length()-1);
 	s << ":irc.local " << errn << " * " << arg << err[errn] << "\r\n";
 	// buf += itoa(errn);//.c_str();

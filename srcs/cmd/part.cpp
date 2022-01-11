@@ -44,7 +44,7 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 		return ;
 	}
 
-	if (args[1].back() == '\n')
+	if ( *(args[1].end() - 1) == '\n')
 		args[1] = args[1].substr(0, args[1].length()-1);
 
 	chans = ft_split(args[1], ",");
