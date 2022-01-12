@@ -44,11 +44,12 @@ void		print_other_names( User &usr, Server &srv ) {
 	map<int, User>		users = srv.getUsers();
 	vector<Channel*>	chans;
 	string				chan_name = "*";
+	size_t j;
 
 	for (map<int, User>::iterator it = users.begin(); it != users.end(); it++) {
 		if ((it->second).isVisible()) {
 			chans = (it->second).getChans();
-			for (size_t j = 0; j < chans.size(); j++) {
+			for (j = 0; j < chans.size(); j++) {
 				if ( cnl_is_visible_to_usr(chans[j], usr) )
 					break ;
 			}

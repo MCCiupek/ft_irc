@@ -119,7 +119,7 @@ string const		&Channel::getMode( void ) const {
 	return _mode;
 }
 
-int const			Channel::getLimit( void ) const {
+size_t 			Channel::getLimit( void ) const {
 	return _limit;
 }
 
@@ -140,6 +140,11 @@ void    			Channel::setTopic(string const & topic) {
 void    			Channel::unsetTopic() {
 	_topic = "";
 	_has_topic = false;
+}
+
+void    			Channel::unsetKey() {
+	_key = "";
+	_has_key = false;
 }
 
 void				Channel::setMode( string mode ) {
@@ -167,32 +172,60 @@ void				Channel::deleteMember( User * usr ) {
 	}
 }
 
+void				Channel::addModerator( User * usr ) {
+	_moderators.push_back(usr);
+}
+
+void				Channel::deleteModerator( User * usr ) {
+	
+	for ( size_t i = 0; i < _moderators.size(); i++ ) {
+		if ( usr->getNick() == _moderators[i]->getNick() )
+			_moderators.erase(_moderators.begin() + i);
+	}
+}
+
 void				Channel::addOper( User * usr ) {
 	_oper.push_back(usr);
 }
 
 void				Channel::deleteOper( User * usr ) {
 	
-	for ( size_t i = 0; i < this->getNbMembers(); i++ ) {
+	for ( size_t i = 0; i < _oper.size(); i++ ) {
 		if ( usr->getNick() == _oper[i]->getNick() )
 			_oper.erase(_oper.begin() + i);
 	}
 }
 
-void				Channel::ban( string to_ban, string key ) {
+/*void				Channel::ban( string to_ban, string key ) {
 
 	if ( _banned.find(key) != _banned.end() )
 		_banned[key].push_back(to_ban);
+}*/
+
+void				Channel::ban( string mask ) {
+	_banned_mask.push_back(mask);
+}
+
+void				Channel::unban( string mask ) {
+	
+	for ( size_t i = 0; i < _banned_mask.size(); i++ ) {
+		if ( mask == _banned_mask[i] )
+			_banned_mask.erase(_banned_mask.begin() + i);
+	}
 }
 
 bool				Channel::isBanned( User const & usr ) {
 
-	if ( find( _banned["nick"].begin(), _banned["nick"].end(), usr.getNick()) != _banned["nick"].end() )
+	for ( size_t i = 0; i < _banned_mask.size(); i++ ) {
+		if ( ft_match(usr.fci(), _banned_mask[i]) )
+			return true;
+	}
+	/*if ( find( _banned["nick"].begin(), _banned["nick"].end(), usr.getNick()) != _banned["nick"].end() )
 		return true;
 	if ( find( _banned["user"].begin(), _banned["user"].end(), usr.getUsername()) != _banned["user"].end() )
 		return true;
 	if ( find( _banned["host"].begin(), _banned["host"].end(), usr.getHostname()) != _banned["host"].end() )
-		return true;
+		return true;*/
 	return false;
 }
 
@@ -255,6 +288,14 @@ bool				Channel::isOnChann( User const & usr ) {
 bool				Channel::isOper( User const & usr ) {
 	for ( size_t i = 0; i < _oper.size(); i++ ) {
 		if ( usr.getNick() == _oper[i]->getNick())
+			return true;
+	}
+	return false;
+}
+
+bool				Channel::isModerator( User const & usr ) {
+	for ( size_t i = 0; i < _moderators.size(); i++ ) {
+		if ( usr.getNick() == _moderators[i]->getNick())
 			return true;
 	}
 	return false;

@@ -23,11 +23,13 @@ class Channel {
         bool							_has_topic;
         vector<User*>					_members;
 		vector<User*>					_invited_usrs;
+		vector<User*>					_moderators;
 		map< string,vector<string> >	_banned;
+		vector<string>					_banned_mask;
         //User*							_channel_oper;
 		vector<User*>					_oper;
 		string							_mode;
-		int								_limit;
+		size_t							_limit;
 
 		/*								CONSTRUCTORS								*/
 
@@ -57,9 +59,9 @@ class Channel {
 		bool const 				&getHasTopic( void ) const;
 		vector<User*> const 	&getMembers( void ) const;
 		vector<User*> const		&getOper( void ) const;
-		//User *					getOperator( void );
+		//User *				getOperator( void );
 		string const			&getMode( void ) const;
-		int const				getLimit( void ) const;
+		size_t					getLimit( void ) const;
 
 		/*								SETTERS										*/
 
@@ -67,16 +69,21 @@ class Channel {
         void    				setKey(string const & key);
         void    				setTopic(string const & topic);
         void    				unsetTopic();
+		void    				unsetKey();
 		void					setMode( string mode );
 		void					setLimit( int limit );
 
 		/*								MEMBERS FUNCTIONS							*/
 
+		void					ban( string mask );
+		void					unban( string mask );
 		void					addMember( User * usr );
 		void					deleteMember( User * usr );
+		void					addModerator( User * usr );
+		void					deleteModerator( User * usr );
 		void					addOper( User * usr );
 		void					deleteOper( User * usr );
-		void					ban( string to_ban, string key );
+		//void					ban( string to_ban, string key );
 		bool					isBanned( User const & usr );
 		void					invite( User * usr );
 		bool					isInvited( User const & usr );
@@ -88,6 +95,7 @@ class Channel {
 		string					getMembersList( void );
 		bool					isOnChann( User const & usr );
 		bool					isOper( User const & usr );
+		bool					isModerator( User const & usr );
 
 };
 

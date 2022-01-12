@@ -108,6 +108,7 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 	char 		flag = args[1][0];
 	string 		mode = &args[1][1];
 	Channel *	cnl = srv.getChannelByName( args[0] );
+	User *		target_usr;
 	
 	if ( !cnl )
 		return send_error(usr, ERR_NOSUCHCHANNEL, args[0]);
@@ -123,6 +124,7 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 
 	string		cnl_mode = cnl->getMode();
 	string		knw_mode = "opsitnmlbvk";
+	string		arg_mode = "olbvk";
 
 	for (size_t i = 0; i < mode.size(); i++)
 		if ( knw_mode.find(mode[i]) == string::npos )
@@ -130,30 +132,84 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 
 	if ( flag == '+' ) {
 		for (size_t i = 0; i < mode.size(); i++) {
+			if ( arg_mode.find(mode[i]) != string::npos && args.size() < 4 ) {
+					send_error(usr, ERR_NEEDMOREPARAMS, args[0]);
+					break;
+			}
 			if ( mode[i] == 'o' ) {
-				// TODO: grant oper priviledge to user in arg
+				// grant oper priviledge to user in arg
+				target_usr = srv.getUserByNick(args[3]);
+				if ( !target_usr ) {
+					send_error(usr, ERR_NOSUCHNICK, args[0]);
+					break;
+				}
+				cnl->addOper( target_usr );
 			} else if ( mode[i] == 'l' ) {
-				// TODO: set user limit with arg
+				// set user limit with arg
+				cnl->setLimit(atoi(args[3].c_str()));
 			} else if ( mode[i] == 'b' ) {
-				// TODO: set ban mask
+				// set ban mask
+				cnl->ban(args[3]);
 			} else if ( mode[i] == 'v' ) {
-				// TODO: if chan is moderated give ability to speak 
+				// if chan is moderated give ability to speak 
 				// to user in arg
+				if ( !cnl->isModerated() )
+					break;
+				target_usr = srv.getUserByNick(args[3]);
+				if ( !target_usr ) {
+					send_error(usr, ERR_NOSUCHNICK, args[0]);
+					break;
+				}
+				cnl->addModerator( target_usr );
 			} else if ( mode[i] == 'k' ) {
-				// TODO: change key with arg
+				// change key with arg
+				if ( cnl->getHasKey() ) {
+					send_error(usr, ERR_KEYSET, args[0]);
+					break;
+				}
+				cnl->setKey(args[3]);
 			} else if ( cnl_mode.find(mode[i]) == string::npos)
 				cnl_mode += mode[i];
 		}
 	} else if ( flag == '-' ) {
 		for (size_t i = 0; i < mode.size(); i++) {
+			if ( arg_mode.find(mode[i]) != string::npos && args.size() < 4 && mode[i] != 'k') {
+					send_error(usr, ERR_NEEDMOREPARAMS, args[0]);
+					break;
+			}
 			size_t to_remove = cnl_mode.find(mode[i]);
 			if ( mode[i] == 'o' ) {
-				// TODO: take oper priviledge from user in arg
+				// take oper priviledge from user in arg
+				target_usr = srv.getUserByNick(args[3]);
+				if ( !target_usr ) {
+					send_error(usr, ERR_NOSUCHNICK, args[0]);
+					break;
+				}
+				cnl->deleteOper( target_usr );
+			} else if ( mode[i] == 'l' ) {
+				// unset user limit with arg
+				cnl->setLimit(MAX_USR_PER_CHAN);
 			} else if ( mode[i] == 'b' ) {
-				// TODO: delete ban mask given in arg (if on)
+				// delete ban mask given in arg (if on)
+				cnl->unban(args[3]);
 			} else if ( mode[i] == 'v' ) {
-				// TODO: if chan is moderated take ability to speak 
+				// if chan is moderated take ability to speak 
 				// from user in arg
+				if ( !cnl->isModerated() )
+					break;
+				target_usr = srv.getUserByNick(args[3]);
+				if ( !target_usr ) {
+					send_error(usr, ERR_NOSUCHNICK, args[0]);
+					break;
+				}
+				if ( !cnl->isModerator(*target_usr) ) {
+					send_error(usr, ERR_UNKNOWNMODE, args[0]);
+					break;
+				}
+				cnl->deleteModerator( target_usr );
+			} else if ( mode[i] == 'k' ) {
+				send_error(usr, ERR_KEYSET, args[0]);
+				break;
 			} else if ( to_remove != string::npos ) {
 				cnl_mode.erase(cnl_mode.begin() + to_remove);
 			}

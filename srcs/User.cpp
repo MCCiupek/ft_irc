@@ -176,7 +176,7 @@ void				User::setIsSet( bool isset )
 
 bool				User::isOper( void ) const
 {
-	return _mode.find('o') == string::npos;
+	return _mode.find('o') != string::npos;
 }
 
 bool 				User::isVisible( void ) const

@@ -69,7 +69,7 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 		send_error( usr, ERR_BANNEDFROMCHAN, channel );
 		return 1;
 	}
-	if ( cnl->getNbMembers() == MAX_USR_PER_CHAN ) {
+	if ( cnl->getNbMembers() == cnl->getLimit() ) {
 		send_error( usr, ERR_CHANNELISFULL, channel );
 		return 1;
 	}

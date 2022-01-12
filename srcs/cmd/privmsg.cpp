@@ -64,6 +64,8 @@ void		send_privmsg_to_chan( string recv, string txt, User &usr, Server &srv ) {
 		return send_error(usr, ERR_NOSUCHCHANNEL, recv);
 	if (!(channel->isOnChann(usr) || channel->isOper(usr)) )
 		return send_error(usr, ERR_CANNOTSENDTOCHAN, recv);
+	if ( channel->isModerated() && !channel->isModerator(usr) )
+		return send_error(usr, ERR_CANNOTSENDTOCHAN, recv);
 	send_to_all_in_chan( channel, txt, usr );
 }
 

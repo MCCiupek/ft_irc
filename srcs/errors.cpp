@@ -27,6 +27,7 @@ void    define_errors( void )
 	err[ERR_NOTONCHANNEL] = " :You're not on that channel";
 	err[ERR_NEEDMOREPARAMS] = " :Not enough parameters";
 	err[ERR_ALREADYREGISTRED] = " :You may not reregister";
+	err[ERR_KEYSET] = " :Channel key already set";
 	err[ERR_CHANNELISFULL] = " :Cannot join channel (+l)";
 	err[ERR_UNKNOWNMODE] = " :is unknown mode char to me";
 	err[ERR_INVITEONLYCHAN] = " :Cannot join channel (+i)";
