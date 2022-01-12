@@ -199,9 +199,10 @@ void				User::addChannel( Channel * channel ) {
 void				User::deleteChannel( Channel * channel ) {
 	
 	for ( vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++ ) {
-		if ( (*it)->getName() == channel->getName() )
+		if ( (*it)->getName() == channel->getName() ) {
 			_channels.erase(it);
 			return ;
+		}
 		// TO DO: transfert channel ownership ?
 	}
 }

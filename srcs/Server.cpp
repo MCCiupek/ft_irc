@@ -76,6 +76,19 @@ map<int, User> const & Server::getUsers() const {
 	return _users;
 }
 
+vector<Channel*> const & Server::getChannels( void ) const {
+	return _channels;
+}
+
+vector<string> const Server::getChannelsNames( void ) const {
+
+	vector<string> names;
+
+	for ( size_t i = 0; i < _channels.size(); i++ )
+		names.push_back(_channels[i]->getName());
+	return names;
+}
+
 string const & Server::getMotd() const {
 	return _motd;
 }

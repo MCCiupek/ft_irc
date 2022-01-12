@@ -44,7 +44,7 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 		return ;
 	}
 
-	if (args[1].back() == '\n')
+	if ( *(args[1].end() - 1) == '\n')
 		args[1] = args[1].substr(0, args[1].length()-1);
 
 	chans = ft_split(args[1], ",");
@@ -56,11 +56,11 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 		cnl = srv.getChannelByName( chans[i] );
 		if ( cnl == NULL ) {
 			send_error( usr, ERR_NOSUCHCHANNEL, chans[i] );
-			return ;
+			continue ;
 		}
 		if ( !cnl->isOnChann(usr) ) {
 			send_error( usr, ERR_NOTONCHANNEL, chans[i] );
-			return ;
+			continue ;
 		}
 		send_to_all_in_chan(cnl, part_msg, usr);
 		usr.leaveChannel(cnl);

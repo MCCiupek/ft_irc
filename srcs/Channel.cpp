@@ -139,6 +139,7 @@ void    			Channel::setTopic(string const & topic) {
 
 void    			Channel::unsetTopic() {
 	_topic = "";
+	_has_topic = false;
 }
 
 void				Channel::setMode( string mode ) {

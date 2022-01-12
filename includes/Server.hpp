@@ -67,6 +67,8 @@ class Server {
 		string const 			&getPortNetwork( void ) const;
 		string const 			&getPasswordNetwork( void ) const;
 		map<int, User> const	&getUsers( void ) const;
+		vector<Channel*> const	&getChannels( void ) const;
+		vector<string> const	getChannelsNames( void ) const;
 		string const			&getMotd( void ) const;
 
 		/*								MEMBERS FUNCTIONS							*/
