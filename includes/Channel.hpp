@@ -27,6 +27,7 @@ class Channel {
         //User*							_channel_oper;
 		vector<User*>					_oper;
 		string							_mode;
+		int								_limit;
 
 		/*								CONSTRUCTORS								*/
 
@@ -58,6 +59,7 @@ class Channel {
 		vector<User*> const		&getOper( void ) const;
 		//User *					getOperator( void );
 		string const			&getMode( void ) const;
+		int const				getLimit( void ) const;
 
 		/*								SETTERS										*/
 
@@ -66,6 +68,7 @@ class Channel {
         void    				setTopic(string const & topic);
         void    				unsetTopic();
 		void					setMode( string mode );
+		void					setLimit( int limit );
 
 		/*								MEMBERS FUNCTIONS							*/
 

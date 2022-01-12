@@ -16,7 +16,8 @@ Channel::Channel(string name) :
 		_has_key(false),
 		_topic(""),
 		_has_topic(false),
-		_mode("")
+		_mode(""),
+		_limit(MAX_USR_PER_CHAN)
 {
 	vector<string> banned_nicks;
 	vector<string> banned_usernames;
@@ -118,6 +119,10 @@ string const		&Channel::getMode( void ) const {
 	return _mode;
 }
 
+int const			Channel::getLimit( void ) const {
+	return _limit;
+}
+
 void    			Channel::setName(string const & name) {
 	_name = name;
 }
@@ -138,6 +143,12 @@ void    			Channel::unsetTopic() {
 
 void				Channel::setMode( string mode ) {
 	_mode = mode;
+}
+
+void    			Channel::setLimit( int limit ) {
+
+	if ( limit > 0 && limit < MAX_USR_PER_CHAN )
+		_limit = limit;
 }
 
 void				Channel::addMember( User * usr ) {

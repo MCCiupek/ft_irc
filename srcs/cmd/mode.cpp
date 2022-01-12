@@ -112,8 +112,14 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 	if ( !cnl )
 		return send_error(usr, ERR_NOSUCHCHANNEL, args[0]);
 
+	if ( !cnl->isOnChann(usr) )
+		return send_error(usr, ERR_NOTONCHANNEL, args[0]);
+
 	if ( !cnl->isOper(usr) )
-		return send_error(usr, ERR_NOSUCHCHANNEL, args[0]);
+		return send_error(usr, ERR_CHANOPRIVSNEEDED, args[0]);
+	
+	if ( (mode.find('o') || mode.find('b')) && mode.size() > 3 )
+		return send_error(usr, ERR_CHANOPRIVSNEEDED, args[0]);
 
 	string		cnl_mode = cnl->getMode();
 	string		knw_mode = "opsitnmlbvk";
@@ -124,15 +130,33 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 
 	if ( flag == '+' ) {
 		for (size_t i = 0; i < mode.size(); i++) {
-			if ( cnl_mode.find(mode[i]) == string::npos && mode[i] != 'o')
+			if ( mode[i] == 'o' ) {
+				// TODO: grant oper priviledge to user in arg
+			} else if ( mode[i] == 'l' ) {
+				// TODO: set user limit with arg
+			} else if ( mode[i] == 'b' ) {
+				// TODO: set ban mask
+			} else if ( mode[i] == 'v' ) {
+				// TODO: if chan is moderated give ability to speak 
+				// to user in arg
+			} else if ( mode[i] == 'k' ) {
+				// TODO: change key with arg
+			} else if ( cnl_mode.find(mode[i]) == string::npos)
 				cnl_mode += mode[i];
 		}
-	}
-	else if ( flag == '-' ) {
+	} else if ( flag == '-' ) {
 		for (size_t i = 0; i < mode.size(); i++) {
 			size_t to_remove = cnl_mode.find(mode[i]);
-			if ( to_remove != string::npos )
+			if ( mode[i] == 'o' ) {
+				// TODO: take oper priviledge from user in arg
+			} else if ( mode[i] == 'b' ) {
+				// TODO: delete ban mask given in arg (if on)
+			} else if ( mode[i] == 'v' ) {
+				// TODO: if chan is moderated take ability to speak 
+				// from user in arg
+			} else if ( to_remove != string::npos ) {
 				cnl_mode.erase(cnl_mode.begin() + to_remove);
+			}
 		}
 	}
 
