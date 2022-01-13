@@ -8,6 +8,9 @@
 # define MAX_CHAN_PER_USR 10
 # define MAX_USR_PER_CHAN 10
 # define MAX_CHAN_NAME_LEN 50
+# define MOTD "\n             __ _          \n  _ __ ___  / _(_)_ __ ___ \n | '_ ` _ \\| |_| | '__/ __|\n | | | | | |  _| | | | (__ \n |_| |_| |_|_| |_|_|  \\___|"
+# define AVAILABLE_USER_MODES "iswo"
+# define AVAILABLE_CHANNEL_MODES "opsitnmlbvk"
 
 # define TRUNC(str, len) (str.substr(0, min(name.length(), (unsigned long)len)))
 

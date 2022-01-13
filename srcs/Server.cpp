@@ -1,7 +1,8 @@
 #include "headers.hpp"
 
 Server::Server( void ) {
-
+	time_t now = time(0);
+	_creation_date = ctime(&now);
 }
 
 Server::Server(string port, string pwd) :
@@ -12,12 +13,14 @@ Server::Server(string port, string pwd) :
 		_port_nwk("127.0.0.1"),
 		_pwd_nwk(""),
 		_servinfo(NULL),
-		_motd("")
+		_motd(MOTD)
 {
+	time_t now = time(0);
+	_creation_date = ctime(&now);
 }
 
 Server::Server(string port, string pwd, string host="localhost",
-	string port_nwk="127.0.0.1", string pwd_nwk="", string motd="") : 
+	string port_nwk="127.0.0.1", string pwd_nwk="", string motd=MOTD) : 
 		_name("mfirc"),
 		_port(port), 
 		_pwd(pwd),
@@ -27,6 +30,8 @@ Server::Server(string port, string pwd, string host="localhost",
 		_servinfo(NULL),
 		_motd(motd)
 {
+	time_t now = time(0);
+	_creation_date = ctime(&now);
 }
 
 Server::~Server() {
@@ -91,6 +96,10 @@ vector<string> const Server::getChannelsNames( void ) const {
 
 string const & Server::getMotd() const {
 	return _motd;
+}
+
+string const & Server::getCreationDate() const {
+	return _creation_date;
 }
 
 ostream & operator<<(ostream & stream, Server &Server) {
@@ -226,7 +235,7 @@ int				Server::receiveData( int i ) {
 		return 1;
 	}
 
-	if (parsing(ft_split(buf, " "), _users[_poll[i].fd], *this))
+	if (parsing(ft_split(buf, "\n"), _users[_poll[i].fd], *this))
 		return 1;
 	
 	//cout << "Client #" << _poll[i].fd << ": " << buf;

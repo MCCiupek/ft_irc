@@ -31,6 +31,7 @@ class Server {
 		map<int, User>			_users;
 		vector<Channel*>		_channels;
 		string					_motd;
+		string					_creation_date;
 
 		/*								CONSTRUCTORS								*/
 
@@ -70,6 +71,7 @@ class Server {
 		vector<Channel*> const	&getChannels( void ) const;
 		vector<string> const	getChannelsNames( void ) const;
 		string const			&getMotd( void ) const;
+		string const			&getCreationDate( void ) const;
 
 		/*								MEMBERS FUNCTIONS							*/
 

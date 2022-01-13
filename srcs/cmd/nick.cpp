@@ -40,8 +40,8 @@ void		nick( vector<string> args, User &usr, Server &srv )
 	}
 	//args[1].pop_back(); --> C++11
 	args[1].erase(args[1].end() - 1);
-	if (srv.is_registered(usr) && usr.getNick() == args[1])
-		return ;
+	//if (srv.is_registered(usr) && usr.getNick() == args[1])
+	//	return ;
 
 	map<int, User>	usrs = srv.getUsers();
 
@@ -59,14 +59,18 @@ void		nick( vector<string> args, User &usr, Server &srv )
 	// 		nick = s.str();
 	// 	}
 	// 	cout << MAGENTA << nick << ": Nick changed to " << args[1] << RESET << endl;
-	if (srv.is_registered(usr))
+	usr.setNick(args[1]);
+	/*if (srv.is_registered(usr))
 	{
 		//cout << MAGENTA << usr.getNick() << ": Nick changed to " << args[1] << RESET << endl;
 		if (usr.getIsSet() && usr.getNick().empty())
 		{
 			cout << GREEN << "User #" << usr.getFd() << " registred as " << args[1] << RESET << endl;
+			usr.setNick(args[1]);
 			messageoftheday(srv, usr);
 		}
-		usr.setNick(args[1]);
-	}
+		else {
+			usr.setNick(args[1]);
+		}
+	}*/
 }

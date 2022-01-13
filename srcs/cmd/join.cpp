@@ -61,6 +61,10 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 		send_error( usr, ERR_BADCHANMASK, channel );
 		return 1;
 	}
+	if ( cnl->isSecret() ) {
+		send_error( usr, ERR_NOSUCHCHANNEL, channel );
+		return 1;
+	}
 	if ( cnl->getHasKey() && cnl->getKey() != key ) {
 		send_error( usr, ERR_BADCHANNELKEY, channel );
 		return 1;
@@ -81,6 +85,8 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 	usr.addChannel( cnl );
 	if ( cnl->getHasTopic() )
 		send_reply(usr, 332, RPL_TOPIC(cnl->getName(), cnl->getTopic()));
+	else
+		send_reply(usr, 332, RPL_NOTOPIC(cnl->getName()));
 	send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), cnl->getMembersList()));
 	send_reply(usr, 366, RPL_ENDOFNAMES(cnl->getName()));
 	return 0;

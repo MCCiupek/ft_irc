@@ -105,33 +105,33 @@
 
 void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 
-	char 		flag = args[1][0];
-	string 		mode = &args[1][1];
-	Channel *	cnl = srv.getChannelByName( args[0] );
+	char 		flag = args[2][0];
+	string 		mode = &args[2][1];
+	Channel *	cnl = srv.getChannelByName( args[1] );
 	User *		target_usr;
 	
 	if ( !cnl )
-		return send_error(usr, ERR_NOSUCHCHANNEL, args[0]);
+		return send_error(usr, ERR_NOSUCHCHANNEL, args[1]);
 
 	if ( !cnl->isOnChann(usr) )
-		return send_error(usr, ERR_NOTONCHANNEL, args[0]);
+		return send_error(usr, ERR_NOTONCHANNEL, args[1]);
 
 	if ( !cnl->isOper(usr) )
-		return send_error(usr, ERR_CHANOPRIVSNEEDED, args[0]);
+		return send_error(usr, ERR_CHANOPRIVSNEEDED, args[1]);
 	
 	if ( (mode.find('o') || mode.find('b')) && mode.size() > 3 )
-		return send_error(usr, ERR_CHANOPRIVSNEEDED, args[0]);
+		return send_error(usr, ERR_CHANOPRIVSNEEDED, args[1]);
 
 	string		cnl_mode = cnl->getMode();
-	string		knw_mode = "opsitnmlbvk";
+	string		knw_mode = AVAILABLE_CHANNEL_MODES;
 	string		arg_mode = "olbvk";
 
-	for (size_t i = 0; i < mode.size(); i++)
+	for (size_t i = 0; i < mode.size() - 1; i++)
 		if ( knw_mode.find(mode[i]) == string::npos )
-			return send_error(usr, ERR_UNKNOWNMODE, args[0]);
+			return send_error(usr, ERR_UNKNOWNMODE, &mode[i]);
 
 	if ( flag == '+' ) {
-		for (size_t i = 0; i < mode.size(); i++) {
+		for (size_t i = 0; i < mode.size() - 1; i++) {
 			if ( arg_mode.find(mode[i]) != string::npos && args.size() < 4 ) {
 					send_error(usr, ERR_NEEDMOREPARAMS, args[0]);
 					break;
@@ -140,7 +140,7 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 				// grant oper priviledge to user in arg
 				target_usr = srv.getUserByNick(args[3]);
 				if ( !target_usr ) {
-					send_error(usr, ERR_NOSUCHNICK, args[0]);
+					send_error(usr, ERR_NOSUCHNICK, args[3]);
 					break;
 				}
 				cnl->addOper( target_usr );
@@ -157,14 +157,14 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 					break;
 				target_usr = srv.getUserByNick(args[3]);
 				if ( !target_usr ) {
-					send_error(usr, ERR_NOSUCHNICK, args[0]);
+					send_error(usr, ERR_NOSUCHNICK, args[1]);
 					break;
 				}
 				cnl->addModerator( target_usr );
 			} else if ( mode[i] == 'k' ) {
 				// change key with arg
 				if ( cnl->getHasKey() ) {
-					send_error(usr, ERR_KEYSET, args[0]);
+					send_error(usr, ERR_KEYSET, args[1]);
 					break;
 				}
 				cnl->setKey(args[3]);
@@ -172,7 +172,7 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 				cnl_mode += mode[i];
 		}
 	} else if ( flag == '-' ) {
-		for (size_t i = 0; i < mode.size(); i++) {
+		for (size_t i = 0; i < mode.size() - 1; i++) {
 			if ( arg_mode.find(mode[i]) != string::npos && args.size() < 4 && mode[i] != 'k') {
 					send_error(usr, ERR_NEEDMOREPARAMS, args[0]);
 					break;
@@ -182,7 +182,7 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 				// take oper priviledge from user in arg
 				target_usr = srv.getUserByNick(args[3]);
 				if ( !target_usr ) {
-					send_error(usr, ERR_NOSUCHNICK, args[0]);
+					send_error(usr, ERR_NOSUCHNICK, args[3]);
 					break;
 				}
 				cnl->deleteOper( target_usr );
@@ -199,11 +199,7 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 					break;
 				target_usr = srv.getUserByNick(args[3]);
 				if ( !target_usr ) {
-					send_error(usr, ERR_NOSUCHNICK, args[0]);
-					break;
-				}
-				if ( !cnl->isModerator(*target_usr) ) {
-					send_error(usr, ERR_UNKNOWNMODE, args[0]);
+					send_error(usr, ERR_NOSUCHNICK, args[3]);
 					break;
 				}
 				cnl->deleteModerator( target_usr );
@@ -223,20 +219,22 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 
 void		usr_mode( vector<string> args, User &usr, Server &srv ) {
 
-	User *	target = srv.getUserByNick(args[0]);
+	User *	target = srv.getUserByNick(args[1]);
 
-	char flag = args[1][0];
-	string mode = &args[1][1];
+	//args[2] = args[2].substr(0, args[2].length()-1);
+
+	char flag = args[2][0];
+	string mode = args[2].substr(1, args[2].length() - 2);//  &args[2][1];
 
 	if ( !target || usr.getNick() != target->getNick() )
-		return send_error(usr, ERR_USERSDONTMATCH, args[0]);
+		return send_error(usr, ERR_USERSDONTMATCH, args[1]);
 
 	string	usr_mode = target->getMode();
-	string	knw_mode = "iswo";
+	string	knw_mode = AVAILABLE_USER_MODES;
 
 	for (size_t i = 0; i < mode.size(); i++)
 		if ( knw_mode.find(mode[i]) == string::npos )
-			return send_error(usr, ERR_UMODEUNKNOWNFLAG, args[0]);
+			return send_error(usr, ERR_UMODEUNKNOWNFLAG, args[2]);
 
 	if ( flag == '+' ) {
 		for (size_t i = 0; i < mode.size(); i++) {
@@ -252,7 +250,7 @@ void		usr_mode( vector<string> args, User &usr, Server &srv ) {
 		}
 	}
 	else
-		return send_error(usr, ERR_UMODEUNKNOWNFLAG, args[0]);
+		return send_error(usr, ERR_UMODEUNKNOWNFLAG, args[2]);
 
 	target->setMode(usr_mode);
 	send_reply(usr, 221, RPL_UMODEIS(target->getMode()));
@@ -267,7 +265,7 @@ void		mode( vector<string> args, User &usr, Server &srv ) {
 		return ;
 	}
 
-	if ( mask.find(args[0]) != string::npos )
+	if ( mask.find(args[1][0]) != string::npos )
 		cnl_mode(args, usr, srv);
 	else
 		usr_mode(args, usr, srv);

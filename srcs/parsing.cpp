@@ -24,24 +24,25 @@ map<string, string>		parser( int n_params, char *params[] ) {
 		res["HOST"] = v[0];
 		res["PORT_NWK"] = v[1];
 		res["PWD_NWK"] = v[2];
+		res["MOTD"] = MOTD;
 	}
 
 	return res;
 }
 
+void	delete_nl( string str ) {
+
+	if ( !str.empty() && str[str.size()] == '\n' ) {
+		str.erase(str.end() - 1);
+	}
+}
+
 int						parsing( vector<string> args, User &usr, Server &srv )
 {
-
-	transform(args[0].begin(), args[0].end(), args[0].begin(), ::toupper);
-	//if (!is_upper(args[0]))
-	//	args[0] = to_upper(args[0]);
-
-	// Remove \n at the end of command
-	if (args.size() == 1)
-		args[0].erase(args[0].end() - 1);
-		// args[0].pop_back(); --> C++11
-	
-	//cout << args[0] << endl;
+	for (size_t i = 0; i  < args.size(); i++) {
+		delete_nl(args[i]);
+		cout << YELLOW << args[i] << RESET << endl;
+	}
 
 	map<string, FnPtr>	m;
 
@@ -50,17 +51,31 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 	m["PING"] = ping;
 	m["PONG"] = pong;
 	m["JOIN"] = join;
-	m["MODE"] = ping;
+	m["MODE"] = mode;
 	m["WHO"] = who;
 	m["PRIVMSG"] = privmsg;
 	m["PART"] = part;
 	m["TOPIC"] = topic;
 	m["NAMES"] = names;
 
-	// Call function
-	if ( m.count(args[0]) > 0 ) {
-		m[args[0]](args, usr, srv);
-		return 1;
+	for (size_t i = 0; i  < args.size(); i++) {
+		vector<string> cmd = ft_split(args[i], " ");
+		transform(cmd[0].begin(), cmd[0].end(), cmd[0].begin(), ::toupper);
+		//if (!is_upper(args[0]))
+		//	args[0] = to_upper(args[0]);
+
+		// Remove \n at the end of command
+		//if (args.size() == 1)
+		//	args[0].erase(args[0].end() - 1);
+			// args[0].pop_back(); --> C++11
+		
+		//cout << args[0] << endl;
+
+		// Call function
+		if ( m.count(cmd[0]) > 0 ) {
+			m[cmd[0]](cmd, usr, srv);
+			//return 1;
+		}
 	}
 
 	return 0;
