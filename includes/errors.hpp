@@ -71,6 +71,7 @@ extern map<int, string>		err;	// errors list
 int		display_usage( void );
 void    define_errors( void );
 void    send_error( User u, int errn, string cmd );
-void    send_reply( int fd, string msg );
+//void    send_reply( int fd, string msg );
+void    send_reply( User u, int rpln, string reply );
 
 #endif

@@ -54,8 +54,19 @@ void    send_error( User u, int errn, string arg )
 		throw eExc(strerror(errno));
 }
 
-void    send_reply( int fd, string msg )
+// void    send_reply( int fd, string msg )
+// {
+// 	if ( send(fd, &msg[0], msg.size(), 0) == -1 )
+// 		throw eExc(strerror(errno));
+// }
+
+void    send_reply( User u, int rpln, string reply )
 {
-	if ( send(fd, &msg[0], msg.size(), 0) == -1 )
+	ostringstream s;
+
+	s << ":mfirc " << rpln << " " << u.getNick() << " " << reply;
+	string msg = s.str();
+
+	if ( send(u.getFd(), &msg[0], msg.size(), 0) == -1 )
 		throw eExc(strerror(errno));
 }
