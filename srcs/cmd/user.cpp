@@ -18,9 +18,9 @@
 
 void	user( vector<string> args, User &usr, Server &srv )
 {
-	if (args.size() < 5)
+	if (args.size() < 4)
 	{
-		send_error(usr, ERR_NEEDMOREPARAMS, args[0]);
+		send_error(usr, ERR_NEEDMOREPARAMS, "USER");
 		return ;
 	}
 	if (usr.getIsSet())

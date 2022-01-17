@@ -117,16 +117,18 @@ static int		who_user( const vector<string> args, User &usr, Server &srv, bool wi
 					<< " " << u.getRealName() << " " << u.getHostname() << " "
 					<< u.getServername() << " " << u.getNick() << " " << "H"
 					<< (u.isIRCOper() ? "*" : "") << (u.isChanOper() ? "@" : "") << " " << ":0 "
-					<< u.getRealName() << "\r\n";
+					<< u.getRealName();// << "\r\n";
 			}
 		}
 	}
 
 	// irssi syntax :<server> 315 <nickname> <who param> :End of /WHO list.
-	s 	<< ":" << srv.getName() << " 315 " << usr.getNick() << " " << (wild == true ? "*" : args[0])
-		<< " :End of /WHO list." << "\r\n";
+	// s 	<< ":" << srv.getName() << " 315 " << usr.getNick() << " " << (wild == true ? "*" : args[0])
+	// 	<< " :End of /WHO list." << "\r\n";
 
-	send_reply(usr.getFd(), s.str());
+	send_reply(usr, 352, RPL_WHOREPLY(s.str()));
+	send_reply(usr, 315, RPL_ENDOFWHO(wild == true ? "*" : args[0]));
+	//send_reply(usr.getFd(), s.str());
 	
 	return 1;
 }
@@ -146,21 +148,22 @@ int				who_channel( const vector<string> args, User &usr, Server &srv, bool wild
 
 			// irssi syntax :<server> 352 <user> <*|u.curr_channel> <u.realname> <u.hostname> <u.servername>
 			//									 <u.nickname> <H|G>[*][@|+] :<hopcount> <u.realname>
-			s	<< ":" << srv.getName() << " 352 " << usr.getNick() << " "
+			s	//<< ":" << srv.getName() << " 352 " << usr.getNick() << " "
 				<< (u.getCurrChan() == nullptr ? "*" : u.getCurrChan()->getName())
 				<< " " << u.getRealName() << " " << u.getHostname() << " "
-				<< u.getServername() << " " << u.getNick() << " " << (u.getIsAway() ? "G" : "H")
+				<< u.getServername() << " " << u.getNick() << " " << "H"
 				<< (u.isIRCOper() ? "*" : "") << (u.isChanOper() ? "@" : "") << " " << ":0 "
-				<< u.getRealName() << "\r\n";
+				<< u.getRealName();// << "\r\n";
 		}
 	}
 
 	// irssi syntax :<server> 315 <nickname> <who param> :End of /WHO list.
-	s 	<< ":" << srv.getName() << " 315 " << usr.getNick() << " " << (wild == true ? "*" : args[0])
-		<< " :End of /WHO list." << "\r\n";
+	// s 	<< ":" << srv.getName() << " 315 " << usr.getNick() << " " << (wild == true ? "*" : args[0])
+	// 	<< " :End of /WHO list." << "\r\n";
 
-	send_reply(usr.getFd(), s.str());
-
+	// send_reply(usr.getFd(), s.str());
+	send_reply(usr, 352, RPL_WHOREPLY(s.str()));
+	send_reply(usr, 315, RPL_ENDOFWHO(wild == true ? "*" : args[0]));
 	return 1;
 }
 

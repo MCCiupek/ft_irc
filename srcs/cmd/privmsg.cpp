@@ -34,8 +34,8 @@ void		send_to_all_in_chan( Channel * Chan, string txt, User &usr ) {
 		if (users[i]->getNick() != usr.getNick()) {
 			string msg = txt + "\n";
 			send(users[i]->getFd(), &msg, msg.length(), 0);
-			if ( users[i]->getIsAway() )
-				send_reply(usr, 301, RPL_AWAY(users[i]->getNick(), users[i]->getAwayMsg()));
+			//if ( users[i]->getIsAway() )
+			//	send_reply(usr, 301, RPL_AWAY(users[i]->getNick(), users[i]->getAwayMsg()));
 		}
 	}
 }
@@ -48,10 +48,10 @@ void		send_privmsg_to_usr( string recv, string txt, User &usr, Server &srv ) {
 	receiver = srv.getUserByNick(recv);
 	if ( !receiver )
 		return send_error(usr, ERR_NOSUCHNICK, recv);
-	msg = txt + "\n";
+	msg = txt + "\r\n";
 	send(receiver->getFd(), &msg, msg.length(), 0);
-	if ( receiver->getIsAway() )
-		send_reply(usr, 301, RPL_AWAY(receiver->getNick(), receiver->getAwayMsg()));
+	//if ( receiver->getIsAway() )
+	//	send_reply(usr, 301, RPL_AWAY(receiver->getNick(), receiver->getAwayMsg()));
 }
 
 void		send_privmsg_to_chan( string recv, string txt, User &usr, Server &srv ) {
@@ -86,15 +86,15 @@ void		send_privmsg( string recv, string txt, User &usr, Server &srv ) {
 
 void		privmsg( vector<string> args, User &usr, Server &srv ) {
 
+	if (args.size() < 1)
+		return send_error(usr, ERR_NORECIPIENT, "");
 	if (args.size() < 2)
-		return send_error(usr, ERR_NORECIPIENT, args[0]);
-	if (args.size() == 2)
-		return send_error(usr, ERR_NOTEXTTOSEND, args[0]);
+		return send_error(usr, ERR_NOTEXTTOSEND, "");
 
 	vector<string> recvs = ft_split(args[1], ",");
 
 	if (has_duplicates(recvs))
-		return send_error(usr, ERR_TOOMANYTARGETS, args[0]);
+		return send_error(usr, ERR_TOOMANYTARGETS, find_duplicates(recvs));
 
 	for (vector<string>::iterator it = recvs.begin(); it != recvs.end(); it++)
 		send_privmsg(*it, ft_join(args, " ", 2), usr, srv);

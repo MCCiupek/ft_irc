@@ -49,12 +49,12 @@ int		create_channel( string channel, string key, User &u, Server &srv ) {
 	ostringstream s;
 
 	// irssi syntax [ :<nickname>!<nickname>@<host> JOIN :#<channel> ]
-	s	<< ":" << u.getNick() << "!" << u.getNick() << "@" << srv.getHost()
-		<< " JOIN :" << channel << "\r\n";
+	// s	<< ":" << u.getNick() << "!" << u.getNick() << "@" << srv.getHost()
+	// 	<< " JOIN :" << channel << "\r\n";
 
-	s << new_channel->MembersToString(u, srv);
+	// s << new_channel->MembersToString(u, srv);
 
-	send_reply(u.getFd(), s.str());
+	// send_reply(u.getFd(), s.str());
 
 	return 0;
 }

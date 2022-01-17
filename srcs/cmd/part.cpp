@@ -36,11 +36,11 @@
 void		part( vector<string> args, User &usr, Server &srv ) {
 
 	vector<string>	chans;
-	string			part_msg = usr.getNick() + " left channel\r\n";
+	string			part_msg = usr.getNick() + " left channel";
 	Channel *		cnl;
 	
-	if ( args.size() < 2 ) {
-		send_error( usr, ERR_NEEDMOREPARAMS, args[0] );
+	if ( args.size() < 1 ) {
+		send_error( usr, ERR_NEEDMOREPARAMS, "PART" );
 		return ;
 	}
 
@@ -63,6 +63,6 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 			continue ;
 		}
 		send_to_all_in_chan(cnl, part_msg, usr);
-		usr.leaveChannel(cnl);
+		usr.deleteChannel(cnl);
 	}
 }

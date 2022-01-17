@@ -41,4 +41,16 @@ bool has_duplicates(vector<T> vec) {
 	return false;
 }
 
+template<typename T>
+T find_duplicates(vector<T> vec) {
+	vector<T> copy = vec;
+	sort(copy.begin(), copy.end());
+	if (copy.size() < 2)
+		return NULL;
+	for (size_t i = 0; i < copy.size() - 1; i++)
+		if (copy[i] == copy[i + 1])
+			return copy[i];
+	return NULL;
+}
+
 #endif
