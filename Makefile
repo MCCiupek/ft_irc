@@ -6,29 +6,29 @@
 #    By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/03 19:40:40 by fmanetti          #+#    #+#              #
-#    Updated: 2021/12/13 19:08:17 by fmanetti         ###   ########.fr        #
+#    Updated: 2021/12/21 05:00:11 by fmanetti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 CC				=		clang++
 
 FLAGS			=		-Wall -Wextra -Werror -std=c++98
-FSANITIZE		=		#-fsanitize=address -g3
+FSANITIZE		=		-fsanitize=address -g3
 
 RM				=		rm -rf
 
 DIR_HEADERS		=		./includes/
 
-# HEADER			=		colors.hpp		\
-# 						errors.hpp		\
-# 						headers.hpp		\
-# 						parsing.hpp		\
-# 						Server.hpp		\
-# 						User.hpp		\
-# 						utils.hpp		\
-# 						cmd.hpp
+HEADER			=		colors.hpp		\
+						errors.hpp		\
+						headers.hpp		\
+						parsing.hpp		\
+						Server.hpp		\
+						User.hpp		\
+						utils.hpp		\
+						cmd.hpp
 
-# HEADERS			=		$(addprefix $(DIR_HEADERS), $(HEADER))
+HEADERS			=		$(addprefix $(DIR_HEADERS), $(HEADER))
 
 DIR_SRCS		=		./srcs/
 
@@ -70,7 +70,7 @@ endif
 
 all:			$(NAME)
 
-$(NAME) :		echoCL $(OBJS) echoOK echoCS
+$(NAME) :		echoCL $(OBJS) $(HEADERS) echoOK echoCS 
 				$(CC) $(FLAGS) $(FSANITIZE) $(OS) $(OBJS) -o $(NAME)
 
 %.o: %.cpp

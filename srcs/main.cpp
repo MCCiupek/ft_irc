@@ -12,7 +12,7 @@ int main( int argc, char *argv[] ) {
 		Server ircserv;
 		if ( p.size() > 2 ) {
 			ircserv = Server(p["PORT"], p["PWD"], p["HOST"], p["PORT_NWK"], p["PWD_NWK"],
-				p["MOTD"]);
+				p["MOTD"], p["OPER"]);
 		} else {
 			ircserv = Server(p["PORT"], p["PWD"]);
 		}

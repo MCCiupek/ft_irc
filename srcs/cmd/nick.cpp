@@ -28,49 +28,43 @@ void		nick( vector<string> args, User &usr, Server &srv )
 {
 	ostringstream s;
 
-	if (args.size() == 1)
+	cout << args[0] << endl;
+
+	if (args.size() == 0)
 	{
-		send_error(usr, ERR_NEEDMOREPARAMS, args[0]);
+		send_error(usr, ERR_NEEDMOREPARAMS, "NICK");
 		return ;
 	}
-	else if (args[1].empty() || args.size() > 2)
+	else if (args[0].empty() || args[0].length() > MAX_USR_NICK_LEN || args.size() > 1)
 	{
 		send_error(usr, ERR_ERRONEUSNICKNAME, implode(args.begin() + 1, args.end()));
 		return ;
 	}
-	//args[1].pop_back(); --> C++11
-	args[1].erase(args[1].end() - 1);
-	//if (srv.is_registered(usr) && usr.getNick() == args[1])
-	//	return ;
+	//args[0].pop_back(); --> C++11
+	args[0].erase(args[0].end());
+	if (srv.is_registered(usr) && usr.getNick() == args[0])
+		return ;
 
 	map<int, User>	usrs = srv.getUsers();
 
 	for (map<int, User>::iterator it = usrs.begin(); it != usrs.end(); it++)
-		if (it->second.getNick() == args[1])
+		if (it->second.getNick() == args[0])
 		{
-			send_error(usr, ERR_NICKNAMEINUSE, args[1]);
+			send_error(usr, ERR_NICKNAMEINUSE, args[0]);
 			return ;
 		}
 
-	// if (srv.is_registered(usr)) {
-	// 	string	nick = usr.getNick();
-	// 	if (nick == "") {
-	// 		s << "Client #" << usr.getFd();
-	// 		nick = s.str();
-	// 	}
-	// 	cout << MAGENTA << nick << ": Nick changed to " << args[1] << RESET << endl;
-	usr.setNick(args[1]);
-	/*if (srv.is_registered(usr))
+	if (srv.is_registered(usr))
 	{
-		//cout << MAGENTA << usr.getNick() << ": Nick changed to " << args[1] << RESET << endl;
+		if (usr.getNick().empty()) 
+			cout << MAGENTA << "User #" << usr.getFd() << " nick set to " << args[0] << RESET << endl;
+		else	
+			cout << MAGENTA << usr.getNick() << ": Nick changed to " << args[0] << RESET << endl;
 		if (usr.getIsSet() && usr.getNick().empty())
 		{
-			cout << GREEN << "User #" << usr.getFd() << " registred as " << args[1] << RESET << endl;
-			usr.setNick(args[1]);
+			cout << GREEN << "User #" << usr.getFd() << " registred as " << args[0] << RESET << endl;
 			messageoftheday(srv, usr);
 		}
-		else {
-			usr.setNick(args[1]);
-		}
-	}*/
+		usr.setNick(args[0]);
+	}
 }

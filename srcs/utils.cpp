@@ -175,11 +175,6 @@ ostream &operator<<(ostream & stream, const User &User) {
 	return stream;
 }
 
-string			server_msg( Server &srv )
-{
-	return ("[server:" + srv.getPort() + "]: ");
-}
-
 string			get_time()
 {
 	ostringstream str;
@@ -193,18 +188,6 @@ void    		messageoftheday( Server &srv, User usr )
 {
 	ostringstream str;
 
-    /*str << server_msg(srv) << srv.getName() << " 001 " << usr.getNick()
-		<< " :Welcome to the Internet Relay Network " << usr.getNick() << endl
-		<< ":" << srv.getName() << " 002 " << usr.getNick()
-		<< " :Your host is " << srv.getName() << ", running " << SERVER_VERSION << endl
-		<< ":" << srv.getName() << " 003 " << usr.getNick()
-		<< " :This server was created " << get_time()
-		<< ":" << srv.getName() << " 004 " << usr.getNick()
-		<< " :" << srv.getName() << " " << SERVER_VERSION << endl;
-
-	if ( send(usr.getFd(), &str.str()[0], str.str().size(), 0) == -1 )
-		throw eExc(strerror(errno));
-*/
 	send_reply(usr, 001, RPL_WELCOME(usr.getNick(), usr.getUsername(), usr.getHostname()));
 	send_reply(usr, 002, RPL_YOURHOST(srv.getName(), SERVER_VERSION));
 	send_reply(usr, 003, RPL_CREATED(srv.getCreationDate()));

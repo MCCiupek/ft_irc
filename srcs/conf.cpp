@@ -18,14 +18,12 @@ static bool				valid_param( string name, string value )
 
 map<string, string>		conf_file( char *path )
 {
-	ifstream	file;
+	ifstream	file(path);
 
-	file.exceptions ( ifstream::badbit );
-	try {
-		file.open(path);
-	}
-	catch (const ifstream::failure& e) {
-		cerr << "Configuration file can't be opened" << endl;
+	if (!file)
+	{
+		cerr << RED << "Configuration file can't be opened" << endl;
+		exit(EXIT_FAILURE); 
 	}
 
 	map<string, string>		m;

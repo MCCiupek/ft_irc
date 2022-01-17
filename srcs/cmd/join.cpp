@@ -39,25 +39,44 @@
 		RPL_TOPIC
 */
 
-int		create_channel( string channel, string key, User &usr, Server &srv ) {
+int		create_channel( string channel, string key, User &u, Server &srv ) {
 
-	Channel	* new_channel = new Channel(channel, key, "", &usr);
+	Channel	* new_channel = new Channel(channel, key, "", &u, "nt");
 	srv.addChannel( new_channel );
-	usr.addChannel( new_channel );
+	u.addChannel( new_channel );
+	u.setCurrChan( new_channel );
+
+	ostringstream s;
+
+	// irssi syntax [ :<nickname>!<nickname>@<host> JOIN :#<channel> ]
+	s	<< ":" << u.getNick() << "!" << u.getNick() << "@" << srv.getHost()
+		<< " JOIN :" << channel << "\r\n";
+
+	s << new_channel->MembersToString(u, srv);
+
+	send_reply(u.getFd(), s.str());
+
 	return 0;
 }
 
 int		join_channel( string channel, string key, User &usr, Server &srv ) {
 
-	Channel *		cnl;
-	string			beg = "#&+!";
+	Channel 		*cnl;
 
+	if ( !usr.isRegistered() )
+	{
+		send_error( usr, ERR_NOTREGISTERED, "JOIN" );
+		return 1;
+	}		
 
-	if ( beg.find(channel[0]) != string::npos ) {
+	if ( channel[0] == '#' ) {
 		cnl = srv.getChannelByName( channel );
+		// if (cnl)
+		// 	cout << "cnl = " << cnl->getName() << endl;
 		if ( cnl == NULL ) // Create Channel.
 			return create_channel(channel, key, usr, srv);
-	} else {
+	}
+	else {
 		send_error( usr, ERR_BADCHANMASK, channel );
 		return 1;
 	}
@@ -65,6 +84,19 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 		send_error( usr, ERR_NOSUCHCHANNEL, channel );
 		return 1;
 	}
+
+	if (usr.getCurrChan())
+	{
+		// User is registred in channel and it is the current
+		if ( (usr.getCurrChan())->getName() == channel )
+			return 0;
+		// User is registered in channel but is not the current
+		else if ( usr.isRegisteredToChan(*cnl) && (usr.getCurrChan()->getName()) != channel ) {
+			usr.setCurrChan(cnl);
+			return 0;
+		}
+	}
+
 	if ( cnl->getHasKey() && cnl->getKey() != key ) {
 		send_error( usr, ERR_BADCHANNELKEY, channel );
 		return 1;
@@ -83,6 +115,7 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 	}
 	cnl->addMember(&usr);
 	usr.addChannel( cnl );
+	usr.setCurrChan( cnl );
 	if ( cnl->getHasTopic() )
 		send_reply(usr, 332, RPL_TOPIC(cnl->getName(), cnl->getTopic()));
 	else
@@ -96,33 +129,35 @@ void		join( vector<string> args, User &usr, Server &srv ) {
 
 	vector<string>	chans;
 	
-	if ( args.size() < 2 ) {
-		send_error( usr, ERR_NEEDMOREPARAMS, args[0] );
+	if ( args.size() < 1 ) {
+		send_error( usr, ERR_NEEDMOREPARAMS, "JOIN" );
 		return ;
 	}
 
-	//if ( *(args[1].end() - 1) == '\n')
-	args[1] = args[1].substr(0, args[1].length()-1);
+	cout << args[0] << endl;
+	// Probably useless
+	// if (args[0].back() == '\n')
+	// 	args[0].erase(args[0].end() - 1);
 	
-	//cout << args[1] << " == 0: " << (args[1] == "0") << endl;
-	if ( args[1] == "0" ) {
+	if ( args[0] == "0" ) {
 		//Leave all channels the user is currently a member of.
 		usr.leaveAllChans();
 		return;
 	}
 
-	chans = ft_split(args[1], ",");
+	chans = ft_split(args[0], ",");
 	// TO DO : Is the use wildcards authorized ? If so should be implemented here with ft_match.
 
 	vector<string>	keys(chans.size());
+
 	if (args.size() > 2)
-		keys = ft_split(args[2], ",");
+		keys = ft_split(args[1], ",");
 
 	for (size_t i = 0; i < chans.size(); i++) {
 		if ( i + 1 == MAX_CHAN_PER_USR ) {
-			send_error( usr, ERR_TOOMANYCHANNELS, args[0] );
+			send_error( usr, ERR_TOOMANYCHANNELS, "JOIN" );
 			return ;
 		}
-		join_channel(chans[i], keys[i], usr, srv);
+		join_channel(chans[i], keys[i], usr, srv);	
 	}
 }
