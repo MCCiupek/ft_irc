@@ -40,7 +40,7 @@ class Channel {
 
 		Channel( void );
 		Channel(string name);
-		Channel(string name, string key, string topic, User * usr);
+		Channel(string name, string key, string topic, User * usr, string mode = "");
 		virtual ~Channel( void ); 
 
 		Channel & operator=(Channel const& src); 
@@ -76,6 +76,7 @@ class Channel {
 		bool					isInviteOnly( void );
 		string					getMembersList( void );
 		bool					isOnChann( User const & usr );
+		string					MembersToString( User const & u, Server const & s );
 
 };
 

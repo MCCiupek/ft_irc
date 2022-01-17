@@ -1,13 +1,14 @@
 #ifndef HEADERS_HPP
 # define HEADERS_HPP
 
-# define BACKLOG 5
-# define MAXCLI 5
-# define BUFSIZE 128
-# define SERVER_VERSION "0.7.13"
-# define MAX_CHAN_PER_USR 10
-# define MAX_USR_PER_CHAN 10
-# define MAX_CHAN_NAME_LEN 50
+# define BACKLOG			5
+# define MAXCLI				5
+# define BUFSIZE			128
+# define SERVER_VERSION		"0.7.13"
+# define MAX_CHAN_PER_USR	10
+# define MAX_USR_PER_CHAN	10
+# define MAX_USR_NICK_LEN	20
+# define MAX_CHAN_NAME_LEN	200
 
 # define TRUNC(str, len) (str.substr(0, min(name.length(), (unsigned long)len)))
 
@@ -40,14 +41,11 @@ using namespace std;
 
 # include "colors.hpp"
 # include "User.hpp"
+# include "Server.hpp"
 # include "Channel.hpp"
 # include "utils.hpp"
 # include "errors.hpp"
 # include "parsing.hpp"
-# include "Server.hpp"
 # include "cmd.hpp"
-
-//void		nick( vector<string> args, User &usr, Server &srv );
-//void		user( vector<string> args, User &usr, Server &srv );
 
 #endif

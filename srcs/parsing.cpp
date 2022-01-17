@@ -5,7 +5,7 @@ map<string, string>		parser( int n_params, char *params[] ) {
 	map<string, string> res;
 
 	if ( n_params != 4 && n_params != 3 && n_params != 2) {
-		throw eExc("Usage: ./ircserv [host:port_network:password_network] <port> <password> \
+		throw eExc("Usage: ./ircserv [host:port_network:password_network] <port> <password> \n\
 		        ./ircserv <txt.conf>");
 	}
 
@@ -31,33 +31,34 @@ map<string, string>		parser( int n_params, char *params[] ) {
 
 int						parsing( vector<string> args, User &usr, Server &srv )
 {
+	string	cmd = args[0];
 
-	transform(args[0].begin(), args[0].end(), args[0].begin(), ::toupper);
-	//if (!is_upper(args[0]))
-	//	args[0] = to_upper(args[0]);
+	transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
+	//if (!is_upper(cmd))
+	//	cmd = to_upper(cmd);
 
 	// Remove \n at the end of command
 	if (args.size() == 1)
-		args[0].erase(args[0].end() - 1);
-		// args[0].pop_back(); --> C++11
+		cmd.erase(cmd.end() - 1);
 	
-	//cout << args[0] << endl;
+	cout << cmd << endl;
 
 	map<string, FnPtr>	m;
 
 	m["NICK"] = nick;
 	m["USER"] = user;
+	m["MODE"] = mode;
 	m["PING"] = ping;
 	m["PONG"] = pong;
 	m["JOIN"] = join;
-	m["MODE"] = ping;
 	m["WHO"] = who;
 	m["PRIVMSG"] = privmsg;
 	m["PART"] = part;
 
 	// Call function
-	if ( m.count(args[0]) > 0 ) {
-		m[args[0]](args, usr, srv);
+	if ( m.count(cmd) > 0 ) {
+		args.erase(args.begin());	// Remove args[0] (command)
+		m[cmd](args, usr, srv);
 		return 1;
 	}
 

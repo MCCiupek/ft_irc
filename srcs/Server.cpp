@@ -12,12 +12,14 @@ Server::Server(string port, string pwd) :
 		_port_nwk("127.0.0.1"),
 		_pwd_nwk(""),
 		_servinfo(NULL),
+		_irc_operators(),
 		_motd("")
 {
 }
 
 Server::Server(string port, string pwd, string host="localhost",
-	string port_nwk="127.0.0.1", string pwd_nwk="", string motd="") : 
+			string port_nwk="127.0.0.1", string pwd_nwk="", string motd="",
+			string operators="") : 
 		_name("mfirc"),
 		_port(port), 
 		_pwd(pwd),
@@ -27,6 +29,15 @@ Server::Server(string port, string pwd, string host="localhost",
 		_servinfo(NULL),
 		_motd(motd)
 {
+	vector<string>	cred = ft_split(operators, "|");
+
+	for (vector<string>::iterator it = cred.begin(); it != cred.end(); ++it)
+	{
+		vector<string>	tmp = ft_split(*it, ":");
+
+		_irc_operators.insert(make_pair(tmp[0], tmp[1]));
+	}
+
 }
 
 Server::~Server() {
@@ -189,6 +200,30 @@ int				Server::sendData( int fd ) {
 	return 0;
 }
 
+vector<string>  get_next_command( char *buf )
+{
+	static string   buffer = "";
+	string			s(buffer + buf);
+
+	// Multiple commands on one line
+	if (count(s.begin(), s.end(), '\n') > 0)
+	{
+		buffer = "";
+		vector<string> tmp = ft_split(s, "\n");
+		
+		// Delete \r in case of connection from irssi
+		for (vector<string>::iterator it = tmp.begin(); it != tmp.end(); ++it)
+			if ((*it)[0] == '\r')
+				(*it).erase(0, 1);
+
+		return tmp;
+	}
+	else
+		buffer += buf;
+
+	return vector<string>();
+}
+
 int				Server::receiveData( int i ) {
 	
 	char    		buf[BUFSIZE];
@@ -204,7 +239,6 @@ int				Server::receiveData( int i ) {
 	nbytes = recv(_poll[i].fd, buf, BUFSIZE - 1, 0);
 	if (nbytes <= 0) {
 		if (nbytes == 0)
-			// cout << BOLDWHITE << "❌ " << nick << " gone away" << RESET << endl;
 			cout << BOLDWHITE << "❌ Client #" << _poll[i].fd << " gone away" << RESET << endl;
 		close(_poll[i].fd);
 		del_from_pfds(_poll, i, &_fd_count);
@@ -213,11 +247,20 @@ int				Server::receiveData( int i ) {
 		return 1;
 	}
 
-	if (parsing(ft_split(buf, " "), _users[_poll[i].fd], *this))
-		return 1;
-	
-	//cout << "Client #" << _poll[i].fd << ": " << buf;
-	cout << nick << ": " << buf;
+	cout << "buf = " << buf << endl;
+
+	vector<string>  v = get_next_command(buf);
+	if (!v.empty())
+		v.pop_back(); // Delete last empty line
+
+	for (vector<string>::iterator it = v.begin(); it != v.end(); it++)
+		cout << "vec " << *it << endl;
+
+	if (v.size() > 0)
+		for (vector<string>::iterator it = v.begin(); it != v.end(); it++)
+			parsing(ft_split(*it, " "), _users[_poll[i].fd], *this);
+
+	// cout << nick << ": " << buf;
 	return 0;
 }
 
@@ -293,6 +336,8 @@ int				Server::is_registered( User usr )
 }
 
 Channel *				Server::getChannelByName( string channel ) {
+
+	// cout << "getChannelByName" << endl;
 
 	for (vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it) {
 		if ( (*it)->getName() == channel )

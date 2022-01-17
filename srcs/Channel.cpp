@@ -10,7 +10,7 @@ Channel::Channel( void ) {
 	_banned["host"] = banned_hostnames;
 }
 
-Channel::Channel(string name) : 
+Channel::Channel(string name) :
 		_name(TRUNC(name, MAX_CHAN_NAME_LEN)),
 		_key(""),
 		_has_key(false),
@@ -27,13 +27,13 @@ Channel::Channel(string name) :
 	_banned["host"] = banned_hostnames;
 }
 
-Channel::Channel(string name, string key, string topic, User * usr) : 
+Channel::Channel(string name, string key, string topic, User * usr, string mode) : 
 		_name(TRUNC(name, MAX_CHAN_NAME_LEN)),
 		_key(key),
 		_has_key(false),
 		_topic(topic),
 		_has_topic(false),
-		_mode("")
+		_mode(mode)
 {
 	vector<string> banned_nicks;
 	vector<string> banned_usernames;
@@ -198,6 +198,26 @@ bool				Channel::isOnChann( User const & usr ) {
 	return false;
 }
 
+string		Channel::MembersToString( User const & u, Server const & srv ) {
+
+	ostringstream s;
+
+	// irssi syntax [ :<server> 353 <nickname> = <channel> :@<channels_users> ]
+	s	<< ":" << srv.getName() << " 353 " << u.getNick()
+		<< " = " << _name << " :@";
+
+	for (vector<User *>::iterator it = _members.begin(); it != _members.end(); it++)
+		s << (*it)->getNick() << " ";
+
+	s << "\r\n";
+
+	// irssi syntax [ :<server> 324 <nickname> <channel> :<message> ]
+	s	<< ":" << srv.getName() << " 366 " << u.getNick()
+		<< " " << _name << " :End of /NAMES list." << "\r\n";
+
+	return (s.str());
+}
+
 ostream & operator<<(ostream & stream, Channel &Channel) {
 
 	stream << "Channel: " << Channel.getName();
@@ -207,4 +227,5 @@ ostream & operator<<(ostream & stream, Channel &Channel) {
 	else
 		stream << " is public";
 	return stream;
+
 }

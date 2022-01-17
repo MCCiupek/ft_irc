@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mode.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2021/12/20 23:49:15 by fmanetti          #+#    #+#             */
+/*   Updated: 2021/12/21 17:06:38 by fmanetti         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "headers.hpp"
 
 /*
@@ -103,21 +115,40 @@
 												the OPER command.
 */
 
-void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
+// MODE #42 b
+// [server:6667]:irc.local 367 pzgm #42 pzgm_!*@* pzgm :1640036076	
+// :irc.local 367 pzgm #42 faffa!*@* pzgm :1640036231
+// :irc.local 367 pzgm #42 lallo!*@* pzgm :1640036281
+// :irc.local 368 pzgm #42 :End of channel ban list
 
-	string		usr_mode = usr.getMode();
+void		cnl_mode( vector<string> args, User &u, Server &srv ) {
+
+	string		usr_mode = u.getMode();
 	string		knw_mode = "opsitnbv";
 	Channel *	cnl;
 
 	if (args[0][0] == '#')
-		cnl = srv.getChannelByName( &args[0][1] );
+		cnl = srv.getChannelByName( args[0] );
 	else if (args[0][0] == '&')
 		cnl = srv.getChannelByKey( &args[0][1] );
 	else 
 		cnl = NULL;
 	
 	if ( !cnl ) {
-		send_error(usr, ERR_NOSUCHNICK, args[0]);
+		send_error(u, ERR_NOSUCHCHANNEL, args[0]);
+		return ;
+	}
+
+	ostringstream s;
+
+	// List channel modes
+	if ( args.size() == 1 ) {
+		// irssi syntax [ :<srv_name> 324 <nickname> <channel> :+<ch_modes> ]
+		s	<< ":" << srv.getName() << " 324 " << u.getNick() << " " << cnl->getName()
+			<< " :+" << cnl->getMode() << "\r\n";
+		
+		send_reply(u.getFd(), s.str());
+
 		return ;
 	}
 
@@ -127,7 +158,7 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 
 	for (size_t i = 0; i < mode.size(); i++) {
 		if ( knw_mode.find(mode[i]) == string::npos ) {
-			send_error(usr, ERR_UNKNOWNMODE, args[0]);
+			send_error(u, ERR_UNKNOWNMODE, args[0]);
 			return ;
 		}
 	}
@@ -148,27 +179,29 @@ void		cnl_mode( vector<string> args, User &usr, Server &srv ) {
 
 	cnl->setMode(cnl_mode);
 
-	send_reply(usr, 324, RPL_CHANNELMODEIS(cnl->getName(), cnl->getMode()));
+	// irssi syntax [ :<nickname>!<nickname>@<host> MODE <channel> :<mode> ]
+	s	<< ":" << u.getNick() << "!" << u.getNick() << "@" << srv.getHost()
+		<< " MODE " << args[0] << " :" << args[1] << "\r\n"; 
+
+	send_reply(u.getFd(), s.str());
 }
 
-void		usr_mode( vector<string> args, User &usr, Server &srv ) {
+void		usr_mode( vector<string> args, User &u, Server &srv ) {
 
-	(void)srv;
-
-	string	usr_mode = usr.getMode();
+	string	usr_mode = u.getMode();
 	string	knw_mode = "iswo";
 
 	char flag = args[1][0];
 	string mode = &args[1][1];
 
-	if (usr.getNick() != args[0]) {
-		send_error(usr, ERR_USERSDONTMATCH, args[0]);
+	if (u.getNick() != args[0]) {
+		send_error(u, ERR_USERSDONTMATCH, args[0]);
 		return ;
 	}
 
 	for (size_t i = 0; i < mode.size(); i++) {
 		if ( knw_mode.find(mode[i]) == string::npos ) {
-			send_error(usr, ERR_UNKNOWNMODE, args[0]);
+			send_error(u, ERR_UNKNOWNMODE, args[0]);
 			return ;
 		}
 	}
@@ -187,20 +220,28 @@ void		usr_mode( vector<string> args, User &usr, Server &srv ) {
 		}
 	}
 
-	usr.setMode(usr_mode);
-	send_reply(usr, 221, RPL_UMODEIS(usr.getMode()));
+	u.setMode(usr_mode);
+
+	ostringstream s;
+
+	// irssi syntax [ :<nickname>!<nickname>@<host> MODE <nickname> :<mode> ]
+	s	<< ":" << u.getNick() << "!" << u.getNick() << "@" << srv.getHost()
+		<< " MODE " << u.getNick() << " :" << args[1] << "\r\n"; 
+
+	send_reply(u.getFd(), s.str());
 }
 
 void		mode( vector<string> args, User &usr, Server &srv ) {
 	
 	string mask = "#&!+";
 
-	if (args.size() < 2) {
-		send_error(usr, ERR_NEEDMOREPARAMS, args[0]);
+	if (args.size() < 1) {
+		send_error(usr, ERR_NEEDMOREPARAMS, "MODE");
 		return ;
 	}
 
-	if ( mask.find(args[0]) != string::npos )
+	// find() search for full string to be match
+	if ( mask.find_first_of(args[0]) != string::npos )
 		cnl_mode(args, usr, srv);
 	else
 		usr_mode(args, usr, srv);

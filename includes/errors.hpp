@@ -24,6 +24,7 @@
 # define ERR_ERRONEUSNICKNAME	432
 # define ERR_NICKNAMEINUSE		433
 # define ERR_NOTONCHANNEL		442
+# define ERR_NOTREGISTERED		451
 # define ERR_NEEDMOREPARAMS		461
 # define ERR_ALREADYREGISTRED	462
 # define ERR_CHANNELISFULL		471
@@ -52,6 +53,6 @@ extern map<int, string>		err;	// errors list
 int		display_usage( void );
 void    define_errors( void );
 void    send_error( User u, int errn, string cmd );
-void    send_reply( User u, int rpln, string reply );
+void    send_reply( int fd, string msg );
 
 #endif

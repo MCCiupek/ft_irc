@@ -30,6 +30,7 @@ class Server {
 		struct pollfd			*_poll;
 		map<int, User>			_users;
 		vector<Channel*>		_channels;
+		map<string, string>		_irc_operators;
 		string					_motd;
 
 		/*								CONSTRUCTORS								*/
@@ -53,7 +54,7 @@ class Server {
 		Server( void );
 		Server(string port, string pwd);
 		Server(string port, string pwd, string host, string port_nwk, string pwd_nwk,
-			string motd);
+			string motd, string operators);
 		virtual ~Server( void ); 
 
 		Server & operator=(Server const& src); 

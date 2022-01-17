@@ -175,11 +175,6 @@ ostream &operator<<(ostream & stream, const User &User) {
 	return stream;
 }
 
-string			server_msg( Server &srv )
-{
-	return ("[server:" + srv.getPort() + "]: ");
-}
-
 string			get_time()
 {
 	ostringstream str;
@@ -193,7 +188,7 @@ void    		messageoftheday( Server &srv, User usr )
 {
 	ostringstream str;
 
-    str << server_msg(srv) << srv.getName() << " 001 " << usr.getNick()
+    str << ":" << srv.getName() << " 001 " << usr.getNick()
 		<< " :Welcome to the Internet Relay Network " << usr.getNick() << endl
 		<< ":" << srv.getName() << " 002 " << usr.getNick()
 		<< " :Your host is " << srv.getName() << ", running " << SERVER_VERSION << endl

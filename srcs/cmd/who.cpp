@@ -1,6 +1,34 @@
 #include "headers.hpp"
 
 /*
+	Syntax:
+		WHO [ <nick> | <channel> | **]
+
+	Parameters:
+	    The channel name or output filter; if no arguments are given, the current
+	    channel will be used.
+
+	Description:
+	    Displays information about users in the specified channel. If you specify a
+	    filter, all the users whose nick, userhost or realname matches the filter
+	    will be returned.
+	    If the channel is secret and you are not on it, you will not receive any
+	    output.
+	    Common flags:
+	        H:    The user is available.
+	        G:    The user is away.
+	        *:    The user is an IRC operator.
+	        @:    The user is a channel operator.
+	        +:    The user is a channel voice.
+	
+	Examples:
+	    /WHO
+	    /WHO #irssi
+	    /WHO bob
+	    /WHO sar*
+*/
+
+/*
 	Command: WHO
 	Parameters: [<name> [<o>]]
 
@@ -48,95 +76,131 @@
 		   of the form: :servername 315 user #c1,#c2 :End of /WHO list.
 */
 
-static int		check_param( string param ) {
-
-	if (param[0] == '#' && param.find("*", 0) != string::npos)
-		return 1;
-	if (count(param.begin(), param.end(), '@') > 1 || count(param.begin(), param.end(), '!') > 1)
-		return 1;
-	size_t host_pos = param.find("@", 0);
-	size_t user_pos = param.find("!", 0);
-	if (host_pos == string::npos || user_pos == string::npos)
-		return 1;
-	if (user_pos > host_pos)
-		return 1;
-	return 0;
-}
-
 static bool		has_permission(const string &query, User &usr, User &cli, Server &srv)
 {
 	string nick;
 	string user;
 	string host;
+	(void)query;
+	(void)usr;
+	(void)cli;
 	(void)srv;
 
-	get_infos(query, nick, user, host);
-	if ((ft_match(cli.getNick(), nick) && ft_match(cli.getUsername(), user) && ft_match(cli.getHostname(), host))
-		&& ((cli.isVisible() == true || /*user_on_same_channel(*cli, *usr) ||*/ &cli == &usr)
-				|| usr.isOper() == true))
-		return true;
-	return false;
+	// get_infos(query, nick, user, host);
+	// if ((ft_match(cli.getNick(), nick) && ft_match(cli.getUsername(), user) && ft_match(cli.getHostname(), host))
+	// 	&& ((cli.isVisible() == true || /*user_on_same_channel(*cli, *usr) ||*/ &cli == &usr)
+	// 			|| usr.isOper() == true))
+	return true;
+	// return false;
 }
 
-static int	who_client(const std::string &query, User &usr, Server &srv, char c) {
+static int		who_user( const vector<string> args, User &usr, Server &srv, bool wild )
+{
+	ostringstream	s;
 
-	map<int, User>			cli_list = srv.getUsers();
+	// Works only if is only <name> or <name> + <channel> (<channel> is ignored)
+	if ( args.size() == 1 || (args.size() == 2 && args[1][0] == '#') )
+	{
+		map<int, User>	users = srv.getUsers();
 
-	for ( map<int, User>::iterator it = cli_list.begin(); it != cli_list.end(); ++it ) {
-		User cli = it->second;
-		if ( c == 'o' && cli.isOper() )
-			continue ;
-		else if ( has_permission(query, usr, cli, srv) == true ) {
-			
-			string reply;
+		for ( map<int, User>::iterator it = users.begin(); it != users.end(); ++it )
+		{
+			User u = it->second;
 
-			reply += string("*") + " ";
-			reply += cli.getUsername() + " ";
-			reply += cli.getHostname() + " ";
-			reply += srv.getHost() + " ";
-			reply += cli.getNick() + " ";
-			if ( cli.getIsAway() )
-				reply += "G";
-			else
-				reply += "H";
-			if ( cli.isOper() )
-				reply += "*";
-			reply += " ";
-			reply += string(":0") + " ";
-			reply += cli.getRealName();
-		
-			send_reply(usr, 352, RPL_WHOREPLY(reply));
+			// irssi syntax :<server> 352 <user> <*|u.curr_channel> <u.realname> <u.hostname> <u.servername>
+			//									 <u.nickname> <H|G>[*][@|+] :<hopcount> <u.realname>
+			if ( (u.getHostname() == args[0] || u.getServername() == args[0] || u.getRealName() == args[0] ) &&
+				has_permission(args[0], usr, u, srv) == true )
+			{
+				s	<< ":" << srv.getName() << " 352 " << usr.getNick() << " "
+					<< (u.getCurrChan() == nullptr ? "*" : u.getCurrChan()->getName())
+					<< " " << u.getRealName() << " " << u.getHostname() << " "
+					<< u.getServername() << " " << u.getNick() << " " << (u.getIsAway() ? "G" : "H")
+					<< (u.isIRCOper() ? "*" : "") << (u.isChanOper() ? "@" : "") << " " << ":0 "
+					<< u.getRealName() << "\r\n";
+			}
 		}
 	}
-	send_reply(usr, 315, RPL_ENDOFWHO(query));
+
+	// irssi syntax :<server> 315 <nickname> <who param> :End of /WHO list.
+	s 	<< ":" << srv.getName() << " 315 " << usr.getNick() << " " << (wild == true ? "*" : args[0])
+		<< " :End of /WHO list." << "\r\n";
+
+	send_reply(usr.getFd(), s.str());
+	
 	return 1;
 }
 
-int				who_channel(const std::string &query, User &usr, Server &srv, char c) {
+int				who_channel( const vector<string> args, User &usr, Server &srv, bool wild ) {
 	
-	// TODO: Implement who channel
-	(void)query;
-	(void)usr;
-	(void)srv;
-	(void)c;
-	return 0;
+	ostringstream	s;
+
+	// Works only if is only <channel> or <channel> + <channel2> (<channel2> is ignored)
+	if ( args.size() == 1 || (args.size() == 2 && args[1][0] == '#') )
+	{
+		map<int, User>	users = srv.getUsers();
+
+		for ( map<int, User>::iterator it = users.begin(); it != users.end(); ++it )
+		{
+			User u = it->second;
+
+			// irssi syntax :<server> 352 <user> <*|u.curr_channel> <u.realname> <u.hostname> <u.servername>
+			//									 <u.nickname> <H|G>[*][@|+] :<hopcount> <u.realname>
+			s	<< ":" << srv.getName() << " 352 " << usr.getNick() << " "
+				<< (u.getCurrChan() == nullptr ? "*" : u.getCurrChan()->getName())
+				<< " " << u.getRealName() << " " << u.getHostname() << " "
+				<< u.getServername() << " " << u.getNick() << " " << (u.getIsAway() ? "G" : "H")
+				<< (u.isIRCOper() ? "*" : "") << (u.isChanOper() ? "@" : "") << " " << ":0 "
+				<< u.getRealName() << "\r\n";
+		}
+	}
+
+	// irssi syntax :<server> 315 <nickname> <who param> :End of /WHO list.
+	s 	<< ":" << srv.getName() << " 315 " << usr.getNick() << " " << (wild == true ? "*" : args[0])
+		<< " :End of /WHO list." << "\r\n";
+
+	send_reply(usr.getFd(), s.str());
+
+	return 1;
 }
 
-void		who( vector<string> args, User &usr, Server &srv ) {
+int				who_wildcard( vector<string> args, User &usr, Server &srv)
+{
+	Channel		*chan = usr.getCurrChan();
+
+	if (chan != nullptr)
+	{
+		args[0] = chan->getName();
+		who_channel(args, usr, srv, true);
+	}
+	else
+	{
+		args[0] = usr.getNick();
+		who_user(args, usr, srv, true);
+	}
+
+	return 1;
+}
+
+void			who( vector<string> args, User &usr, Server &srv ) {
 
 	// TODO: handle multiple <name> calls
-	string	mask = "#&!+";
-	char	opt = 'n';
+	// char	opt = 'n';
 
-	if (args.size() < 2)
+	if (args.size() == 0)
+	{
+		send_error(usr, ERR_NEEDMOREPARAMS, "WHO");
 		return ;
-	else if (check_param(args[1]))
-		return ;
-	if (args.size() >= 3 && args[2].size() == 1 && args[2][0] == 'o')
-		opt = 'o';
-	if (mask.find(args[1][0], 0) != string::npos) {
-		who_channel(args[1], usr, srv, opt);
-	} else {
-		who_client(args[1], usr, srv, opt);
 	}
+
+	// // ope
+	// if (args.size() >= 3 && args[1].size() == 1 && args[1][0] == 'o')
+	// 	opt = 'o';
+
+	if (args[0][0] == '#')
+		who_channel(args, usr, srv, false);
+	else if (args[0] == "*")
+		who_wildcard(args, usr, srv);
+	else
+		who_user(args, usr, srv, false);
 }
