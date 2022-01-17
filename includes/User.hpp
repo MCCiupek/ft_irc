@@ -161,7 +161,7 @@ class User
 		bool				isChanOper( void ) const
 		{
 			for (vector<Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
-				if ((*it)->getOperator()->getNick() == _nick)
+				if ((*it)->isOper(*this))
 					return true;
 			
 			return false;
