@@ -115,7 +115,7 @@ static int		who_user( const vector<string> args, User &usr, Server &srv, bool wi
 				s	<< ":" << srv.getName() << " 352 " << usr.getNick() << " "
 					<< (u.getCurrChan() == nullptr ? "*" : u.getCurrChan()->getName())
 					<< " " << u.getRealName() << " " << u.getHostname() << " "
-					<< u.getServername() << " " << u.getNick() << " " << (u.getIsAway() ? "G" : "H")
+					<< u.getServername() << " " << u.getNick() << " " << "H"
 					<< (u.isIRCOper() ? "*" : "") << (u.isChanOper() ? "@" : "") << " " << ":0 "
 					<< u.getRealName() << "\r\n";
 			}

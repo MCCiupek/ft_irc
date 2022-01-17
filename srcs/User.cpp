@@ -1,22 +1,23 @@
 #include "headers.hpp"
 
 User::User( void ) : _fd(-1), _nick(""), _username(""), _hostname(""),
-			_servername(""), _realname(""), _mode(""), _away_msg("is away"), _ping_status(false),
-			_is_away(false), _isset(false)
+			_servername(""), _realname(""), _mode(""), _ping_status(false),
+			_isset(false), _isIRCOper(false), _curr_chan(nullptr),
+			_channels()
 {
 }
 
 User::User( int fd ) : _fd(fd), _nick(""), _username(""), _hostname(""),
-	_servername(""), _realname(""), _mode(""), _away_msg("is away"), _ping_status(false),
-	_is_away(false), _isset(false)
+	_servername(""), _realname(""), _mode(""), _ping_status(false),
+	_isset(false),  _isIRCOper(false), _curr_chan(nullptr), _channels()
 {
 }
 
 User::User( int fd, string nick, string username, string hostname,
-	string servername, string realname, string mode, string away_msg, bool ping_status ) : _fd(fd), _nick(nick),
-	_username(username), _hostname(hostname), _servername(servername),
-	_realname(realname), _mode(mode), _away_msg(away_msg), _ping_status(ping_status),
-	_is_away(false), _isset(false)
+	string servername, string realname, string mode, bool ping_status ) :
+	_fd(fd), _nick(nick), _username(username), _hostname(hostname), _servername(servername),
+	_realname(realname), _mode(mode), _ping_status(ping_status), _isset(false),
+	_isIRCOper(false), _curr_chan(nullptr), _channels()
 {
 }
 
@@ -37,146 +38,174 @@ User				&User::operator=( User const &rhs )
 	_hostname = rhs._hostname;
 	_servername = rhs._servername;
 	_realname = rhs._realname;
+	_mode = rhs._mode;
+	_last_act = rhs._last_act;
+	_ping_status = rhs._ping_status;
+	_isset = rhs._isset;
+	_isIRCOper = rhs._isIRCOper;
+	_curr_chan = rhs._curr_chan;
+	_channels = rhs._channels;
 
 	return (*this);
 }
 
 /*								GETTERS										*/
 
-int	const			&User::getFd( void ) const
+int	const				&User::getFd( void ) const
 {
 	return _fd;
 }
 
-string const		&User::getNick( void ) const
+string const			&User::getNick( void ) const
 {
 	return _nick;
 }
 
-string const		&User::getUsername( void ) const
+string const			&User::getUsername( void ) const
 {
 	return _username;
 }
 
-string const		&User::getHostname( void ) const
+string const			&User::getHostname( void ) const
 {
 	return _hostname;
 }
 
-string const		&User::getServername( void ) const
+string const			&User::getServername( void ) const
 {
 	return _servername;
 }
 
-string const		&User::getRealName( void ) const
+string const			&User::getRealName( void ) const
 {
 	return _realname;
 }
 
-string const		&User::getMode( void ) const
+string const			&User::getMode( void ) const
 {
 	return _mode;
 }
 
-string const		&User::getAwayMsg( void ) const
-{
-	return _away_msg;
-}
-
-time_t 	*			User::getLastAct( void ) const
+time_t 	*				User::getLastAct( void ) const
 {
 	return _last_act;
 }
 
-bool const			&User::getPingStatus( void ) const
+bool const				&User::getPingStatus( void ) const
 {
 	return _ping_status;
 }
 
-bool const			&User::getIsAway( void ) const
-{
-	return _is_away;
-}
-
-bool const			&User::getIsSet( void ) const
+bool const				&User::getIsSet( void ) const
 {
 	return _isset;
 }
 
-vector<Channel*>	User::getChans( void ) const
+vector<Channel*>		User::getChans( void ) const
+{
+	return _channels;
+}
+
+bool const				&User::getIsIRCOper( void ) const
+{
+	return _isIRCOper;
+}
+
+Channel					*User::getCurrChan( void ) const
+{
+	return _curr_chan;
+}
+
+vector<Channel*> const	&User::getChannels( void ) const
 {
 	return _channels;
 }
 
 /*								SETTERS										*/
 
-void				User::setFd( int fd )
+void					User::setFd( int fd )
 {
 	_fd = fd;
 }
 
-void				User::setNick( string nick )
+void					User::setNick( string nick )
 {
 	_nick = nick;
 }
 
-void 				User::setUsername( string username )
+void 					User::setUsername( string username )
 {
 	_username = username;
 }
 
-void				User::setHostname( string hostname )
+void					User::setHostname( string hostname )
 {
 	_hostname = hostname;
 }
 
-void				User::setServername( string servername )
+void					User::setServername( string servername )
 {
 	_servername = servername;
 }
 
-void				User::setRealName( string realname )
+void					User::setRealName( string realname )
 {
 	_realname = realname;
 }
 
-void				User::setMode( string mode )
+void					User::setMode( string mode )
 {
 	_mode = mode;
 }
 
-void				User::setLastAct( time_t last_act )
+void					User::setLastAct( time_t last_act )
 {
 	_last_act = &last_act;
 }
 
-void				User::setPingStatus( bool ping_status )
+void					User::setPingStatus( bool ping_status )
 {
 	_ping_status = ping_status;
 }
 
-void				User::setAway( string msg="" )
-{
-	_is_away = true;
-	if ( msg != "" )
-		_away_msg = msg;
-}
-
-void				User::unsetAway( void )
-{
-	_is_away = false;
-}
-
-void				User::setIsSet( bool isset )
+void					User::setIsSet( bool isset )
 {
 	_isset = isset;
 }
 
+void					User::setIsIRCOper( bool isIRCOper )
+{
+	_isIRCOper = isIRCOper;
+}
+
+void					User::setCurrChan( Channel *c )
+{
+	_curr_chan = c;
+	cout << MAGENTA << getNick() << "'s current channel set to " << getCurrChan() << RESET << endl;
+}
+
 /*								MEMBERS FUNCTIONS							*/
 
-bool				User::isOper( void ) const
+bool				User::isRegistered( void ) const
 {
-	return _mode.find('o') != string::npos;
+	if (!getNick().empty() && getIsSet())
+		return true;
+	
+	return false;
+}
+
+bool				User::isIRCOper( void ) const
+{
+	return _mode.find('o') == string::npos;
+}
+
+bool				User::isChanOper( void ) const
+{
+	for (vector<Channel*>::const_iterator it = _channels.begin(); it != _channels.end(); ++it)
+		if ((*it)->isOper(*this))
+			return true;
+	
+	return false;
 }
 
 bool 				User::isVisible( void ) const
@@ -192,12 +221,19 @@ string const		User::fci( void ) const
 
 void				User::addChannel( Channel * channel ) {
 	
-	cout << MAGENTA << this->getNick() << " joined channel " << channel->getName() << RESET << endl;
-	_channels.push_back(channel);
+	if (_channels.size() < 10)
+	{
+		cout << MAGENTA << this->getNick() << " joined channel " << channel->getName() << RESET << endl;
+		_channels.push_back(channel);
+	}
+	else
+		cout << MAGENTA << getNick() << " max number of channels reached." << RESET << endl;
 }
 
 void				User::deleteChannel( Channel * channel ) {
-	
+
+	cout << MAGENTA << this->getNick() << " left channel " << channel->getName() << RESET << endl;
+	channel->deleteMember(this);
 	for ( vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++ ) {
 		if ( (*it)->getName() == channel->getName() ) {
 			_channels.erase(it);
@@ -205,13 +241,6 @@ void				User::deleteChannel( Channel * channel ) {
 		}
 		// TO DO: transfert channel ownership ?
 	}
-}
-
-void				User::leaveChannel( Channel * channel ) {
-	
-	cout << MAGENTA << this->getNick() << " left channel " << channel->getName() << RESET << endl;
-	channel->deleteMember(this);
-	deleteChannel(channel);
 }
 
 void				User::leaveAllChans( void ) {
@@ -223,4 +252,18 @@ void				User::leaveAllChans( void ) {
 		// TO DO: transfert channel ownership ?
 	}
 
+}
+
+bool				User::isRegisteredToChan( Channel &c )
+{
+	cout << "isregistered to chan" << endl;
+	cout << _channels.size() << endl;
+
+	for (vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it )
+	{
+		if ((*it)->getName() == c.getName())
+			return true;
+	}
+
+	return false;
 }
