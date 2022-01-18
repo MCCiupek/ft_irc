@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   mode.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/12/20 23:49:15 by fmanetti          #+#    #+#             */
-/*   Updated: 2021/12/21 17:06:38 by fmanetti         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "headers.hpp"
 
 /*
@@ -114,12 +102,6 @@
 												allowed from users since would bypass
 												the OPER command.
 */
-
-// MODE #42 b
-// [server:6667]:irc.local 367 pzgm #42 pzgm_!*@* pzgm :1640036076	
-// :irc.local 367 pzgm #42 faffa!*@* pzgm :1640036231
-// :irc.local 367 pzgm #42 lallo!*@* pzgm :1640036281
-// :irc.local 368 pzgm #42 :End of channel ban list
 
 void		cnl_mode( vector<string> args, User &u, Server &srv ) {
 
@@ -302,7 +284,8 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 	send_reply(u, 221, RPL_UMODEIS(u.getMode()));
 }
 
-void		mode( vector<string> args, User &usr, Server &srv ) {
+void		mode( vector<string> args, User &usr, Server &srv )
+{
 	
 	string mask = "#&!+";
 

@@ -18,6 +18,8 @@ Server::Server(string port, string pwd) :
 {
 	time_t now = time(0);
 	_creation_date = ctime(&now);
+	_creation_date.pop_back();
+	
 }
 
 Server::Server(string port, string pwd, string host="localhost",

@@ -66,7 +66,7 @@ void    send_reply( User u, int rpln, string reply )
 
 	s	<< ":mfirc "
 		<< setfill('0') << setw(3) << rpln
-		<< " " << u.getNick() << " " << reply;
+		<< " " << u.getNick() << " " << reply << "\r\n";
 	string msg = s.str();
 
 	if ( send(u.getFd(), &msg[0], msg.size(), 0) == -1 )

@@ -46,19 +46,6 @@ int		create_channel( string channel, string key, User &u, Server &srv ) {
 	u.addChannel( new_channel );
 	u.setCurrChan( new_channel );
 
-	ostringstream s;
-
-	// irssi syntax [ :<nickname>!<nickname>@<host> JOIN :#<channel> ]
-	// s	<< ":" << u.getNick() << "!" << u.getNick() << "@" << srv.getHost()
-	// 	<< " JOIN :" << channel << "\r\n";
-
-	// s << new_channel->MembersToString(u, srv);
-
-	// send_reply(u.getFd(), s.str());
-	if ( new_channel->getHasTopic() )
-		send_reply(u, 332, RPL_TOPIC(new_channel->getName(), new_channel->getTopic()));
-	else
-		send_reply(u, 332, RPL_NOTOPIC(new_channel->getName()));
 	send_reply(u, 353, RPL_NAMREPLY(new_channel->getName(), new_channel->getMembersList()));
 	send_reply(u, 366, RPL_ENDOFNAMES(new_channel->getName()));
 	return 0;
@@ -122,10 +109,10 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 	cnl->addMember(&usr);
 	usr.addChannel( cnl );
 	usr.setCurrChan( cnl );
-	if ( cnl->getHasTopic() )
-		send_reply(usr, 332, RPL_TOPIC(cnl->getName(), cnl->getTopic()));
-	else
-		send_reply(usr, 332, RPL_NOTOPIC(cnl->getName()));
+	// if ( cnl->getHasTopic() )
+	// 	send_reply(usr, 332, RPL_TOPIC(cnl->getName(), cnl->getTopic()));
+	// else
+	// 	send_reply(usr, 332, RPL_NOTOPIC(cnl->getName()));
 	send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), cnl->getMembersList()));
 	send_reply(usr, 366, RPL_ENDOFNAMES(cnl->getName()));
 	return 0;

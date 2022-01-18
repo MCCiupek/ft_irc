@@ -3,22 +3,29 @@
 
 # include "headers.hpp"
 
-# define RPL_WELCOME(nick, user, host) (":Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host + "\r\n")
-# define RPL_YOURHOST(servername, version) (":Your host is " + servername + ", running version " + version + "\r\n")
-# define RPL_CREATED(date) (":This server was created " + date + "\r\n")
-# define RPL_MYINFO(servername, version, available_user_modes, available_channel_modes) (":" + servername + " " + version + " " + available_user_modes + " " + available_channel_modes + "\r\n")
-# define RPL_MOTDSTART(server) (":- " + server + " Message of the day - \r\n")
+// OFFICIAL REPLIES
+
+# define RPL_WELCOME(nick, user, host) (":Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host)
+# define RPL_YOURHOST(servername, version) (":Your host is " + servername + ", running version " + version)
+# define RPL_CREATED(date) (":This server was created " + date)
+# define RPL_MYINFO(servername, version, available_user_modes, available_channel_modes) \
+	(":" + servername + " " + version + " " + available_user_modes + " " + available_channel_modes)
+# define RPL_MOTDSTART(server) (":- " + server + " Message of the day -")
 # define RPL_MOTD(txt) (txt)
-# define RPL_ENDOFMOTD() (":End of /MOTD command\r\n")
-# define RPL_UMODEIS(user_mode) (user_mode + "\r\n")
-# define RPL_WHOREPLY(arg) (arg + "\r\n")
-# define RPL_ENDOFWHO(name) (name + " :End of /WHO list\r\n")
-# define RPL_CHANNELMODEIS(channel, mode) (" :" + channel + " " + mode + "\r\n")
-# define RPL_NOTOPIC(channel) (" :" + channel + " :No topic is set" + "\r\n")
-# define RPL_TOPIC(channel, topic) (" :" + channel + " :" + topic + "\r\n")
-# define RPL_NAMREPLY(channel, list) (" :" + channel + " :" + list + "\r\n")
-# define RPL_ENDOFNAMES(channel) (" :" + channel + " :End of NAMES list\r\n")
-# define RPL_AWAY(nick, msg) (nick + " :" + msg + "\r\n")
+# define RPL_ENDOFMOTD() (":End of /MOTD command")
+# define RPL_UMODEIS(user_mode) (user_mode)
+# define RPL_WHOREPLY(arg) (arg)
+# define RPL_ENDOFWHO(name) (name + " :End of /WHO list")
+# define RPL_CHANNELMODEIS(channel, mode) (" :" + channel + " " + mode)
+# define RPL_NAMREPLY(channel, list) (" = #" + channel + ":" + list)
+# define RPL_ENDOFNAMES(channel) (" :" + channel + " :End of NAMES list")
+# define RPL_AWAY(nick, msg) (nick + " :" + msg)
+
+// COMMAND REPLYES
+// irssi JOIN [ :<nickname>!<nickname>@<host> JOIN :#<channel> ]
+// # define RPL_JOIN(fci, channel) (":" + fci + " JOIN " + ":#" + channel)
+
+// ERRORS
 
 # define ERR_NOSUCHNICK			401
 # define ERR_NOSUCHSERVER		402
@@ -71,7 +78,6 @@ extern map<int, string>		err;	// errors list
 int		display_usage( void );
 void    define_errors( void );
 void    send_error( User u, int errn, string cmd );
-//void    send_reply( int fd, string msg );
 void    send_reply( User u, int rpln, string reply );
 
 #endif

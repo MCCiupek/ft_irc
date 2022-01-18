@@ -198,16 +198,10 @@ void    		messageoftheday( Server &srv, User usr )
 		send_reply(usr, 375, RPL_MOTDSTART(srv.getName()));
 
 		vector<string>	tmp = ft_split(motd, "\\n");
-		ostringstream	str;
 
-		/*for (vector<string>::iterator it = tmp.begin(); it != tmp.end(); it++)
-		{
-			if (it != tmp.begin())	// send_reply add the first
-				str << ":" << srv.getName() << " 372 " << usr.getNick() << " ";
-			str	<< ":" << *it << "\r\n";
-		}*/
+		for (vector<string>::iterator it = tmp.begin(); it != tmp.end(); it++)
+			send_reply(usr, 372, RPL_MOTD(*it));
 		
-		send_reply(usr, 372, RPL_MOTD(str.str()));
 		send_reply(usr, 376, RPL_ENDOFMOTD());
 	}
 	else
