@@ -72,3 +72,15 @@ void    send_reply( User u, int rpln, string reply )
 	if ( send(u.getFd(), &msg[0], msg.size(), 0) == -1 )
 		throw eExc(strerror(errno));
 }
+
+void    send_notice( User u, string notice )
+{
+	ostringstream s;
+
+	s << ":" << u.fci() << " " << notice << "\r\n";
+
+	string msg = s.str();
+
+	if ( send(u.getFd(), &msg[0], msg.size(), 0) == -1 )
+		throw eExc(strerror(errno));
+}

@@ -8,6 +8,9 @@ Channel::Channel( void ) {
 	_banned["nick"] = banned_nicks;
 	_banned["user"] = banned_usernames;
 	_banned["host"] = banned_hostnames;
+
+	time_t now = time(0);
+	_creation_date = (intmax_t)now;
 }
 
 Channel::Channel(string name) :
@@ -26,6 +29,9 @@ Channel::Channel(string name) :
 	_banned["nick"] = banned_nicks;
 	_banned["user"] = banned_usernames;
 	_banned["host"] = banned_hostnames;
+
+	time_t now = time(0);
+	_creation_date = (intmax_t)now;
 }
 
 Channel::Channel(string name, string key, string topic, User * usr, string mode) : 
@@ -43,6 +49,11 @@ Channel::Channel(string name, string key, string topic, User * usr, string mode)
 	_banned["nick"] = banned_nicks;
 	_banned["user"] = banned_usernames;
 	_banned["host"] = banned_hostnames;
+
+	time_t now = time(0);
+	_creation_date = (intmax_t)now;
+
+	cout << _creation_date << endl;
 
 	if ( key != "" )
 		_has_key = true;
@@ -119,8 +130,19 @@ string const		&Channel::getMode( void ) const {
 	return _mode;
 }
 
+string const Channel::getCreationDate() const {
+	ostringstream s;
+	s << fixed << _creation_date;
+	string date = s.str();
+	return date;
+}
+
 size_t 			Channel::getLimit( void ) const {
 	return _limit;
+}
+
+vector<string> const	&Channel::getBanMask( void ) const {
+	return _banned_mask;
 }
 
 void    			Channel::setName(string const & name) {
@@ -270,7 +292,7 @@ string				Channel::getMembersList( void ) {
 	string reply;
 
 	for ( size_t i = 0; i < _members.size(); i++ ) {
-		reply += _members[i]->getNick();
+		reply += "@" + _members[i]->getNick();
 		if ( i < _members.size() - 1 )
 			reply += " ";
 	}

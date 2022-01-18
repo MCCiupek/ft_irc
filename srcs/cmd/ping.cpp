@@ -25,16 +25,16 @@
 
 void		ping( vector<string> args, User &usr, Server &srv ) {
 
-	if (args.size() < 2)
+	if (args.size() < 1)
 	{
-		send_error(usr, ERR_NOORIGIN, args[0]);
+		send_error(usr, ERR_NOORIGIN, "PING");
 		return ;
 	}
-	else if (args.size() > 2)
+	else if (args.size() > 1)
 	{
-		send_error(usr, ERR_NOSUCHSERVER, args[2]);
+		send_error(usr, ERR_NOSUCHSERVER, args[1]);
 		return ;
 	}
-	string reply = ":" + srv.getHost() + " PONG " + srv.getHost() + " " + args[1] + "\n";
+	string reply = ":" + srv.getHost() + " PONG " + srv.getHost() + " " + args[0] + "\r\n";
 	send(usr.getFd(), reply.c_str(), reply.length(), 0);
 }

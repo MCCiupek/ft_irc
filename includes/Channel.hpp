@@ -30,6 +30,7 @@ class Channel {
 		vector<User*>					_oper;
 		string							_mode;
 		size_t							_limit;
+		double							_creation_date;
 
 		/*								CONSTRUCTORS								*/
 
@@ -62,6 +63,8 @@ class Channel {
 		//User *				getOperator( void );
 		string const			&getMode( void ) const;
 		size_t					getLimit( void ) const;
+		string const			getCreationDate( void ) const;
+		vector<string> const	&getBanMask( void ) const;
 
 		/*								SETTERS										*/
 

@@ -123,11 +123,25 @@
 
 void		cnl_mode( vector<string> args, User &u, Server &srv ) {
 
-	char 		flag = args[1][0];
-	string 		mode = &args[1][1];
+	char 		flag;
+	string 		mode;
 	string		usr_mode = u.getMode();
-	Channel *	cnl = srv.getChannelByName( args[0] );
 	User *		target_usr;
+	Channel *	cnl = srv.getChannelByName( args[0] );
+
+	// List channel modes
+	if ( args.size() == 1 ) {
+		send_reply(u, 324, RPL_CHANNELMODEIS(cnl->getName(), cnl->getMode()));
+		return ;
+	}
+
+	if (args[1][0] != '+' && args[1][0] != '-') {
+		flag = ' ';
+		mode = args[1];
+	} else {
+		flag = args[1][0];
+		mode = &args[1][1];
+	}
 	
 	if ( !cnl )
 		return send_error(u, ERR_NOSUCHCHANNEL, args[0]);
@@ -141,25 +155,10 @@ void		cnl_mode( vector<string> args, User &u, Server &srv ) {
 	if ( (mode.find('o') || mode.find('b')) && mode.size() > 3 )
 		return send_error(u, ERR_CHANOPRIVSNEEDED, args[0]);
 
-	if (args[0][0] == '#')
-		cnl = srv.getChannelByName( args[0] );
-
-	ostringstream s;
-
-	// List channel modes
-	if ( args.size() == 1 ) {
-		// irssi syntax [ :<srv_name> 324 <nickname> <channel> :+<ch_modes> ]
-		// s	<< ":" << srv.getName() << " 324 " << u.getNick() << " " << cnl->getName()
-		// 	<< " :+" << cnl->getMode() << "\r\n";
-		
-		//send_reply(u.getFd(), s.str());
-		send_reply(u, 324, RPL_CHANNELMODEIS(cnl->getName(), cnl->getMode()));
-		return ;
-	}
 
 	string		cnl_mode = cnl->getMode();
 	string		knw_mode = AVAILABLE_CHANNEL_MODES;
-	string		arg_mode = "olbvk";
+	string		arg_mode = "oblvk";
 
 	for (size_t i = 0; i < mode.size() - 1; i++)
 		if ( knw_mode.find(mode[i]) == string::npos )
@@ -247,6 +246,17 @@ void		cnl_mode( vector<string> args, User &u, Server &srv ) {
 		}
 	}
 
+	if ( mode.find('b') != string::npos ) {
+			vector<string> b_list = cnl->getBanMask();
+			for (size_t j = 0; j < b_list.size(); j++)
+				send_reply(u, 367, RPL_BANLIST(cnl->getName(), b_list[j]));
+			cout << RPL_ENDOFBANLIST(cnl->getName()) << endl;
+			send_reply(u, 368, RPL_ENDOFBANLIST(cnl->getName()));
+	}
+
+	if (flag == ' ')
+		return ;
+	
 	cnl->setMode(cnl_mode);
 
 	// irssi syntax [ :<nickname>!<nickname>@<host> MODE <channel> :<mode> ]
@@ -268,7 +278,7 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 		return send_error(u, ERR_NEEDMOREPARAMS, "MODE");
 
 	char flag = args[1][0];
-	string mode = args[1].substr(1, args[1].length() - 1);// mc: -2 i.o. -1 bc substr second arg is the lenght of the string to keep
+	string mode = args[1].substr(1, args[1].length() - 1);
 
 	if (u.getNick() != args[0]) {
 		send_error(u, ERR_USERSDONTMATCH, args[0]);

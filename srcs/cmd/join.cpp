@@ -55,12 +55,9 @@ int		create_channel( string channel, string key, User &u, Server &srv ) {
 	// s << new_channel->MembersToString(u, srv);
 
 	// send_reply(u.getFd(), s.str());
-	if ( new_channel->getHasTopic() )
-		send_reply(u, 332, RPL_TOPIC(new_channel->getName(), new_channel->getTopic()));
-	else
-		send_reply(u, 332, RPL_NOTOPIC(new_channel->getName()));
 	send_reply(u, 353, RPL_NAMREPLY(new_channel->getName(), new_channel->getMembersList()));
 	send_reply(u, 366, RPL_ENDOFNAMES(new_channel->getName()));
+	send_reply(u, 329, RPL_CREATIONTIME(new_channel->getName(), new_channel->getCreationDate()));
 	return 0;
 }
 
@@ -79,8 +76,11 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 		cnl = srv.getChannelByName( channel );
 		// if (cnl)
 		// 	cout << "cnl = " << cnl->getName() << endl;
-		if ( cnl == NULL ) // Create Channel.
+		if ( cnl == NULL ) // Create Channel. 
+		{
+			send_notice(usr, NTC_JOIN(channel));
 			return create_channel(channel, key, usr, srv);
+		}
 	}
 	else {
 		send_error( usr, ERR_BADCHANMASK, channel );
@@ -122,12 +122,14 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 	cnl->addMember(&usr);
 	usr.addChannel( cnl );
 	usr.setCurrChan( cnl );
+	send_notice(usr, NTC_JOIN(channel));
 	if ( cnl->getHasTopic() )
 		send_reply(usr, 332, RPL_TOPIC(cnl->getName(), cnl->getTopic()));
 	else
 		send_reply(usr, 332, RPL_NOTOPIC(cnl->getName()));
 	send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), cnl->getMembersList()));
 	send_reply(usr, 366, RPL_ENDOFNAMES(cnl->getName()));
+	send_reply(usr, 329, RPL_CREATIONTIME(cnl->getName(), cnl->getCreationDate()));
 	return 0;
 }
 

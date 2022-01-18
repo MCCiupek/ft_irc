@@ -16,12 +16,12 @@
 
 void		pong( vector<string> args, User &usr, Server &srv ) {
 
-	if (args.size() == 1)
+	if (args.size() == 0)
 	{
-		send_error(usr, ERR_NOORIGIN, args[0]);
+		send_error(usr, ERR_NOORIGIN, "PONG");
 		return ;
 	}
-	if (args[1].substr(1, args[1].size()) == srv.getHost() || args[1] == srv.getHost())
+	if (args[0].substr(1, args[0].size()) == srv.getHost() || args[0] == srv.getHost())
 	{
 		time(usr.getLastAct());
 		usr.setPingStatus(false);

@@ -8,17 +8,22 @@
 # define RPL_CREATED(date) (":This server was created " + date + "\r\n")
 # define RPL_MYINFO(servername, version, available_user_modes, available_channel_modes) (":" + servername + " " + version + " " + available_user_modes + " " + available_channel_modes + "\r\n")
 # define RPL_MOTDSTART(server) (":- " + server + " Message of the day - \r\n")
-# define RPL_MOTD(txt) (txt)
+# define RPL_MOTD(txt) (txt + "\r\n")
 # define RPL_ENDOFMOTD() (":End of /MOTD command\r\n")
 # define RPL_UMODEIS(user_mode) (user_mode + "\r\n")
 # define RPL_WHOREPLY(arg) (arg + "\r\n")
 # define RPL_ENDOFWHO(name) (name + " :End of /WHO list\r\n")
-# define RPL_CHANNELMODEIS(channel, mode) (" :" + channel + " " + mode + "\r\n")
-# define RPL_NOTOPIC(channel) (" :" + channel + " :No topic is set" + "\r\n")
-# define RPL_TOPIC(channel, topic) (" :" + channel + " :" + topic + "\r\n")
-# define RPL_NAMREPLY(channel, list) (" :" + channel + " :" + list + "\r\n")
-# define RPL_ENDOFNAMES(channel) (" :" + channel + " :End of NAMES list\r\n")
+# define RPL_CHANNELMODEIS(channel, mode) (channel + " :+" + mode + "\r\n")
+# define RPL_NOTOPIC(channel) (channel + " :No topic is set" + "\r\n")
+# define RPL_TOPIC(channel, topic) (channel + " :" + topic + "\r\n")
+# define RPL_NAMREPLY(channel, list) ("= " + channel + " :" + list + "\r\n")
+# define RPL_ENDOFNAMES(channel) (channel + " :End of /NAMES list.\r\n")
 # define RPL_AWAY(nick, msg) (nick + " :" + msg + "\r\n")
+# define RPL_CREATIONTIME(channel, creation_time) (channel + " :" + creation_time + "\r\n")
+# define RPL_BANLIST(channel, mask) (channel + " :" + mask + "\r\n")
+# define RPL_ENDOFBANLIST(channel) (channel + " :End of channel ban list\r\n")
+
+# define NTC_JOIN(channel) ("JOIN :" + channel)
 
 # define ERR_NOSUCHNICK			401
 # define ERR_NOSUCHSERVER		402
@@ -73,5 +78,6 @@ void    define_errors( void );
 void    send_error( User u, int errn, string cmd );
 //void    send_reply( int fd, string msg );
 void    send_reply( User u, int rpln, string reply );
+void    send_notice( User u, string notice );
 
 #endif
