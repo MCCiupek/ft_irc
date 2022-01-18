@@ -186,25 +186,12 @@ string			get_time()
 
 void    		messageoftheday( Server &srv, User usr )
 {
-<<<<<<< HEAD
-=======
-	// ostringstream str;
-
->>>>>>> d60ad405d52e694cc5204dfa7b05d9445be0fbd6
 	send_reply(usr, 001, RPL_WELCOME(usr.getNick(), usr.getUsername(), usr.getHostname()));
 	send_reply(usr, 002, RPL_YOURHOST(srv.getName(), SERVER_VERSION));
 	send_reply(usr, 003, RPL_CREATED(srv.getCreationDate()));
 	send_reply(usr, 004, RPL_MYINFO(srv.getName(), SERVER_VERSION, AVAILABLE_USER_MODES, AVAILABLE_CHANNEL_MODES));
 
-<<<<<<< HEAD
 	string motd = srv.getMotd();
-=======
-	// Reset stringstream
-	// str.str("");
-	// str.clear();
-
-	string motd = MOTD;//srv.getMotd();
->>>>>>> d60ad405d52e694cc5204dfa7b05d9445be0fbd6
 
 	if (!motd.empty())
 	{
