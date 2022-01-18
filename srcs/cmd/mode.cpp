@@ -268,7 +268,7 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 		return send_error(u, ERR_NEEDMOREPARAMS, "MODE");
 
 	char flag = args[1][0];
-	string mode = args[1].substr(1, args[1].length() - 1);//  &args[2][1];
+	string mode = args[1].substr(1, args[1].length() - 2);// mc: -2 i.o. -1 bc substr second arg is the lenght of the string to keep
 
 	if (u.getNick() != args[0]) {
 		send_error(u, ERR_USERSDONTMATCH, args[0]);
@@ -277,7 +277,7 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 
 	for (size_t i = 0; i < mode.size(); i++) {
 		if ( knw_mode.find(mode[i]) == string::npos ) {
-			send_error(u, ERR_UNKNOWNMODE, args[0]);
+			send_error(u, ERR_UNKNOWNMODE, mode);
 			return ;
 		}
 	}

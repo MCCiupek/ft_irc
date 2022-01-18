@@ -11,6 +11,7 @@
 # define MAX_USR_PER_CHAN	10
 # define MAX_USR_NICK_LEN	20
 # define MAX_CHAN_NAME_LEN	200
+# define MOTD "HELLO AND WELCOME TO MFIRC" // mc: juste pour tester avec irssi, a supprimer plus tard
 
 # define TRUNC(str, len) (str.substr(0, min(name.length(), (unsigned long)len)))
 

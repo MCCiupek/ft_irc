@@ -186,7 +186,7 @@ string			get_time()
 
 void    		messageoftheday( Server &srv, User usr )
 {
-	ostringstream str;
+	// ostringstream str;
 
 	send_reply(usr, 001, RPL_WELCOME(usr.getNick(), usr.getUsername(), usr.getHostname()));
 	send_reply(usr, 002, RPL_YOURHOST(srv.getName(), SERVER_VERSION));
@@ -194,10 +194,10 @@ void    		messageoftheday( Server &srv, User usr )
 	send_reply(usr, 004, RPL_MYINFO(srv.getName(), SERVER_VERSION, AVAILABLE_USER_MODES, AVAILABLE_CHANNEL_MODES));
 
 	// Reset stringstream
-	str.str("");
-	str.clear();
+	// str.str("");
+	// str.clear();
 
-	string motd = srv.getMotd();
+	string motd = MOTD;//srv.getMotd();
 
 	if (!motd.empty())
 	{

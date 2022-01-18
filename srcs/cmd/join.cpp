@@ -55,7 +55,12 @@ int		create_channel( string channel, string key, User &u, Server &srv ) {
 	// s << new_channel->MembersToString(u, srv);
 
 	// send_reply(u.getFd(), s.str());
-
+	if ( new_channel->getHasTopic() )
+		send_reply(u, 332, RPL_TOPIC(new_channel->getName(), new_channel->getTopic()));
+	else
+		send_reply(u, 332, RPL_NOTOPIC(new_channel->getName()));
+	send_reply(u, 353, RPL_NAMREPLY(new_channel->getName(), new_channel->getMembersList()));
+	send_reply(u, 366, RPL_ENDOFNAMES(new_channel->getName()));
 	return 0;
 }
 
@@ -69,6 +74,7 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 		return 1;
 	}		
 
+	channel.erase(channel.end() - 1); // mc: delete last char (to change in parsing or elsewhere): ok with 1 chan and no args but wont work with more
 	if ( channel[0] == '#' ) {
 		cnl = srv.getChannelByName( channel );
 		// if (cnl)

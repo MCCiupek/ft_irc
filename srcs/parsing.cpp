@@ -38,8 +38,8 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 	//	cmd = to_upper(cmd);
 
 	// Remove \n at the end of command
-	if (args.size() == 1)
-		cmd.erase(cmd.end() - 1);
+	//if (args.size() == 1)
+	//	cmd.erase(cmd.end() - 1);
 	
 	cout << cmd << endl;
 
@@ -65,5 +65,5 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 		return 1;
 	}
 
-	return 0;
+	return -1;
 }
