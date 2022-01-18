@@ -44,13 +44,13 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 		return ;
 	}
 
-	if ( *(args[args.size()].end() - 1) == '\n')
-		args[args.size()] = args[args.size()].substr(0, args[args.size()].length()-1);
+	//if ( *(args[args.size()].end() - 1) == '\n')
+	//	args[args.size()] = args[args.size()].substr(0, args[args.size()].length()-1);
 
-	chans = ft_split(args[1], ",");
+	chans = ft_split(args[0], ",");
 
-	if ( args.size() > 2 )
-		part_msg = ft_join(args, " ", 2) + "\r\n";
+	if ( args.size() > 1 )
+		part_msg = ft_join(args, " ", 1) + "\r\n";
 
 	for (size_t i = 0; i < chans.size(); i++) {
 		cnl = srv.getChannelByName( chans[i] );

@@ -32,8 +32,9 @@ void		send_to_all_in_chan( Channel * Chan, string txt, User &usr ) {
 	vector<User*> users = Chan->getMembers();
 	for ( size_t i = 0; i < users.size(); i++ ) {
 		if (users[i]->getNick() != usr.getNick()) {
-			string msg = txt + "\n";
-			send(users[i]->getFd(), &msg, msg.length(), 0);
+			string msg = txt + "\r\n";
+			//send(users[i]->getFd(), &msg, msg.length(), 0);
+			send(users[i]->getFd(), &msg[0], msg.size(), 0);
 			//if ( users[i]->getIsAway() )
 			//	send_reply(usr, 301, RPL_AWAY(users[i]->getNick(), users[i]->getAwayMsg()));
 		}
@@ -49,7 +50,8 @@ void		send_privmsg_to_usr( string recv, string txt, User &usr, Server &srv ) {
 	if ( !receiver )
 		return send_error(usr, ERR_NOSUCHNICK, recv);
 	msg = txt + "\r\n";
-	send(receiver->getFd(), &msg, msg.length(), 0);
+	//send(receiver->getFd(), &msg, msg.length(), 0);
+	send(receiver->getFd(), &msg[0], msg.size(), 0);
 	//if ( receiver->getIsAway() )
 	//	send_reply(usr, 301, RPL_AWAY(receiver->getNick(), receiver->getAwayMsg()));
 }
@@ -91,11 +93,11 @@ void		privmsg( vector<string> args, User &usr, Server &srv ) {
 	if (args.size() < 2)
 		return send_error(usr, ERR_NOTEXTTOSEND, "");
 
-	vector<string> recvs = ft_split(args[1], ",");
+	vector<string> recvs = ft_split(args[0], ",");
 
 	if (has_duplicates(recvs))
 		return send_error(usr, ERR_TOOMANYTARGETS, find_duplicates(recvs));
 
 	for (vector<string>::iterator it = recvs.begin(); it != recvs.end(); it++)
-		send_privmsg(*it, ft_join(args, " ", 2), usr, srv);
+		send_privmsg(*it, ft_join(args, " ", 1), usr, srv);
 }
