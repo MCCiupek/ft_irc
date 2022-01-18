@@ -5,10 +5,10 @@
 
 # define RPL_WELCOME(nick, user, host) (":Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host + "\r\n")
 # define RPL_YOURHOST(servername, version) (":Your host is " + servername + ", running version " + version + "\r\n")
-# define RPL_CREATED(date) (":This server was created " + date + "\r\n")
+# define RPL_CREATED(date) (":This server was created " + date + "\r")
 # define RPL_MYINFO(servername, version, available_user_modes, available_channel_modes) (":" + servername + " " + version + " " + available_user_modes + " " + available_channel_modes + "\r\n")
 # define RPL_MOTDSTART(server) (":- " + server + " Message of the day - \r\n")
-# define RPL_MOTD(txt) (":- " + txt + "\r\n")
+# define RPL_MOTD(txt) (txt)
 # define RPL_ENDOFMOTD() (":End of /MOTD command\r\n")
 # define RPL_UMODEIS(user_mode) (user_mode + "\r\n")
 # define RPL_WHOREPLY(arg) (arg + "\r\n")

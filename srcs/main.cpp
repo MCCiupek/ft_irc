@@ -8,7 +8,6 @@ int main( int argc, char *argv[] ) {
 
 	try {
 		p = parser( argc, argv );
-
 		Server ircserv;
 		if ( p.size() > 2 ) {
 			ircserv = Server(p["PORT"], p["PWD"], p["HOST"], p["PORT_NWK"], p["PWD_NWK"],

@@ -64,7 +64,9 @@ void    send_reply( User u, int rpln, string reply )
 {
 	ostringstream s;
 
-	s << ":mfirc " << rpln << " " << u.getNick() << " " << reply;
+	s	<< ":mfirc "
+		<< setfill('0') << setw(3) << rpln
+		<< " " << u.getNick() << " " << reply;
 	string msg = s.str();
 
 	if ( send(u.getFd(), &msg[0], msg.size(), 0) == -1 )

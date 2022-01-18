@@ -186,39 +186,29 @@ string			get_time()
 
 void    		messageoftheday( Server &srv, User usr )
 {
-	ostringstream str;
-
 	send_reply(usr, 001, RPL_WELCOME(usr.getNick(), usr.getUsername(), usr.getHostname()));
 	send_reply(usr, 002, RPL_YOURHOST(srv.getName(), SERVER_VERSION));
 	send_reply(usr, 003, RPL_CREATED(srv.getCreationDate()));
 	send_reply(usr, 004, RPL_MYINFO(srv.getName(), SERVER_VERSION, AVAILABLE_USER_MODES, AVAILABLE_CHANNEL_MODES));
-
-	// Reset stringstream
-	str.str("");
-	str.clear();
 
 	string motd = srv.getMotd();
 
 	if (!motd.empty())
 	{
 		send_reply(usr, 375, RPL_MOTDSTART(srv.getName()));
-		send_reply(usr, 372, RPL_MOTD(motd));
-		send_reply(usr, 376, RPL_ENDOFMOTD());
-		/*str << ":" << srv.getName() << " 375 " << usr.getNick()
-		<< " :- " << srv.getName() << " Message of the day -" << endl;
 
 		vector<string>	tmp = ft_split(motd, "\\n");
+		ostringstream	str;
 
 		for (vector<string>::iterator it = tmp.begin(); it != tmp.end(); it++)
 		{
-			str << ":" << srv.getName() << " 372 " << usr.getNick()
-				<< " :" << *it << endl;
+			if (it != tmp.begin())	// send_reply add the first
+				str << ":" << srv.getName() << " 372 " << usr.getNick() << " ";
+			str	<< ":" << *it << "\r\n";
 		}
-		str << ":" << srv.getName() << " 372 " << usr.getNick()
-			<< " :End of MOTD command" << endl;
-
-		if ( send(usr.getFd(), &str.str()[0], str.str().size(), 0) == -1 )
-			throw eExc(strerror(errno));*/
+		
+		send_reply(usr, 372, RPL_MOTD(str.str()));
+		send_reply(usr, 376, RPL_ENDOFMOTD());
 	}
 	else
 		send_error(usr, ERR_NOMOTD, "");
