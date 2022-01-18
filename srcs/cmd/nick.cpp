@@ -41,7 +41,7 @@ void		nick( vector<string> args, User &usr, Server &srv )
 		return ;
 	}
 	//args[0].pop_back(); --> C++11
-	args[0].erase(args[0].end() - 1); // mc: ajout du -1 pour supprimer le dernier char et pas le string::npos
+	//args[0].erase(args[0].end() - 1); // mc: ajout du -1 pour supprimer le dernier char et pas le string::npos
 	if (srv.is_registered(usr) && usr.getNick() == args[0])
 		return ;
 

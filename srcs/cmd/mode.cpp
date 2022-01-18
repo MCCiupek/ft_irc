@@ -268,7 +268,7 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 		return send_error(u, ERR_NEEDMOREPARAMS, "MODE");
 
 	char flag = args[1][0];
-	string mode = args[1].substr(1, args[1].length() - 2);// mc: -2 i.o. -1 bc substr second arg is the lenght of the string to keep
+	string mode = args[1].substr(1, args[1].length() - 1);// mc: -2 i.o. -1 bc substr second arg is the lenght of the string to keep
 
 	if (u.getNick() != args[0]) {
 		send_error(u, ERR_USERSDONTMATCH, args[0]);

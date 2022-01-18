@@ -41,7 +41,26 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 	//if (args.size() == 1)
 	//	cmd.erase(cmd.end() - 1);
 	
-	cout << cmd << endl;
+	for (size_t i = 0; i < args.size(); i++)
+		if (args[i].back() == '\r')
+			args[i].pop_back();
+
+	// for (size_t i = 0; i < args.size(); i++) {
+	// 	for (size_t j = 0; j < args[i].size(); j++) {
+	// 		if (args[i][j] == '\n')
+	// 			cout << YELLOW << "\\n" << RESET;
+	// 		else if (args[i][j] == '\r')
+	// 			cout << YELLOW << "\\r" << RESET;
+	// 		else
+	// 			cout << YELLOW << args[i][j] << RESET;
+	// 	}
+	// 	cout << " ";
+	// }
+	// cout << endl;
+
+	
+	//cout << cmd << endl;
+	//args[args.size() - 1].erase(args[args.size() - 1].end() - 1);
 
 	map<string, FnPtr>	m;
 

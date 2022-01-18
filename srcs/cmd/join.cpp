@@ -74,7 +74,7 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 		return 1;
 	}		
 
-	channel.erase(channel.end() - 1); // mc: delete last char (to change in parsing or elsewhere): ok with 1 chan and no args but wont work with more
+	//channel.erase(channel.end() - 1); // mc: delete last char (to change in parsing or elsewhere): ok with 1 chan and no args but wont work with more
 	if ( channel[0] == '#' ) {
 		cnl = srv.getChannelByName( channel );
 		// if (cnl)
