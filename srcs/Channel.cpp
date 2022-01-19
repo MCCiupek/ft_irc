@@ -53,8 +53,10 @@ Channel::Channel(string name, string key, string topic, User * usr, string mode)
 	time_t now = time(0);
 	_creation_date = (intmax_t)now;
 
-	if ( key != "" )
+	if ( key != "" ) {
 		_has_key = true;
+		_mode += "k";
+	}
 	
 	if ( topic != "" )
 		_has_topic = true;

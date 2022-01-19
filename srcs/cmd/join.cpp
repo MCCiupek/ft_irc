@@ -42,6 +42,9 @@
 int		create_channel( string channel, string key, User &u, Server &srv ) {
 
 	Channel	* new_channel = new Channel(channel, key, "", &u, "nt");
+
+	//cout << RED << "key:" << key << "." << RESET << endl;
+
 	srv.addChannel( new_channel );
 	u.addChannel( new_channel );
 	u.setCurrChan( new_channel );

@@ -25,6 +25,7 @@
 
 # define NTC_JOIN(channel) ("JOIN :" + channel)
 # define NTC_PART(channel) ("PART :" + channel)
+# define NTC_PART_MSG(channel, msg) ("PART " + channel + " :\"" + msg +"\"")
 # define NTC_PRIVMSG(dest, msg) ("PRIVMSG " + dest + " " + msg)
 
 # define ERR_NOSUCHNICK			401
