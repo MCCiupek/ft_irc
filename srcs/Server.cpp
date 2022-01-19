@@ -262,10 +262,9 @@ int				Server::receiveData( int i ) {
 	memset(buf, 0, BUFSIZE);
 	nbytes = recv(_poll[i].fd, buf, BUFSIZE - 1, 0);
 	if (nbytes <= 0) {
-		if (nbytes == 0)
+		if (!nbytes)
 			cout << BOLDWHITE << "❌ Client #" << _poll[i].fd << " gone away" << RESET << endl;
-		close(_poll[i].fd);
-		del_from_pfds(_poll, i, &_fd_count);
+		del_from_pfds(i);
 		if (nbytes < 0)
 			throw eExc(strerror(errno));
 		return 1;
@@ -306,11 +305,39 @@ void				Server::acceptConn() {
 		 << ":" << ntohs(host_addr.sin_port) << RESET << endl;
 }
 
+/* pollfd utils */
+
+void				Server::add_to_pfds(int newfd)
+{
+	
+	// if ( _fd_count == *fd_size ) {
+	// 	*fd_size *= 2;
+	// 	_poll = (struct pollfd *)realloc(_poll, sizeof(*_poll) * (*fd_size));
+	// }
+
+	if (_fd_count == 5)
+		cout << RED << "Max number of clients reached" << RESET << endl;
+	else
+	{
+		(_poll)[_fd_count].fd = newfd;
+		(_poll)[_fd_count].events = POLLIN;
+
+		(_fd_count)++;
+	}
+}
+
+void				Server::del_from_pfds(int fd)
+{
+	close(fd);
+	_poll[fd] = _poll[_fd_count - 1];
+	_fd_count--;
+}
+
 void				Server::run() {
 
-	int     fd_size = MAXCLI;
+	// int     fd_size = MAXCLI;
 
-	_poll = (struct pollfd *)malloc(sizeof *_poll * fd_size);
+	// _poll = (struct pollfd *)malloc(sizeof *_poll * fd_size);
 	_poll[0].fd = _sockfd;
 	_poll[0].events = POLLIN;
 	_fd_count = 1;
@@ -329,17 +356,14 @@ void				Server::run() {
 				if ( _poll[i].fd == _sockfd )
 				{
 					this->acceptConn();
-					// Add new fd that made the connection
-					add_to_pfds(&_poll, _newfd, &_fd_count, &fd_size);
+					// Add new fd that made the connection (Up to 5)
+					add_to_pfds(_newfd);
 					// Create new user
 					_users[_newfd] = User(_newfd);
 					break ;
 				}
 				else
-				{
-					if (!this->receiveData(i))
-						this->sendData( _poll[i].fd );
-				}
+					this->receiveData(i);
 			}
 		}
 	}

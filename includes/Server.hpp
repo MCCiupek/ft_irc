@@ -27,7 +27,7 @@ class Server {
 		string					_pwd_nwk;
 		struct addrinfo 		_hints;
 		struct addrinfo			*_servinfo;
-		struct pollfd			*_poll;
+		struct pollfd			_poll[MAXCLI];
 		map<int, User>			_users;
 		vector<Channel*>		_channels;
 		map<string, string>		_irc_operators;
@@ -47,6 +47,7 @@ class Server {
 		int						sendData( int fd );
 		int						receiveData( int i );
 		void					acceptConn( void );
+		void					add_to_pfds(int newfd);
 
 	public:
 
@@ -83,6 +84,7 @@ class Server {
 		Channel *				getChannelByKey( string key );
 		User *					getUserByNick( string nick );
 		void					addChannel( Channel * channel );
+		void					del_from_pfds(int fd);
 
 };
 

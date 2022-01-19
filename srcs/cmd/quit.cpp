@@ -52,6 +52,14 @@
 // [client:8000]QUIT :vaffanculo a tutti
 // [server:6667]:deb_user_!deb_user@127.0.0.1 QUIT :Quit: vaffanculo a tutti
 
+void		send_notice_channel(User &u, Channel *c, string notice)
+{
+	vector<User*>	members = c->getMembers();
+
+	for (vector<User*>::iterator it = members.begin(); it != members.end(); it++)
+		send_notice(u, *(*it), notice);
+}
+
 void		quit( vector<string> args, User &usr, Server &srv )
 {
 	string	msg;
@@ -60,4 +68,16 @@ void		quit( vector<string> args, User &usr, Server &srv )
 
 	for (vector<string>::iterator it = args.begin(); it != args.end(); it++)
 		msg += *it;
+
+	cout << "msg = " << msg << endl;
+
+	vector<Channel *>	usr_channels = usr.getChannels();
+
+	if (usr_channels.size())
+		for (vector<Channel*>::iterator it = usr_channels.begin(); it != usr_channels.end(); it++)
+			send_notice_channel(usr, *it, NTC_QUIT(msg));
+
+	usr.leaveAllChans();
+	srv.del_from_pfds(usr.getFd());
+	cout << BOLDWHITE << "❌ Client #" << usr.getFd() << " gone away" << RESET << endl;
 }

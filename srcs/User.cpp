@@ -247,10 +247,13 @@ void				User::deleteChannel( Channel * channel ) {
 void				User::leaveAllChans( void ) {
 	
 	while ( !(_channels.empty()) ) {
-		(*_channels.begin())->deleteMember(this);
-		cout << MAGENTA << this->getNick() << " left channel " << (*_channels.begin())->getName() << RESET << endl;
-		_channels.erase(_channels.begin());
-		// TO DO: transfert channel ownership ?
+		
+		vector<Channel*>::iterator	chan = _channels.begin();
+		
+		(*chan)->deleteOper(this);
+		(*chan)->deleteMember(this);
+		cout << MAGENTA << this->getNick() << " left channel " << (*chan)->getName() << RESET << endl;
+		_channels.erase(chan);
 	}
 
 }
