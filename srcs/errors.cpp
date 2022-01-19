@@ -23,7 +23,7 @@ void    define_errors( void )
 	err[ERR_NOMOTD] = " :MOTD File is missing";
 	err[ERR_NONICKNAMEGIVEN] = " :No nickname given";
 	err[ERR_ERRONEUSNICKNAME] = " :Erroneous nickname";
-	err[ERR_NICKNAMEINUSE] = " :Nickname is already in use";
+	err[ERR_NICKNAMEINUSE] = " :Nickname is already in use.";
 	err[ERR_NOTONCHANNEL] = " :You're not on that channel";
 	err[ERR_NOTREGISTERED] = " :You have not registered";
 	err[ERR_NEEDMOREPARAMS] = " :Not enough parameters";
@@ -73,14 +73,14 @@ void    send_reply( User u, int rpln, string reply )
 		throw eExc(strerror(errno));
 }
 
-void    send_notice( User u, string notice )
+void    send_notice( User from, User to, string notice )
 {
 	ostringstream s;
 
-	s << ":" << u.fci() << " " << notice << "\r\n";
+	s << ":" << from.fci() << " " << notice << "\r\n";
 
 	string msg = s.str();
 
-	if ( send(u.getFd(), &msg[0], msg.size(), 0) == -1 )
+	if ( send(to.getFd(), &msg[0], msg.size(), 0) == -1 )
 		throw eExc(strerror(errno));
 }

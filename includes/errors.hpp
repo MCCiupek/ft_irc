@@ -24,6 +24,8 @@
 # define RPL_ENDOFBANLIST(channel) (channel + " :End of channel ban list\r\n")
 
 # define NTC_JOIN(channel) ("JOIN :" + channel)
+# define NTC_PART(channel) ("PART :" + channel)
+# define NTC_PRIVMSG(dest, msg) ("PRIVMSG " + dest + " " + msg)
 
 # define ERR_NOSUCHNICK			401
 # define ERR_NOSUCHSERVER		402
@@ -78,6 +80,6 @@ void    define_errors( void );
 void    send_error( User u, int errn, string cmd );
 //void    send_reply( int fd, string msg );
 void    send_reply( User u, int rpln, string reply );
-void    send_notice( User u, string notice );
+void    send_notice( User from, User to, string notice );
 
 #endif

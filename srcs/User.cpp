@@ -181,7 +181,7 @@ void					User::setIsIRCOper( bool isIRCOper )
 void					User::setCurrChan( Channel *c )
 {
 	_curr_chan = c;
-	cout << MAGENTA << getNick() << "'s current channel set to " << getCurrChan() << RESET << endl;
+	cout << MAGENTA << getNick() << "'s current channel set to " << getCurrChan()->getName() << RESET << endl;
 }
 
 /*								MEMBERS FUNCTIONS							*/

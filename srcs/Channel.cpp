@@ -53,8 +53,6 @@ Channel::Channel(string name, string key, string topic, User * usr, string mode)
 	time_t now = time(0);
 	_creation_date = (intmax_t)now;
 
-	cout << _creation_date << endl;
-
 	if ( key != "" )
 		_has_key = true;
 	
@@ -292,7 +290,9 @@ string				Channel::getMembersList( void ) {
 	string reply;
 
 	for ( size_t i = 0; i < _members.size(); i++ ) {
-		reply += "@" + _members[i]->getNick();
+		if (this->isOper(*_members[i]))
+			reply += "@";
+		reply += _members[i]->getNick();
 		if ( i < _members.size() - 1 )
 			reply += " ";
 	}

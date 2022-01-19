@@ -44,9 +44,6 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 		return ;
 	}
 
-	//if ( *(args[args.size()].end() - 1) == '\n')
-	//	args[args.size()] = args[args.size()].substr(0, args[args.size()].length()-1);
-
 	chans = ft_split(args[0], ",");
 
 	if ( args.size() > 1 )
@@ -62,7 +59,14 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 			send_error( usr, ERR_NOTONCHANNEL, chans[i] );
 			continue ;
 		}
+		vector<User*> usrs = cnl->getMembers();
 		send_to_all_in_chan(cnl, part_msg, usr);
+		for (size_t j = 0; j < usrs.size(); j++)
+			send_notice(usr, *usrs[j], NTC_PART(cnl->getName()));
 		usr.deleteChannel(cnl);
+
+		// TODO: Define what should be done if:
+		//		- usr leaving is the only operator (--> give operator priv to oldest member?)
+		//		- usr leaving is the last usr in chan (--> delete chan?)
 	}
 }

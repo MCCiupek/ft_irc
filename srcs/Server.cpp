@@ -335,8 +335,9 @@ void				Server::run() {
 				}
 				else
 				{
-					if (!this->receiveData(i))
-						this->sendData( _poll[i].fd );
+					this->receiveData(i);
+					//if (!this->receiveData(i))
+						//this->sendData( _poll[i].fd );
 				}
 			}
 		}

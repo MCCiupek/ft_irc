@@ -149,12 +149,11 @@ void		cnl_mode( vector<string> args, User &u, Server &srv ) {
 	if ( !cnl->isOnChann(u) )
 		return send_error(u, ERR_NOTONCHANNEL, args[0]);
 
-	if ( !cnl->isOper(u) )
+	if ( flag != ' ' && !cnl->isOper(u) )
 		return send_error(u, ERR_CHANOPRIVSNEEDED, args[0]);
 	
-	if ( (mode.find('o') || mode.find('b')) && mode.size() > 3 )
+	if ( flag != ' ' && (mode.find('o') || mode.find('b')) && mode.size() > 3 )
 		return send_error(u, ERR_CHANOPRIVSNEEDED, args[0]);
-
 
 	string		cnl_mode = cnl->getMode();
 	string		knw_mode = AVAILABLE_CHANNEL_MODES;
