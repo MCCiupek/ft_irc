@@ -116,10 +116,6 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 	vector<User*> usrs = cnl->getMembers();
 	for (size_t i = 0; i < usrs.size(); i++)
 		send_notice(usr, *usrs[i], NTC_JOIN(channel));
-	/*if ( cnl->getHasTopic() )
-		send_reply(usr, 332, RPL_TOPIC(cnl->getName(), cnl->getTopic()));
-	else
-		send_reply(usr, 332, RPL_NOTOPIC(cnl->getName()));*/
 	send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), cnl->getMembersList()));
 	send_reply(usr, 366, RPL_ENDOFNAMES(cnl->getName()));
 	send_reply(usr, 329, RPL_CREATIONTIME(cnl->getName(), cnl->getCreationDate()));

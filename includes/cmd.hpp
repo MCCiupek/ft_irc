@@ -18,5 +18,6 @@ void		privmsg( vector<string> args, User &usr, Server &srv );
 void		part( vector<string> args, User &usr, Server &srv );
 void		topic( vector<string> args, User &usr, Server &srv );
 void		names( vector<string> args, User &usr, Server &srv );
+void		quit( vector<string> args, User &usr, Server &srv );
 
 #endif
