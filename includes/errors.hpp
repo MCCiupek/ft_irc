@@ -3,10 +3,13 @@
 
 # include "headers.hpp"
 
+// OFFICIAL REPLIES
+
 # define RPL_WELCOME(nick, user, host) (":Welcome to the Internet Relay Network " + nick + "!" + user + "@" + host + "\r\n")
 # define RPL_YOURHOST(servername, version) (":Your host is " + servername + ", running version " + version + "\r\n")
 # define RPL_CREATED(date) (":This server was created " + date + "\r\n")
-# define RPL_MYINFO(servername, version, available_user_modes, available_channel_modes) (":" + servername + " " + version + " " + available_user_modes + " " + available_channel_modes + "\r\n")
+# define RPL_MYINFO(servername, version, available_user_modes, available_channel_modes) \
+	(":" + servername + " " + version + " " + available_user_modes + " " + available_channel_modes + "\r\n")
 # define RPL_MOTDSTART(server) (":- " + server + " Message of the day - \r\n")
 # define RPL_MOTD(txt) (txt + "\r\n")
 # define RPL_ENDOFMOTD() (":End of /MOTD command\r\n")
@@ -23,10 +26,15 @@
 # define RPL_BANLIST(channel, mask) (channel + " :" + mask + "\r\n")
 # define RPL_ENDOFBANLIST(channel) (channel + " :End of channel ban list\r\n")
 
+// NOTICES
+
 # define NTC_JOIN(channel) ("JOIN :" + channel)
 # define NTC_PART(channel) ("PART :" + channel)
 # define NTC_PART_MSG(channel, msg) ("PART " + channel + " :\"" + msg +"\"")
 # define NTC_PRIVMSG(dest, msg) ("PRIVMSG " + dest + " " + msg)
+# define NTC_QUIT(msg) (" QUIT :Quit: " + msg)
+
+// ERRORS
 
 # define ERR_NOSUCHNICK			401
 # define ERR_NOSUCHSERVER		402
@@ -79,7 +87,6 @@ extern map<int, string>		err;	// errors list
 int		display_usage( void );
 void    define_errors( void );
 void    send_error( User u, int errn, string cmd );
-//void    send_reply( int fd, string msg );
 void    send_reply( User u, int rpln, string reply );
 void    send_notice( User from, User to, string notice );
 

@@ -76,6 +76,7 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 	m["PART"] = part;
 	m["TOPIC"] = topic;
 	m["NAMES"] = names;
+	m["QUIT"] = quit;
 
 	// Call function
 	if ( m.count(cmd) > 0 ) {
