@@ -43,8 +43,6 @@ int		create_channel( string channel, string key, User &u, Server &srv ) {
 
 	Channel	* new_channel = new Channel(channel, key, "", &u, "nt");
 
-	//cout << RED << "key:" << key << "." << RESET << endl;
-
 	srv.addChannel( new_channel );
 	u.addChannel( new_channel );
 	u.setCurrChan( new_channel );
@@ -151,7 +149,7 @@ void		join( vector<string> args, User &usr, Server &srv ) {
 
 	vector<string>	keys(chans.size());
 
-	if (args.size() > 2)
+	if (args.size() > 1)
 		keys = ft_split(args[1], ",");
 
 	for (size_t i = 0; i < chans.size(); i++) {
