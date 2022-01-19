@@ -46,15 +46,6 @@ int		create_channel( string channel, string key, User &u, Server &srv ) {
 	u.addChannel( new_channel );
 	u.setCurrChan( new_channel );
 
-	ostringstream s;
-
-	// irssi syntax [ :<nickname>!<nickname>@<host> JOIN :#<channel> ]
-	// s	<< ":" << u.getNick() << "!" << u.getNick() << "@" << srv.getHost()
-	// 	<< " JOIN :" << channel << "\r\n";
-
-	// s << new_channel->MembersToString(u, srv);
-
-	// send_reply(u.getFd(), s.str());
 	send_reply(u, 353, RPL_NAMREPLY(new_channel->getName(), new_channel->getMembersList()));
 	send_reply(u, 366, RPL_ENDOFNAMES(new_channel->getName()));
 	send_reply(u, 329, RPL_CREATIONTIME(new_channel->getName(), new_channel->getCreationDate()));
@@ -71,11 +62,8 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 		return 1;
 	}		
 
-	//channel.erase(channel.end() - 1); // mc: delete last char (to change in parsing or elsewhere): ok with 1 chan and no args but wont work with more
 	if ( channel[0] == '#' ) {
 		cnl = srv.getChannelByName( channel );
-		// if (cnl)
-		// 	cout << "cnl = " << cnl->getName() << endl;
 		if ( cnl == NULL ) // Create Channel. 
 		{
 			send_notice(usr, usr, NTC_JOIN(channel));

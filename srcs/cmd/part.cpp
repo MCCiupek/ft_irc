@@ -50,20 +50,36 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 		part_msg = ft_join(args, " ", 1);
 
 	for (size_t i = 0; i < chans.size(); i++) {
+
 		cnl = srv.getChannelByName( chans[i] );
+
+		// if channel doesnt exists
 		if ( cnl == NULL ) {
 			send_error( usr, ERR_NOSUCHCHANNEL, chans[i] );
 			continue ;
 		}
+
+		// if user is not on channel
 		if ( !cnl->isOnChann(usr) ) {
 			send_error( usr, ERR_NOTONCHANNEL, chans[i] );
 			continue ;
 		}
-		vector<User*> usrs = cnl->getMembers();
+
 		send_to_all_in_chan(cnl, part_msg, usr);
+
+		vector<User*> usrs = cnl->getMembers();
 		for (size_t j = 0; j < usrs.size(); j++)
 			send_notice(usr, *usrs[j], NTC_PART(cnl->getName()));
+	
 		usr.deleteChannel(cnl);
+
+		// if channel is user's current channel
+		if ( usr.getCurrChan()->getName() == cnl->getName() ) {
+			if ( usr.getChannels().size() > 0 )
+				usr.setCurrChan(usr.getChannels().back());
+			else
+				usr.setCurrChan(nullptr);
+		}
 
 		// Delete chan if usr leaving is the last usr in chan
 		if (cnl->getNbMembers() == 0)
