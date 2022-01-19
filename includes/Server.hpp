@@ -83,6 +83,7 @@ class Server {
 		Channel *				getChannelByKey( string key );
 		User *					getUserByNick( string nick );
 		void					addChannel( Channel * channel );
+		void					deleteChannel( Channel * channel );
 
 };
 

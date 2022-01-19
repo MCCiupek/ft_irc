@@ -392,3 +392,13 @@ void				Server::addChannel( Channel * channel ) {
 	
 	_channels.push_back(channel);
 }
+
+void				Server::deleteChannel( Channel * channel ) {
+
+	for ( vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++ ) {
+		if ( (*it)->getName() == channel->getName() ) {
+			_channels.erase(it);
+			return ;
+		}
+	}
+}

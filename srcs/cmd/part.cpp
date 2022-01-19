@@ -65,8 +65,8 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 			send_notice(usr, *usrs[j], NTC_PART(cnl->getName()));
 		usr.deleteChannel(cnl);
 
-		// TODO: Define what should be done if:
-		//		- usr leaving is the only operator (--> give operator priv to oldest member?)
-		//		- usr leaving is the last usr in chan (--> delete chan?)
+		// Delete chan if usr leaving is the last usr in chan
+		if (cnl->getNbMembers() == 0)
+			srv.deleteChannel(cnl);
 	}
 }
