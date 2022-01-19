@@ -67,9 +67,9 @@ void		quit( vector<string> args, User &usr, Server &srv )
 	args[0] = &args[0][1];	// Delete ':' at the beginning of the message
 
 	for (vector<string>::iterator it = args.begin(); it != args.end(); it++)
-		msg += *it;
+		msg += *it + " ";
 
-	cout << "msg = " << msg << endl;
+	msg.pop_back(); // Delete last space
 
 	vector<Channel *>	usr_channels = usr.getChannels();
 
