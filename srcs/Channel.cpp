@@ -203,6 +203,8 @@ void    			Channel::setLimit( int limit ) {
 
 	if ( limit > 0 && limit <= MAX_USR_PER_CHAN )
 		_limit = limit;
+	else
+		_limit = MAX_USR_PER_CHAN;
 }
 
 void				Channel::addMember( User * usr ) {

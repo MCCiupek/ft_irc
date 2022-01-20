@@ -132,14 +132,13 @@ void		join( vector<string> args, User &usr, Server &srv ) {
 		return ;
 	}
 	
-	if ( args[0] == "0" ) {
-		//Leave all channels the user is currently a member of.
-		usr.leaveAllChans();
-		return;
-	}
+	// if ( args[0] == "0" ) {
+	// 	//Leave all channels the user is currently a member of.
+	// 	usr.leaveAllChans();
+	// 	return;
+	// }
 
 	chans = ft_split(args[0], ",");
-	// TO DO : Is the use wildcards authorized ? If so should be implemented here with ft_match.
 
 	vector<string>	keys(chans.size());
 
