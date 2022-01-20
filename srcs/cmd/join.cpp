@@ -49,7 +49,7 @@ int		create_channel( string channel, string key, User &u, Server &srv ) {
 
 	send_reply(u, 353, RPL_NAMREPLY(new_channel->getName(), new_channel->getMembersList()));
 	send_reply(u, 366, RPL_ENDOFNAMES(new_channel->getName()));
-	send_reply(u, 329, RPL_CREATIONTIME(new_channel->getName(), new_channel->getCreationDate()));
+	//send_reply(u, 329, RPL_CREATIONTIME(new_channel->getName(), new_channel->getCreationDate()));
 	return 0;
 }
 
@@ -114,9 +114,12 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 	vector<User*> usrs = cnl->getMembers();
 	for (size_t i = 0; i < usrs.size(); i++)
 		send_notice(usr, *usrs[i], NTC_JOIN(channel));
+	if (cnl->getHasTopic()) {
+		send_reply(usr, 332, RPL_TOPIC(cnl->getName(), cnl->getTopic()));
+		send_reply(usr, 333, RPL_TOPICWHOTIME(cnl->getName(), cnl->getTopicWho()->fci(), cnl->getTopicWhen()));
+	}
 	send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), cnl->getMembersList()));
 	send_reply(usr, 366, RPL_ENDOFNAMES(cnl->getName()));
-	send_reply(usr, 329, RPL_CREATIONTIME(cnl->getName(), cnl->getCreationDate()));
 	return 0;
 }
 
@@ -128,11 +131,6 @@ void		join( vector<string> args, User &usr, Server &srv ) {
 		send_error( usr, ERR_NEEDMOREPARAMS, "JOIN" );
 		return ;
 	}
-
-	cout << args[0] << endl;
-	// Probably useless
-	// if (args[0].back() == '\n')
-	// 	args[0].erase(args[0].end() - 1);
 	
 	if ( args[0] == "0" ) {
 		//Leave all channels the user is currently a member of.

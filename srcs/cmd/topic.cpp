@@ -35,28 +35,27 @@
 void		topic( vector<string> args, User &usr, Server &srv ) {
 
 	Channel *		cnl;
+	string			topic = "";
 
-	if ( args.size() < 2 )
-		return send_error( usr, ERR_NEEDMOREPARAMS, args[0] );
-
-	//if ( *(args[args.size() - 1].end() - 1) == '\n')
-	//	args[args.size() - 1] = args[args.size() - 1].substr(0, args[args.size() - 1].length()-1);
+	if ( args.size() < 1 )
+		return send_error( usr, ERR_NEEDMOREPARAMS, "TOPIC" );
 
 	cnl = srv.getChannelByName( args[0] );
 	if ( cnl == NULL || !cnl->isOnChann(usr) )
 		return send_error( usr, ERR_NOTONCHANNEL, args[0] );
 	
 	if ( args.size() > 1 ) {
-		if ( cnl->isTopicSettableByOperOnly() && !cnl->isOper(usr) ) {}
+		if ( cnl->isTopicSettableByOperOnly() && !cnl->isOper(usr) )
 			return send_error( usr, ERR_CHANOPRIVSNEEDED, args[0] );
 		if ( args[1] == ":" ) {
-			cnl->unsetTopic();
+			cnl->unsetTopic( &usr );
 		} else {
-			string topic = ft_join( args, " ", 1);
+			topic = ft_join( args, " ", 1);
 			if ( topic[0] == ':' )
 				topic = &topic[1];
-			cnl->setTopic( topic );
+			cnl->setTopic( topic, &usr );
 		}
+		send_notice_channel(usr, cnl, NTC_TOPIC(cnl->getName(), topic));
 	}
 	if ( cnl->getHasTopic() )
 		send_reply(usr, 332, RPL_TOPIC(cnl->getName(), cnl->getTopic()));

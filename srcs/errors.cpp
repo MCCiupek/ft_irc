@@ -73,6 +73,14 @@ void    send_reply( User u, int rpln, string reply )
 		throw eExc(strerror(errno));
 }
 
+void		send_notice_channel(User &u, Channel *c, string notice)
+{
+	vector<User*>	members = c->getMembers();
+
+	for (vector<User*>::iterator it = members.begin(); it != members.end(); it++)
+		send_notice(u, *(*it), notice);
+}
+
 void	send_notice( User from, User to, string notice )
 {
 	ostringstream s;

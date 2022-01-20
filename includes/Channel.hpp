@@ -31,6 +31,8 @@ class Channel {
 		string							_mode;
 		size_t							_limit;
 		double							_creation_date;
+		double							_topic_when;
+		User *							_topic_who;
 
 		/*								CONSTRUCTORS								*/
 
@@ -64,14 +66,16 @@ class Channel {
 		string const			&getMode( void ) const;
 		size_t					getLimit( void ) const;
 		string const			getCreationDate( void ) const;
+		string const			getTopicWhen( void ) const;
+		User *					getTopicWho( void ) const;
 		vector<string> const	&getBanMask( void ) const;
 
 		/*								SETTERS										*/
 
         void    				setName(string const & name);
         void    				setKey(string const & key);
-        void    				setTopic(string const & topic);
-        void    				unsetTopic();
+        void    				setTopic(string const & topic, User * u);
+        void    				unsetTopic(User * u);
 		void    				unsetKey();
 		void					setMode( string mode );
 		void					setLimit( int limit );

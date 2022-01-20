@@ -11,6 +11,9 @@ Channel::Channel( void ) {
 
 	time_t now = time(0);
 	_creation_date = (intmax_t)now;
+
+	_topic_when = (intmax_t)now;
+	_topic_who = nullptr;
 }
 
 Channel::Channel(string name) :
@@ -32,6 +35,9 @@ Channel::Channel(string name) :
 
 	time_t now = time(0);
 	_creation_date = (intmax_t)now;
+
+	_topic_when = (intmax_t)now;
+	_topic_who = nullptr;
 }
 
 Channel::Channel(string name, string key, string topic, User * usr, string mode) : 
@@ -57,6 +63,9 @@ Channel::Channel(string name, string key, string topic, User * usr, string mode)
 		_has_key = true;
 		_mode += "k";
 	}
+
+	_topic_when = (intmax_t)now;
+	_topic_who = usr;
 	
 	if ( topic != "" )
 		_has_topic = true;
@@ -137,6 +146,17 @@ string const Channel::getCreationDate() const {
 	return date;
 }
 
+string const Channel::getTopicWhen() const {
+	ostringstream s;
+	s << fixed << _topic_when;
+	string date = s.str();
+	return date;
+}
+
+User *					Channel::getTopicWho( void ) const {
+	return _topic_who;
+}
+
 size_t 			Channel::getLimit( void ) const {
 	return _limit;
 }
@@ -154,14 +174,20 @@ void    			Channel::setKey(string const & key) {
 	_has_key = true;
 }
 
-void    			Channel::setTopic(string const & topic) {
+void    			Channel::setTopic(string const & topic, User * u) {
 	_topic = topic;
 	_has_topic = true;
+	_topic_who = u;
+	time_t now = time(0);
+	_topic_when = (intmax_t)now;
 }
 
-void    			Channel::unsetTopic() {
+void    			Channel::unsetTopic(User * u) {
 	_topic = "";
 	_has_topic = false;
+	_topic_who = u;
+	time_t now = time(0);
+	_topic_when = (intmax_t)now;
 }
 
 void    			Channel::unsetKey() {

@@ -19,6 +19,7 @@
 # define RPL_CHANNELMODEIS(channel, mode) (channel + " :+" + mode + "\r\n")
 # define RPL_NOTOPIC(channel) (channel + " :No topic is set" + "\r\n")
 # define RPL_TOPIC(channel, topic) (channel + " :" + topic + "\r\n")
+# define RPL_TOPICWHOTIME(channel, who, when) (channel + " " + who + " :" + when + "\r\n")
 # define RPL_NAMREPLY(channel, list) ("= " + channel + " :" + list + "\r\n")
 # define RPL_ENDOFNAMES(channel) (channel + " :End of /NAMES list.\r\n")
 # define RPL_AWAY(nick, msg) (nick + " :" + msg + "\r\n")
@@ -33,6 +34,9 @@
 # define NTC_PART_MSG(channel, msg) ("PART " + channel + " :\"" + msg +"\"")
 # define NTC_PRIVMSG(dest, msg) ("PRIVMSG " + dest + " " + msg)
 # define NTC_QUIT(msg) (" QUIT :Quit: " + msg)
+# define NTC_TOPIC(channel, topic) ("TOPIC " + channel + " :" + topic)
+# define NTC_CHANMODE(channel, mode) ("MODE " + channel + " :" + mode)
+# define NTC_CHANMODE_ARG(channel, mode, arg) ("MODE " + channel + " " + mode + " :" + arg)
 
 // ERRORS
 
@@ -88,6 +92,7 @@ int		display_usage( void );
 void    define_errors( void );
 void    send_error( User u, int errn, string cmd );
 void    send_reply( User u, int rpln, string reply );
+void	send_notice_channel(User &u, Channel *c, string notice);
 void    send_notice( User from, User to, string notice );
 
 #endif
