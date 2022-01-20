@@ -201,7 +201,7 @@ void				Channel::setMode( string mode ) {
 
 void    			Channel::setLimit( int limit ) {
 
-	if ( limit > 0 && limit < MAX_USR_PER_CHAN )
+	if ( limit > 0 && limit <= MAX_USR_PER_CHAN )
 		_limit = limit;
 }
 
@@ -257,6 +257,8 @@ void				Channel::ban( string mask ) {
 void				Channel::unban( string mask ) {
 	
 	for ( size_t i = 0; i < _banned_mask.size(); i++ ) {
+		cout << "mask: " << mask << endl;
+		cout << "_banned_mask: " << _banned_mask[i] << endl;
 		if ( mask == _banned_mask[i] )
 			_banned_mask.erase(_banned_mask.begin() + i);
 	}
