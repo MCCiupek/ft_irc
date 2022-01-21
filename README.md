@@ -32,14 +32,14 @@ IRC client programs connect to an IRC server to access a specific channel. IRC s
   - [x] USER
   - [ ] [SERVER]
   - [ ] OPER
-  - [ ] QUIT
+  - [x] QUIT
   - [ ] [SQUIT]
 - [ ] Channel operations
   - [x] JOIN
   - [x] PART
   - [x] MODE
   - [x] TOPIC
-  - [ ] NAMES
+  - [x] NAMES
   - [ ] LIST
   - [ ] INVITE
   - [ ] KICK
