@@ -53,7 +53,7 @@ void		kick( vector<string> args, User &usr, Server &srv ) {
 	chans = ft_split(args[0], ",");
 	victims = ft_split(args[1], ",");
 
-	reason = "";
+	reason = ":";
 	if ( args.size() > 2 )
 		reason = ft_join(args, " ", 2);
 
@@ -82,17 +82,23 @@ void		kick( vector<string> args, User &usr, Server &srv ) {
 
 		for (size_t j = 0; j < victims.size(); j++) {
 
-			victim = srv.getUserByNick(victims[i]);
+			victim = srv.getUserByNick(victims[j]);
+
+			// if victim is not a vilid nick
+			if ( !victim ) {
+				send_error( usr, ERR_NOSUCHNICK, victims[j] );
+				continue ;
+			}
 
 			// if victim is not on channel
 			if ( !cnl->isOnChann(*victim) ) {
-				send_error(*victim, ERR_NOTONCHANNEL, chans[i] );
+				send_error( usr, ERR_NOTONCHANNEL, chans[i] );
 				continue ;
 			}
 
 			vector<User*> usrs = cnl->getMembers();
 			for (size_t k = 0; k < usrs.size(); k++) {
-				send_notice(usr, *usrs[k], NTC_KICK(cnl->getName(), victim->getNick(), &reason[1]));
+				send_notice(usr, *usrs[k], NTC_KICK(cnl->getName(), victim->getNick(), reason));
 			}
 		
 			victim->deleteChannel(cnl);
