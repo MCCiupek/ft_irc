@@ -11,6 +11,7 @@ Server::Server(string port, string pwd) :
 		_pwd(pwd),
 		_host(DEFAULT_HOST),
 		_servinfo(NULL),
+		_users(),
 		_irc_operators(),
 		_motd("")
 {
@@ -27,6 +28,7 @@ Server::Server(string port, string pwd, string host=DEFAULT_HOST, string motd=""
 		_pwd(pwd),
 		_host(host),
 		_servinfo(NULL),
+		_users(),
 		_motd(motd)
 {
 	time_t now = time(0);
@@ -331,6 +333,8 @@ void				Server::run() {
 
 		if (poll_count == -1)
 			throw eExc(strerror(errno));
+
+		cout << "fd_count = " << _fd_count << endl;
 
 		for ( int i = 0; i < _fd_count; i++ ) {
 			// If something happened on fd i

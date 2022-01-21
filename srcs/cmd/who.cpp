@@ -100,7 +100,8 @@ static int		who_user( const vector<string> args, User &usr, Server &srv, bool wi
 
 			// irssi syntax :<server> 352 <user> <*|u.curr_channel> <u.realname> <u.hostname> <u.servername>
 			//									 <u.nickname> <H|G>[*][@|+] :<hopcount> <u.realname>
-			if ( (u.getHostname() == args[0] || u.getServername() == args[0] || u.getRealName() == args[0] ))
+			if ( (u.getNick() == args[0] || u.getHostname() == args[0] || u.getServername() == args[0]
+				|| u.getRealName() == args[0] ))
 			{
 				send_reply(usr, 352, RPL_WHOREPLY((u.getCurrChan() ? u.getCurrChan()->getName() : "*"),
 					u.getUsername(), u.getHostname(), u.getServername(), u.getNick(),
@@ -118,15 +119,25 @@ int				who_channel( const vector<string> args, User &usr, Server &srv, bool wild
 	
 	ostringstream	s;
 
-	// Works only if is only <channel> or <channel> + <channel2> (<channel2> is ignored)
-	if ( args.size() == 1 || (args.size() == 2 && args[1][0] == '#') )
-	{
-		map<int, User>	users = srv.getUsers();
+	vector<Channel*>	chans = srv.getChannels();
+	Channel				*c = nullptr;
 
-		for ( map<int, User>::iterator it = users.begin(); it != users.end(); ++it )
+	for (vector<Channel*>::iterator it = chans.begin(); it != chans.end(); it++)
+		if ((*it)->getName() == args[0])
 		{
-			User u = it->second;
+			c = *it;
+			break;
+		}
 
+	// Works only if is only <channel> or <channel> + <channel2> (<channel2> is ignored)
+	if ( (args.size() == 1 || (args.size() == 2 && args[1][0] == '#')) && c
+		&& usr.isRegisteredToChan(*c) )
+	{
+		vector<User*>	users = c->getMembers();
+
+		for ( vector<User*>::iterator it = users.begin(); it != users.end(); ++it )
+		{
+			User u = *(*it);
 			send_reply(usr, 352, RPL_WHOREPLY((u.getCurrChan() ? u.getCurrChan()->getName() : "*"),
 				u.getUsername(), u.getHostname(), u.getServername(), u.getNick(),
 				(u.isIRCOper() ? "*" : ""), (u.isChanOper() ? "@" : ""), u.getRealName()));

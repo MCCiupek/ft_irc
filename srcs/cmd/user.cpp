@@ -29,15 +29,16 @@ void	user( vector<string> args, User &usr, Server &srv )
 		return ;
 	}
 
-	usr.setUsername(args[1]);
-	usr.setHostname(args[2]);
-	usr.setServername(args[3]);
-	usr.setRealName(ft_join(args, " ", 4));
+	usr.setUsername(args[0]);
+	usr.setHostname(args[1]);
+	usr.setServername(args[2]);
+	usr.setRealName(ft_join(args, " ", 3));
 	usr.setIsSet(true);
 
 	if (!usr.getNick().empty())
 	{
 		cout << GREEN << "User #" << usr.getFd() << " registred as " << usr.getNick() << RESET << endl;
+		cout << usr << endl;
 		messageoftheday(srv, usr);
 	}
 }
