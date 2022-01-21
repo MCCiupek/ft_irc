@@ -6,12 +6,10 @@ Server::Server( void ) {
 }
 
 Server::Server(string port, string pwd) :
-		_name("mfirc"),
+		_name(SERVER_NAME),
 		_port(port), 
 		_pwd(pwd),
-		_host("localhost"),
-		_port_nwk("127.0.0.1"),
-		_pwd_nwk(""),
+		_host(DEFAULT_HOST),
 		_servinfo(NULL),
 		_irc_operators(),
 		_motd("")
@@ -22,15 +20,12 @@ Server::Server(string port, string pwd) :
 	
 }
 
-Server::Server(string port, string pwd, string host="localhost",
-			string port_nwk="127.0.0.1", string pwd_nwk="", string motd="",
+Server::Server(string port, string pwd, string host=DEFAULT_HOST, string motd="",
 			string operators="") : 
-		_name("mfirc"),
+		_name(SERVER_NAME),
 		_port(port), 
 		_pwd(pwd),
 		_host(host),
-		_port_nwk(port_nwk),
-		_pwd_nwk(pwd_nwk),
 		_servinfo(NULL),
 		_motd(motd)
 {
@@ -58,8 +53,6 @@ Server & Server::operator=(Server const & src) {
 		this->_port = src.getPort();
 		this->_pwd = src.getPassword();
 		this->_host = src.getHost();
-		this->_port_nwk = src.getPortNetwork();
-		this->_pwd_nwk = src.getPasswordNetwork();
 		this->_motd = src.getMotd();
 		this->_users = src.getUsers();
 	}
@@ -80,14 +73,6 @@ string const & Server::getPassword() const {
 
 string const & Server::getHost() const {
 	return _host;
-}
-
-string const & Server::getPortNetwork() const {
-	return _port_nwk;
-}
-
-string const & Server::getPasswordNetwork() const {
-	return _pwd_nwk;
 }
 
 map<int, User> const & Server::getUsers() const {
@@ -121,8 +106,6 @@ ostream & operator<<(ostream & stream, Server &Server) {
 	stream << "port: " << Server.getPort() << endl;
 	stream << "pwd: " << Server.getPassword() << endl;
 	stream << "host: " << Server.getHost() << endl;
-	stream << "port network: " << Server.getPortNetwork() << endl;
-	stream << "pwd network: " << Server.getPasswordNetwork() << endl;
 	return stream;
 }
 

@@ -23,8 +23,6 @@ class Server {
 		string					_port;
 		string					_pwd;
 		string					_host;
-		string					_port_nwk;
-		string					_pwd_nwk;
 		struct addrinfo 		_hints;
 		struct addrinfo			*_servinfo;
 		struct pollfd			_poll[MAXCLI];
@@ -55,8 +53,7 @@ class Server {
 
 		Server( void );
 		Server(string port, string pwd);
-		Server(string port, string pwd, string host, string port_nwk, string pwd_nwk,
-			string motd, string operators);
+		Server(string port, string pwd, string host, string motd, string operators);
 		virtual ~Server( void ); 
 
 		Server & operator=(Server const& src); 
@@ -67,8 +64,6 @@ class Server {
 		string const 			&getPort( void ) const;
 		string const 			&getPassword( void ) const;
 		string const 			&getHost( void ) const;
-		string const 			&getPortNetwork( void ) const;
-		string const 			&getPasswordNetwork( void ) const;
 		map<int, User> const	&getUsers( void ) const;
 		vector<Channel*> const	&getChannels( void ) const;
 		vector<string> const	getChannelsNames( void ) const;

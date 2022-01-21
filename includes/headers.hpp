@@ -1,6 +1,8 @@
 #ifndef HEADERS_HPP
 # define HEADERS_HPP
 
+# define SERVER_NAME        "mfirc" 
+# define DEFAULT_HOST       "127.0.0.1"
 # define AVAILABLE_USER_MODES "iswo"
 # define AVAILABLE_CHANNEL_MODES "opsitnmlbvk"
 # define BACKLOG			5

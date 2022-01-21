@@ -4,27 +4,16 @@ map<string, string>		parser( int n_params, char *params[] ) {
 
 	map<string, string> res;
 
-	if ( n_params != 4 && n_params != 3 && n_params != 2) {
-		throw eExc("Usage: ./ircserv [host:port_network:password_network] <port> <password> \n\
+	if ( n_params != 3 && n_params != 2) {
+		throw eExc("Usage: ./ircserv <port> <password> \n\
 		        ./ircserv <txt.conf>");
 	}
 
 	if (n_params == 2)
 		return (conf_file(params[1]));
 
-	res["PORT"] = params[1 + (n_params == 4)];
-	res["PWD"] = params[2 + (n_params == 4)];
-
-	if (n_params == 4) {
-
-		vector<string> v = ft_split(params[1], ":");
-		if ( v.size() != 3 )
-			throw eExc("Usage: ./ircserv [host:port_network:password_network] <port> <password>");
-
-		res["HOST"] = v[0];
-		res["PORT_NWK"] = v[1];
-		res["PWD_NWK"] = v[2];
-	}
+	res["PORT"] = params[1];
+	res["PWD"] = params[2];
 
 	return res;
 }
