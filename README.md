@@ -42,7 +42,7 @@ IRC client programs connect to an IRC server to access a specific channel. IRC s
   - [x] NAMES
   - [ ] LIST
   - [ ] INVITE
-  - [ ] KICK
+  - [x] KICK
 - [ ] Server
   - [ ] VERSION
   - [ ] STATS
