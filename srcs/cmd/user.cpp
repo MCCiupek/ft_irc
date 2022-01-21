@@ -32,7 +32,7 @@ void	user( vector<string> args, User &usr, Server &srv )
 	usr.setUsername(args[1]);
 	usr.setHostname(args[2]);
 	usr.setServername(args[3]);
-	usr.setRealName(args[4]);
+	usr.setRealName(ft_join(args, " ", 4));
 	usr.setIsSet(true);
 
 	if (!usr.getNick().empty())

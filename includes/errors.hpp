@@ -14,7 +14,9 @@
 # define RPL_MOTD(txt) (txt + "\r\n")
 # define RPL_ENDOFMOTD() (":End of /MOTD command\r\n")
 # define RPL_UMODEIS(user_mode) (user_mode + "\r\n")
-# define RPL_WHOREPLY(arg) (arg + "\r\n")
+# define RPL_WHOREPLY(curr_chan, username, hostname, servname, nick, ircoper, chanoper, realname) \
+	(curr_chan + " " + username + " " + hostname + " " + servname + " " + nick + " H " + ircoper \
+	+ chanoper + " :0 " + realname)
 # define RPL_ENDOFWHO(name) (name + " :End of /WHO list\r\n")
 # define RPL_CHANNELMODEIS(channel, mode) (channel + " :+" + mode + "\r\n")
 # define RPL_NOTOPIC(channel) (channel + " :No topic is set" + "\r\n")

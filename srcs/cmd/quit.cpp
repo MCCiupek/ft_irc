@@ -58,10 +58,7 @@ void		quit( vector<string> args, User &usr, Server &srv )
 
 	args[0] = &args[0][1];	// Delete ':' at the beginning of the message
 
-	for (vector<string>::iterator it = args.begin(); it != args.end(); it++)
-		msg += *it + " ";
-
-	msg.pop_back(); // Delete last space
+	msg = ft_join(args, " ", 0);
 
 	vector<Channel *>	usr_channels = usr.getChannels();
 
