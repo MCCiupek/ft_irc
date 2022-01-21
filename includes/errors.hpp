@@ -37,6 +37,7 @@
 # define NTC_TOPIC(channel, topic) ("TOPIC " + channel + " :" + topic)
 # define NTC_CHANMODE(channel, mode) ("MODE " + channel + " :" + mode)
 # define NTC_CHANMODE_ARG(channel, mode, arg) ("MODE " + channel + " " + mode + " :" + arg)
+# define NTC_KICK(channel, usr, reason) ("KICK " + channel  + " " + usr + " " + reason)
 
 // ERRORS
 
