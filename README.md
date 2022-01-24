@@ -53,9 +53,9 @@ IRC client programs connect to an IRC server to access a specific channel. IRC s
   - [ ] ADMIN
   - [ ] INFO
 
-- [ ] Sending messages
+- [x] Sending messages
   - [x] PRIVMSG
-  - [ ] NOTICE
+  - [x] NOTICE
 - [ ] User
   - [ ] WHO
   - [ ] WHOIS
