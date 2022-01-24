@@ -41,7 +41,7 @@ IRC client programs connect to an IRC server to access a specific channel. IRC s
   - [x] TOPIC
   - [x] NAMES
   - [ ] LIST
-  - [ ] INVITE
+  - [x] INVITE
   - [x] KICK
 - [ ] Server
   - [ ] VERSION
