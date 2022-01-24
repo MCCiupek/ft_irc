@@ -79,12 +79,12 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 
 		// TODO: PUT THE FOLLOWING CODE IN USER::DELETECHANNEL() >>>>>>>>>>>>>>>>>
 		// if channel is user's current channel
-		if ( usr.getCurrChan()->getName() == cnl->getName() ) {
-			if ( usr.getChannels().size() > 0 )
-				usr.setCurrChan(usr.getChannels().back());
-			else
-				usr.setCurrChan(nullptr);
-		}
+		// if ( usr.getCurrChan()->getName() == cnl->getName() ) {
+		// 	if ( usr.getChannels().size() > 0 )
+		// 		usr.setCurrChan(usr.getChannels().back());
+		// 	else
+		// 		usr.setCurrChan(nullptr);
+		// }
 		// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 		// Delete chan if usr leaving is the last usr in chan

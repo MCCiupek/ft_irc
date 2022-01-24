@@ -67,6 +67,14 @@ void		quit( vector<string> args, User &usr, Server &srv )
 			send_notice_channel(usr, *it, NTC_QUIT(msg));
 
 	usr.leaveAllChans();
+
+	vector<Channel *>	srv_channels = srv.getChannels();
+
+	if (srv_channels.size())
+		for (vector<Channel*>::iterator it = srv_channels.begin(); it != srv_channels.end(); it++)
+			if ( !(*it)->getNbMembers() )
+				srv.deleteChannel(*it);
+
 	srv.del_from_pfds(usr.getFd());
 	cout << BOLDWHITE << "❌ Client #" << usr.getFd() << " gone away" << RESET << endl;
 }

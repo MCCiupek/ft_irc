@@ -233,14 +233,26 @@ void				User::addChannel( Channel * channel ) {
 
 void				User::deleteChannel( Channel * channel ) {
 
+	string chan_name;
+
 	cout << MAGENTA << this->getNick() << " left channel " << channel->getName() << RESET << endl;
+	channel->deleteOper(this);
 	channel->deleteMember(this);
 	for ( vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++ ) {
 		if ( (*it)->getName() == channel->getName() ) {
+			if ( this->getCurrChan() && this->getCurrChan()->getName() == (*it)->getName() ) {
+				if ( this->getChannels().size() > 1 ) {
+					if (this->getChannels().back()->getName() != (*it)->getName())
+						this->setCurrChan(this->getChannels().back());
+					else
+						this->setCurrChan(this->getChannels().front());
+				}
+				else
+					this->setCurrChan(nullptr);
+			}
 			_channels.erase(it);
 			return ;
 		}
-		// TO DO: transfert channel ownership ?
 	}
 }
 
@@ -250,10 +262,11 @@ void				User::leaveAllChans( void ) {
 		
 		vector<Channel*>::iterator	chan = _channels.begin();
 		
-		(*chan)->deleteOper(this);
-		(*chan)->deleteMember(this);
-		cout << MAGENTA << this->getNick() << " left channel " << (*chan)->getName() << RESET << endl;
-		_channels.erase(chan);
+		//(*chan)->deleteOper(this);
+		//(*chan)->deleteMember(this);
+		//cout << MAGENTA << this->getNick() << " left channel " << (*chan)->getName() << RESET << endl;
+		deleteChannel( *chan );
+		//_channels.erase(chan);
 	}
 
 }
