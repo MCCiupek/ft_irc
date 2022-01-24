@@ -35,6 +35,7 @@
 # define NTC_PART(channel) ("PART :" + channel)
 # define NTC_PART_MSG(channel, msg) ("PART " + channel + " :\"" + msg +"\"")
 # define NTC_PRIVMSG(dest, msg) ("PRIVMSG " + dest + " " + msg)
+# define NTC_NOTICE(dest, msg) ("NOTICE " + dest + " " + msg)
 # define NTC_QUIT(msg) (" QUIT :Quit: " + msg)
 # define NTC_TOPIC(channel, topic) ("TOPIC " + channel + " :" + topic)
 # define NTC_CHANMODE(channel, mode) ("MODE " + channel + " :" + mode)

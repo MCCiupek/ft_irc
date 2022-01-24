@@ -15,6 +15,7 @@ void		mode( vector<string> args, User &usr, Server &srv );
 //void		usr_mode( vector<string> args, User &usr, Server &srv );
 void		send_to_all_in_chan( Channel * Chan, string txt, User &usr );
 void		privmsg( vector<string> args, User &usr, Server &srv );
+void		notice( vector<string> args, User &usr, Server &srv );
 void		part( vector<string> args, User &usr, Server &srv );
 void		topic( vector<string> args, User &usr, Server &srv );
 void		names( vector<string> args, User &usr, Server &srv );

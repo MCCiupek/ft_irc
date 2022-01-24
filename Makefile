@@ -52,6 +52,7 @@ SRC				=		main.cpp		\
 						cmd/names.cpp	\
 						cmd/quit.cpp	\
 						cmd/kick.cpp	\
+						cmd/notice.cpp	\
 						conf.cpp
 
 SRCS			=		$(addprefix $(DIR_SRCS), $(SRC))

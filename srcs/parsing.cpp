@@ -67,6 +67,7 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 	m["NAMES"] = names;
 	m["QUIT"] = quit;
 	m["KICK"] = kick;
+	m["NOTICE"] = notice;
 
 	// Call function
 	if ( m.count(cmd) > 0 ) {
