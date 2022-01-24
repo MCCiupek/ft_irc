@@ -41,7 +41,7 @@ void		invite( vector<string> args, User &usr, Server &srv ) {
 	cnl = srv.getChannelByName( args[1] );
 
 	// if channel doesnt exists
-	if ( cnl == NULL ) {
+	if ( !cnl ) {
 		return ;
 	}
 
@@ -57,7 +57,7 @@ void		invite( vector<string> args, User &usr, Server &srv ) {
 
 	// if guest's nick is not a valid nick
 	if ( !guest )
-		return send_error( usr, ERR_NOSUCHNICK, guest->getNick() );
+		return send_error( usr, ERR_NOSUCHNICK, args[0] );
 
 	// if guest is already on channel
 	if ( cnl->isOnChann(*guest) )

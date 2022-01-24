@@ -66,6 +66,7 @@ void		nick( vector<string> args, User &usr, Server &srv )
 			usr.setNick(args[0]); // mc: Set nick before MOTD bc nick is needed in RPL 001
 			messageoftheday(srv, usr);
 		}
+		send_notice(usr, usr, NTC_NICK(args[0]));
 		usr.setNick(args[0]);
 	}
 }

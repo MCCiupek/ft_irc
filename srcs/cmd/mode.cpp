@@ -285,8 +285,11 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 
 	(void)srv;
 
-	if (args.size() < 2)
+	if (args.size() < 1)
 		return send_error(u, ERR_NEEDMOREPARAMS, "MODE");
+
+	if (args.size() < 2)
+		return send_reply(u, 221, RPL_UMODEIS(u.getMode()));
 
 	char flag = args[1][0];
 	string mode = args[1].substr(1, args[1].length() - 1);
@@ -317,10 +320,10 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 		}
 	}
 	else
-		return send_error(u, ERR_UMODEUNKNOWNFLAG, args[2]);
+		return send_error(u, ERR_UMODEUNKNOWNFLAG, args[1]);
 
 	u.setMode(usr_mode);
-	send_reply(u, 221, RPL_UMODEIS(u.getMode()));
+	send_notice(u, u, NTC_MODE(u.getNick(), args[1]));
 }
 
 void		mode( vector<string> args, User &usr, Server &srv )

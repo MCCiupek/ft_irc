@@ -32,6 +32,8 @@
 
 // NOTICES
 
+# define NTC_NICK(nick) ("NICK :" + nick)
+# define NTC_MODE(nick, mode) ("MODE " + nick + " :" + mode)
 # define NTC_JOIN(channel) ("JOIN :" + channel)
 # define NTC_PART(channel) ("PART :" + channel)
 # define NTC_PART_MSG(channel, msg) ("PART " + channel + " :\"" + msg +"\"")
