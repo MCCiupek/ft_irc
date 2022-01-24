@@ -63,14 +63,8 @@ void		invite( vector<string> args, User &usr, Server &srv ) {
 	if ( cnl->isOnChann(*guest) )
 		return send_error( usr, ERR_USERONCHANNEL, args[0] + " " + args[1] );
 
-	//vector<User*> usrs = cnl->getMembers();
-	//for (size_t i = 0; i < usrs.size(); i++) {
-	//	send_notice(usr, *usrs[i], NTC_INVITE(cnl->getName(), guest->getNick()));
-	//}
-
 	send_notice(usr, *guest, NTC_INVITE(cnl->getName(), guest->getNick()));
+	send_reply(usr, 341, RPL_INVITING(guest->getNick(), cnl->getName()));
 
 	cnl->invite(guest);
-
-	send_reply(usr, 341, RPL_INVITING(guest->getNick(), cnl->getName()));
 }
