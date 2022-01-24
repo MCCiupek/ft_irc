@@ -28,6 +28,7 @@
 # define RPL_CREATIONTIME(channel, creation_time) (channel + " :" + creation_time + "\r\n")
 # define RPL_BANLIST(channel, mask) (channel + " :" + mask + "\r\n")
 # define RPL_ENDOFBANLIST(channel) (channel + " :End of channel ban list\r\n")
+# define RPL_INVITING(guest, channel) (guest + " :" + channel + "\r\n")
 
 // NOTICES
 
@@ -41,6 +42,7 @@
 # define NTC_CHANMODE(channel, mode) ("MODE " + channel + " :" + mode)
 # define NTC_CHANMODE_ARG(channel, mode, arg) ("MODE " + channel + " " + mode + " :" + arg)
 # define NTC_KICK(channel, usr, reason) ("KICK " + channel  + " " + usr + " " + reason)
+# define NTC_INVITE(channel, usr) ("INVITE " + usr  + " :" + channel)
 
 // ERRORS
 
@@ -63,6 +65,7 @@
 # define ERR_ERRONEUSNICKNAME	432
 # define ERR_NICKNAMEINUSE		433
 # define ERR_NOTONCHANNEL		442
+# define ERR_USERONCHANNEL		443
 # define ERR_NOTREGISTERED		451
 # define ERR_NEEDMOREPARAMS		461
 # define ERR_ALREADYREGISTRED	462

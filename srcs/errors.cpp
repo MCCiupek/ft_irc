@@ -25,7 +25,8 @@ void    define_errors( void )
 	err[ERR_ERRONEUSNICKNAME] = " :Erroneous nickname";
 	err[ERR_NICKNAMEINUSE] = " :Nickname is already in use.";
 	err[ERR_NOTONCHANNEL] = " :You're not on that channel";
-	err[ERR_NOTREGISTERED] = " :You have not registered";
+	err[ERR_USERONCHANNEL] = " :You're not on that channel";
+	err[ERR_NOTREGISTERED] = " :is already on channel";
 	err[ERR_NEEDMOREPARAMS] = " :Not enough parameters";
 	err[ERR_ALREADYREGISTRED] = " :You may not reregister";
 	err[ERR_KEYSET] = " :Channel key already set";
