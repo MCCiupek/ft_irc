@@ -11,6 +11,10 @@ void get_infos(const string &str, string &nickname, string &username, string &ho
 
 # include "Server.hpp"
 
+char &				back( string & s );
+const char &		back( const string & s );
+string 				pop_back( string & s );
+string 				pop_back( const string & s );
 string				to_upper( string s );
 bool				is_digit( string s );
 bool				is_alpha( string s );

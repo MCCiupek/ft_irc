@@ -2,14 +2,14 @@
 
 User::User( void ) : _fd(-1), _nick(""), _username(""), _hostname(""),
 			_servername(""), _realname(""), _mode(""), _ping_status(false),
-			_isset(false), _isIRCOper(false), _curr_chan(nullptr),
+			_isset(false), _isIRCOper(false), _curr_chan(NULL),
 			_channels()
 {
 }
 
 User::User( int fd ) : _fd(fd), _nick(""), _username(""), _hostname(""),
 	_servername(""), _realname(""), _mode(""), _ping_status(false),
-	_isset(false),  _isIRCOper(false), _curr_chan(nullptr), _channels()
+	_isset(false),  _isIRCOper(false), _curr_chan(NULL), _channels()
 {
 }
 
@@ -17,7 +17,7 @@ User::User( int fd, string nick, string username, string hostname,
 	string servername, string realname, string mode, bool ping_status ) :
 	_fd(fd), _nick(nick), _username(username), _hostname(hostname), _servername(servername),
 	_realname(realname), _mode(mode), _ping_status(ping_status), _isset(false),
-	_isIRCOper(false), _curr_chan(nullptr), _channels()
+	_isIRCOper(false), _curr_chan(NULL), _channels()
 {
 }
 
@@ -235,21 +235,21 @@ void				User::deleteChannel( Channel * channel ) {
 
 	string chan_name;
 
-	cout << MAGENTA << this->getNick() << " left channel " << channel->getName() << RESET << endl;
 	channel->deleteOper(this);
 	channel->deleteMember(this);
 	for ( vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++ ) {
 		if ( (*it)->getName() == channel->getName() ) {
-			if ( this->getCurrChan() && this->getCurrChan()->getName() == (*it)->getName() ) {
+			if ( this->getCurrChan() && this->getCurrChan()->getName() == channel->getName() ) {
 				if ( this->getChannels().size() > 1 ) {
-					if (this->getChannels().back()->getName() != (*it)->getName())
+					if (this->getChannels().back()->getName() != channel->getName())
 						this->setCurrChan(this->getChannels().back());
 					else
 						this->setCurrChan(this->getChannels().front());
 				}
 				else
-					this->setCurrChan(nullptr);
+					this->setCurrChan(NULL);
 			}
+			cout << MAGENTA << this->getNick() << " left channel " << channel->getName() << RESET << endl;
 			_channels.erase(it);
 			return ;
 		}

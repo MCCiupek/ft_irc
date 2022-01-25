@@ -3,6 +3,22 @@
 
 /* String utils */
 
+char &back( string & s ) {
+	return s[s.length() - 1];
+}
+
+const char &back( const string & s ) {
+	return s[s.length() - 1];
+}
+
+string pop_back( string & s ) {
+	return s.substr(0, s.length() - 1);
+}
+
+string pop_back( const string & s ) {
+	return s.substr(0, s.length() - 1);
+}
+
 string				to_upper( string s )
 {
 	for (string::iterator it = s.begin(); it != s.end(); it++)

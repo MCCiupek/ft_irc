@@ -83,7 +83,7 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 		// 	if ( usr.getChannels().size() > 0 )
 		// 		usr.setCurrChan(usr.getChannels().back());
 		// 	else
-		// 		usr.setCurrChan(nullptr);
+		// 		usr.setCurrChan(NULL);
 		// }
 		// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 

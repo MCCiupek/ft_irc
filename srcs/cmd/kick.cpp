@@ -109,7 +109,7 @@ void		kick( vector<string> args, User &usr, Server &srv ) {
 				if ( victim->getChannels().size() > 0 )
 					victim->setCurrChan(victim->getChannels().back());
 				else
-					victim->setCurrChan(nullptr);
+					victim->setCurrChan(NULL);
 			}
 			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 

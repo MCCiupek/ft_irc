@@ -120,7 +120,7 @@ int				who_channel( const vector<string> args, User &usr, Server &srv, bool wild
 	ostringstream	s;
 
 	vector<Channel*>	chans = srv.getChannels();
-	Channel				*c = nullptr;
+	Channel				*c = NULL;
 
 	for (vector<Channel*>::iterator it = chans.begin(); it != chans.end(); it++)
 		if ((*it)->getName() == args[0])
@@ -152,7 +152,7 @@ int				who_wildcard( vector<string> args, User &usr, Server &srv)
 {
 	Channel		*chan = usr.getCurrChan();
 
-	if (chan != nullptr)
+	if (chan != NULL)
 	{
 		args[0] = chan->getName();
 		who_channel(args, usr, srv, true);

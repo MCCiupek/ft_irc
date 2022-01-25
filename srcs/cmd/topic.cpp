@@ -55,7 +55,7 @@ void		topic( vector<string> args, User &usr, Server &srv ) {
 				topic = &topic[1];
 			cnl->setTopic( topic, &usr );
 		}
-		send_notice_channel(usr, cnl, NTC_TOPIC(cnl->getName(), topic));
+		return send_notice_channel(usr, cnl, NTC_TOPIC(cnl->getName(), topic));
 	}
 	if ( cnl->getHasTopic() )
 		send_reply(usr, 332, RPL_TOPIC(cnl->getName(), cnl->getTopic()));

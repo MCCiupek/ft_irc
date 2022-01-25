@@ -30,9 +30,20 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 	//if (args.size() == 1)
 	//	cmd.erase(cmd.end() - 1);
 	
-	for (size_t i = 0; i < args.size(); i++)
-		if (args[i].back() == '\r')
-			args[i].pop_back();
+	for (size_t i = 0; i < args.size(); i++) {
+		// if (back(args[i]) == '\r')
+		// 	cout << "\\r" << endl;
+		// else
+		// 	cout << back(args[i]) << endl;
+		if (back(args[i]) == '\r')
+			args[i] = pop_back(args[i]);
+		// if (back(args[i]) == '\r')
+		// 	cout << "\\r" << endl;
+		// else
+		// 	cout << back(args[i]) << endl;
+	}
+		// if (args[i].back() == '\r')
+		// 	args[i].pop_back();
 
 	// for (size_t i = 0; i < args.size(); i++) {
 	// 	for (size_t j = 0; j < args[i].size(); j++) {
