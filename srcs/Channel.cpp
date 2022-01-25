@@ -10,9 +10,9 @@ Channel::Channel( void ) {
 	_banned["host"] = banned_hostnames;
 
 	time_t now = time(0);
-	_creation_date = (__intmax_t)now;
+	_creation_date = (intmax)now;
 
-	_topic_when = (__intmax_t)now;
+	_topic_when = (intmax)now;
 	_topic_who = NULL;
 }
 
@@ -34,9 +34,9 @@ Channel::Channel(string name) :
 	_banned["host"] = banned_hostnames;
 
 	time_t now = time(0);
-	_creation_date = (__intmax_t)now;
+	_creation_date = (intmax)now;
 
-	_topic_when = (__intmax_t)now;
+	_topic_when = (intmax)now;
 	_topic_who = NULL;
 }
 
@@ -57,14 +57,14 @@ Channel::Channel(string name, string key, string topic, User * usr, string mode)
 	_banned["host"] = banned_hostnames;
 
 	time_t now = time(0);
-	_creation_date = (__intmax_t)now;
+	_creation_date = (intmax)now;
 
 	if ( key != "" ) {
 		_has_key = true;
 		_mode += "k";
 	}
 
-	_topic_when = (__intmax_t)now;
+	_topic_when = (intmax)now;
 	_topic_who = usr;
 	
 	if ( topic != "" )
@@ -179,7 +179,7 @@ void    			Channel::setTopic(string const & topic, User * u) {
 	_has_topic = true;
 	_topic_who = u;
 	time_t now = time(0);
-	_topic_when = (__intmax_t)now;
+	_topic_when = (intmax)now;
 }
 
 void    			Channel::unsetTopic(User * u) {
@@ -187,7 +187,7 @@ void    			Channel::unsetTopic(User * u) {
 	_has_topic = false;
 	_topic_who = u;
 	time_t now = time(0);
-	_topic_when = (__intmax_t)now;
+	_topic_when = (intmax)now;
 }
 
 void    			Channel::unsetKey() {

@@ -14,8 +14,6 @@
 # define MAX_USR_NICK_LEN	20
 # define MAX_CHAN_NAME_LEN	200
 
-# define TRUNC(str, len) (str.substr(0, min(name.length(), (unsigned long)len)))
-
 # include <iostream>
 # include <vector>
 # include <map>
@@ -37,6 +35,7 @@
 # include <unistd.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <stdint.h>
 # include <signal.h>
 //# include <system_error>
 # include <fcntl.h>
@@ -52,5 +51,13 @@ using namespace std;
 # include "errors.hpp"
 # include "parsing.hpp"
 # include "cmd.hpp"
+
+#if __APPLE__
+	typedef intmax_t intmax;
+#elif __linux__
+	typedef __intmax_t intmax;
+#endif
+
+# define TRUNC(str, len) (str.substr(0, min(name.length(), (unsigned long)len)))
 
 #endif

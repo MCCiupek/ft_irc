@@ -6,7 +6,7 @@
 #    By: fmanetti <fmanetti@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/03 19:40:40 by fmanetti          #+#    #+#              #
-#    Updated: 2021/12/21 05:00:11 by fmanetti         ###   ########.fr        #
+#    Updated: 2022/01/25 12:28:44 by fmanetti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -90,6 +90,7 @@ clean:			echoCLEAN
 
 fclean:			clean
 				$(RM) $(NAME)
+				rm proxy/parse.pyc
 
 git:			fclean
 				git pull
