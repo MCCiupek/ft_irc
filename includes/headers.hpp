@@ -14,6 +14,14 @@
 # define MAX_USR_NICK_LEN	20
 # define MAX_CHAN_NAME_LEN	200
 
+# ifdef __APPLE__
+#  define INTMAX_T intmax_t
+# elif __linux__
+#  define INTMAX_T __intmax_t
+# endif
+
+# define TRUNC(str, len) (str.substr(0, min(name.length(), (unsigned long)len)))
+
 # include <iostream>
 # include <vector>
 # include <map>
@@ -51,13 +59,5 @@ using namespace std;
 # include "errors.hpp"
 # include "parsing.hpp"
 # include "cmd.hpp"
-
-#if __APPLE__
-	typedef intmax_t intmax;
-#elif __linux__
-	typedef __intmax_t intmax;
-#endif
-
-# define TRUNC(str, len) (str.substr(0, min(name.length(), (unsigned long)len)))
 
 #endif
