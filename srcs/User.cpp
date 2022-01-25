@@ -1,14 +1,14 @@
 #include "headers.hpp"
 
 User::User( void ) : _fd(-1), _nick(""), _username(""), _hostname(""),
-			_servername(""), _realname(""), _mode(""), _ping_status(false),
-			_isset(false), _isIRCOper(false), _curr_chan(NULL),
-			_channels()
+			_servername(""), _realname(""), _mode(""), _passwd(""), 
+			_ping_status(false), _isset(false), _isIRCOper(false),
+			_curr_chan(NULL), _channels()
 {
 }
 
 User::User( int fd ) : _fd(fd), _nick(""), _username(""), _hostname(""),
-	_servername(""), _realname(""), _mode(""), _ping_status(false),
+	_servername(""), _realname(""), _mode(""), _passwd(""), _ping_status(false),
 	_isset(false),  _isIRCOper(false), _curr_chan(NULL), _channels()
 {
 }
@@ -156,6 +156,11 @@ void					User::setRealName( string realname )
 void					User::setMode( string mode )
 {
 	_mode = mode;
+}
+
+void					User::setPasswd( string passwd )
+{
+	_passwd = passwd;
 }
 
 void					User::setLastAct( time_t last_act )

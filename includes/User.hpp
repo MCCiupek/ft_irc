@@ -21,6 +21,7 @@ class User
 		string				_servername;
 		string				_realname;
 		string				_mode;
+		string				_passwd;
 		time_t 				*_last_act;
 		bool				_ping_status;
 		bool				_isset;			// If USER command is been used
@@ -68,6 +69,7 @@ class User
 		void					setServername( string servername );
 		void					setRealName( string realname );
 		void					setMode( string mode );
+		void					setPasswd( string passwd );
 		void					setLastAct( time_t last_act );
 		void					setPingStatus( bool ping_status );
 		void					setIsSet( bool isset );

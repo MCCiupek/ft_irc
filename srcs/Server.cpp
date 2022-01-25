@@ -48,7 +48,7 @@ Server::~Server() {
 	
 }
 
-Server & Server::operator=(Server const & src) {
+Server 						&Server::operator=(Server const & src) {
 
 	if (this != &src) {
 		this->_name = src.getName();
@@ -61,31 +61,31 @@ Server & Server::operator=(Server const & src) {
 	return *this;
 }
 
-string const & Server::getName() const {
+string const 				&Server::getName() const {
 	return _name;
 }
 
-string const & Server::getPort() const {
+string const 				&Server::getPort() const {
 	return _port;
 }
 
-string const & Server::getPassword() const {
+string const 				&Server::getPassword() const {
 	return _pwd;
 }
 
-string const & Server::getHost() const {
+string const 				&Server::getHost() const {
 	return _host;
 }
 
-map<int, User> const & Server::getUsers() const {
+map<int, User> const 		&Server::getUsers() const {
 	return _users;
 }
 
-vector<Channel*> const & Server::getChannels( void ) const {
+vector<Channel*> const 		&Server::getChannels( void ) const {
 	return _channels;
 }
 
-vector<string> const Server::getChannelsNames( void ) const {
+vector<string> const		Server::getChannelsNames( void ) const {
 
 	vector<string> names;
 
@@ -94,12 +94,16 @@ vector<string> const Server::getChannelsNames( void ) const {
 	return names;
 }
 
-string const & Server::getMotd() const {
+string const 				&Server::getMotd() const {
 	return _motd;
 }
 
-string const & Server::getCreationDate() const {
+string const 				&Server::getCreationDate() const {
 	return _creation_date;
+}
+
+map<string, string>	const	&Server::getIRCOperators() const {
+	return _irc_operators;
 }
 
 ostream & operator<<(ostream & stream, Server &Server) {
@@ -357,17 +361,34 @@ void				Server::run() {
 }
 
 //	If fd was registered
-int				Server::is_registered( User usr )
+bool					Server::is_registered( User usr )
 {
-	//cout << _users << endl;
 	for (map<int, User>::const_iterator it = _users.begin(); it != _users.end(); ++it) {
 		if ((it->second).getFd() == usr.getFd())
-			return it->first;
+			return true;
 	}
-	//if (_users.find(usr.getFd()) != _users.end())
-	//	return true;
 	
-	return -1;
+	return false;
+}
+
+bool					Server::username_isIRCOper( string usr_name )
+{
+	for (map<string, string>::iterator it = _irc_operators.begin(); it != _irc_operators.end(); ++it) {
+		if (it->first == usr_name)
+			return true;
+	}
+
+	return false;	
+}
+
+bool					Server::isIRCOperator( string usr_name, string pswd )
+{
+	for (map<string, string>::iterator it = _irc_operators.begin(); it != _irc_operators.end(); ++it) {
+		if (it->first == usr_name && it->second == pswd)
+			return true;
+	}
+
+	return false;
 }
 
 Channel *				Server::getChannelByName( string channel ) {

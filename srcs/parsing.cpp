@@ -74,12 +74,14 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 	m["WHO"] = who;
 	m["PRIVMSG"] = privmsg;
 	m["PART"] = part;
+	m["PASS"] = pass;
 	m["TOPIC"] = topic;
 	m["NAMES"] = names;
 	m["QUIT"] = quit;
 	m["KICK"] = kick;
 	m["NOTICE"] = notice;
 	m["INVITE"] = invite;
+	m["OPER"] = oper;
 
 	// Call function
 	if ( m.count(cmd) > 0 ) {

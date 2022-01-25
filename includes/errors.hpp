@@ -30,6 +30,7 @@
 # define RPL_ENDOFBANLIST(channel) (channel + " :End of channel ban list\r\n")
 # define RPL_INVITING(guest, channel) (guest + " :" + channel + "\r\n")
 
+
 // NOTICES
 
 # define NTC_NICK(nick) ("NICK :" + nick)
@@ -71,6 +72,7 @@
 # define ERR_NOTREGISTERED		451
 # define ERR_NEEDMOREPARAMS		461
 # define ERR_ALREADYREGISTRED	462
+# define ERR_PASSWDMISMATCH		464
 # define ERR_KEYSET				467
 # define ERR_CHANNELISFULL		471
 # define ERR_UNKNOWNMODE		472
@@ -79,6 +81,7 @@
 # define ERR_BADCHANNELKEY		475
 # define ERR_BADCHANMASK		476
 # define ERR_CHANOPRIVSNEEDED	482
+# define ERR_NOOPERHOST			491
 # define ERR_UMODEUNKNOWNFLAG	501
 # define ERR_USERSDONTMATCH		502
 

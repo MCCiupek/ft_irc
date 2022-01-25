@@ -60,21 +60,24 @@ class Server {
 
 		/*								GETTERS										*/
 
-		string const			&getName( void ) const;
-		string const 			&getPort( void ) const;
-		string const 			&getPassword( void ) const;
-		string const 			&getHost( void ) const;
-		map<int, User> const	&getUsers( void ) const;
-		vector<Channel*> const	&getChannels( void ) const;
-		vector<string> const	getChannelsNames( void ) const;
-		string const			&getMotd( void ) const;
-		string const			&getCreationDate( void ) const;
+		string const				&getName( void ) const;
+		string const 				&getPort( void ) const;
+		string const 				&getPassword( void ) const;
+		string const 				&getHost( void ) const;
+		map<int, User> const		&getUsers( void ) const;
+		vector<Channel*> const		&getChannels( void ) const;
+		vector<string> const		getChannelsNames( void ) const;
+		string const				&getMotd( void ) const;
+		string const				&getCreationDate( void ) const;
+		map<string, string>	const	&getIRCOperators( void ) const;
 
 		/*								MEMBERS FUNCTIONS							*/
 
 		void					initConn( void );
 		void					run( void );
-		int						is_registered( User usr );
+		bool					is_registered( User usr );
+		bool					username_isIRCOper( string usr_name );
+		bool					isIRCOperator( string usr_name, string pswd );
 		Channel *				getChannelByName( string channel );
 		Channel *				getChannelByKey( string key );
 		User *					getUserByNick( string nick );
