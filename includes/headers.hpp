@@ -14,6 +14,12 @@
 # define MAX_USR_NICK_LEN	20
 # define MAX_CHAN_NAME_LEN	200
 
+# ifdef MACOS
+#  define INTMAX_T intmax_t
+# else
+#  define INTMAX_T __intmax_t
+# endif
+
 # define TRUNC(str, len) (str.substr(0, min(name.length(), (unsigned long)len)))
 
 # include <iostream>

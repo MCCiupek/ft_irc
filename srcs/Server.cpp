@@ -334,7 +334,7 @@ void				Server::run() {
 		if (poll_count == -1)
 			throw eExc(strerror(errno));
 
-		cout << "fd_count = " << _fd_count << endl;
+		//cout << "fd_count = " << _fd_count << endl;
 
 		for ( int i = 0; i < _fd_count; i++ ) {
 			// If something happened on fd i
