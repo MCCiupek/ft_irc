@@ -32,18 +32,20 @@ void		oper( vector<string> args, User &usr, Server &srv )
 		send_error( usr, ERR_NEEDMOREPARAMS, "OPER" );
 		return ;
 	}
-	if ( srv.getIRCOperators().size() == 0 ) {
+
+	if ( srv.getIRCOperators().size() == 0 ) {	
 		send_error( usr, ERR_NOOPERHOST, "OPER");
 		return ;
 	}
 
 	if ( srv.username_isIRCOper(args[0]) )
 	{
-		if ( srv.isIRCOperator(args[0], args[1]) ) {
+		if ( !srv.isIRCOperator(args[0], args[1]) ) {
 			send_error( usr, ERR_PASSWDMISMATCH, "OPER" );
 			return ;
 		}
 		usr.setIsIRCOper(true);
-		send_reply( usr, 381, " :You are now an IRC operator\r\n");
+		usr.addMode("o");
+		send_reply( usr, 381, ":You are now an IRC operator\r\n");
 	}
 }

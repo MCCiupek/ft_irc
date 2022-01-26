@@ -1,9 +1,6 @@
 #include "headers.hpp"
 
-Server::Server( void ) {
-	time_t now = time(0);
-	_creation_date = ctime(&now);
-}
+Server::Server( void ) {}
 
 Server::Server(string port, string pwd) :
 		_name(SERVER_NAME),
@@ -39,9 +36,8 @@ Server::Server(string port, string pwd, string host=DEFAULT_HOST, string motd=""
 	{
 		vector<string>	tmp = ft_split(*it, ":");
 
-		_irc_operators.insert(make_pair(tmp[0], tmp[1]));
+		_irc_operators[tmp[0]] = tmp[1];
 	}
-
 }
 
 Server::~Server() {
@@ -243,6 +239,8 @@ int				Server::receiveData( int i ) {
 	int 			nbytes;
 	ostringstream	s;
 	string			nick = _users[_poll[i].fd].getNick();
+
+	cout << getIRCOperators().size() << endl;
 
 	if (nick == "") {
 		s << "Client #" << _poll[i].fd;

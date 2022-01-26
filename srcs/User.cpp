@@ -225,6 +225,11 @@ string const		User::fci( void ) const
 	return _nick + "!" + _username + "@" + _hostname;
 }
 
+void				User::addMode( string mode )
+{
+	_mode + mode;
+}
+
 void				User::addChannel( Channel * channel ) {
 	
 	if (_channels.size() < 10)

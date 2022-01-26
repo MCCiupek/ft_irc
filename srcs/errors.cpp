@@ -40,7 +40,7 @@ void    define_errors( void )
 	err[ERR_UMODEUNKNOWNFLAG] = " :Unknown MODE flag";
 	err[ERR_USERSDONTMATCH] = " :Cant change mode for other users";
 	err[ERR_NOOPERHOST] = " :No O-lines for your host";
-	err[ERR_PASSWDMISMATCH] = ":Password incorrect";
+	err[ERR_PASSWDMISMATCH] = " :Password incorrect";
 }
 
 void    send_error( User u, int errn, string arg )
