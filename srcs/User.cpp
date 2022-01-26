@@ -39,6 +39,7 @@ User				&User::operator=( User const &rhs )
 	_servername = rhs._servername;
 	_realname = rhs._realname;
 	_mode = rhs._mode;
+	_passwd = rhs._passwd;
 	_last_act = rhs._last_act;
 	_ping_status = rhs._ping_status;
 	_isset = rhs._isset;

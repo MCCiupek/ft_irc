@@ -45,7 +45,7 @@ class Server {
 		int						sendData( int fd );
 		int						receiveData( int i );
 		void					acceptConn( void );
-		void					add_to_pfds(int newfd);
+		bool					add_to_pfds(int newfd);
 
 	public:
 
@@ -83,6 +83,7 @@ class Server {
 		User *					getUserByNick( string nick );
 		void					addChannel( Channel * channel );
 		void					deleteChannel( Channel * channel );
+		void					deleteUser( User * u );
 		void					del_from_pfds(int fd);
 
 };

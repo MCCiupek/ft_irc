@@ -294,7 +294,7 @@ void				Server::acceptConn() {
 
 /* pollfd utils */
 
-void				Server::add_to_pfds(int newfd)
+bool				Server::add_to_pfds(int newfd)
 {
 	
 	// if ( _fd_count == *fd_size ) {
@@ -302,21 +302,20 @@ void				Server::add_to_pfds(int newfd)
 	// 	_poll = (struct pollfd *)realloc(_poll, sizeof(*_poll) * (*fd_size));
 	// }
 
-	if (_fd_count == 5)
+	if (_fd_count == MAXCLI) {
 		cout << RED << "Max number of clients reached" << RESET << endl;
-	else
-	{
-		(_poll)[_fd_count].fd = newfd;
-		(_poll)[_fd_count].events = POLLIN;
-
-		(_fd_count)++;
+		return false;
 	}
+	_poll[_fd_count].fd = newfd;
+	_poll[_fd_count].events = POLLIN;
+	_fd_count++;
+	return true;
 }
 
 void				Server::del_from_pfds(int fd)
 {
 	close(fd);
-	_poll[fd] = _poll[_fd_count - 1];
+	_poll[fd] = _poll[_fd_count];
 	_fd_count--;
 }
 
@@ -346,10 +345,13 @@ void				Server::run() {
 				{
 					this->acceptConn();
 					// Add new fd that made the connection (Up to 5)
-					add_to_pfds(_newfd);
-					// Create new user
-					_users[_newfd] = User(_newfd);
-					break ;
+					if ( add_to_pfds(_newfd) ) {
+						// Create new user
+						cout << BOLDCYAN << "new fd: " << _newfd << RESET << endl;
+						cout << BOLDCYAN << "map: " << _users[_newfd] << RESET << endl;
+						_users[_newfd] = User(_newfd);
+						break ;
+					}
 				}
 				else
 					this->receiveData(i);
@@ -361,7 +363,10 @@ void				Server::run() {
 //	If fd was registered
 bool					Server::is_registered( User usr )
 {
+	cout << YELLOW << "users: " << _users.size() << RESET << endl;
+
 	for (map<int, User>::const_iterator it = _users.begin(); it != _users.end(); ++it) {
+		cout << YELLOW << "\tuser[" << (it->second).getFd() << "]: " << (it->second).getNick() << RESET << endl;
 		if ((it->second).getFd() == usr.getFd())
 			return true;
 	}
@@ -429,6 +434,17 @@ void				Server::deleteChannel( Channel * channel ) {
 	for ( vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++ ) {
 		if ( (*it)->getName() == channel->getName() ) {
 			_channels.erase(it);
+			return ;
+		}
+	}
+}
+
+void				Server::deleteUser( User * u ) {
+
+	for ( map<int, User>::const_iterator it = _users.begin(); it != _users.end(); ++it ) {
+		if ( (it->second).getNick() == u->getNick() ) {
+			cout << "Erasing user " << u->getNick() << endl;
+			_users.erase(it);
 			return ;
 		}
 	}

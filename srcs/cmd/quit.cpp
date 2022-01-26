@@ -76,6 +76,10 @@ void		quit( vector<string> args, User &usr, Server &srv )
 			if ( !(*it)->getNbMembers() )
 				srv.deleteChannel(*it);
 
-	srv.del_from_pfds(usr.getFd());
-	cout << BOLDWHITE << "❌ Client #" << usr.getFd() << " gone away" << RESET << endl;
+	int fd = usr.getFd();
+
+	srv.deleteUser( &usr );
+	srv.del_from_pfds(fd);
+	
+	cout << BOLDWHITE << "❌ Client #" << fd << " gone away" << RESET << endl;
 }
