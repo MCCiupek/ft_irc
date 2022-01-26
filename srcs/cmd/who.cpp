@@ -110,7 +110,11 @@ static int		who_user( const vector<string> args, User &usr, Server &srv, bool wi
 		}
 	}
 
-	send_reply(usr, 315, RPL_ENDOFWHO(wild == true ? "*" : args[0]));
+	// I had to divide it in two because the ternary broke the output
+	if (wild == true)
+		send_reply(usr, 315, RPL_ENDOFWHO(string("*")));
+	else
+		send_reply(usr, 315, RPL_ENDOFWHO(args[0]));	
 	
 	return 1;
 }
@@ -173,6 +177,11 @@ void			who( vector<string> args, User &usr, Server &srv ) {
 	if (args.size() == 0)
 	{
 		send_error(usr, ERR_NEEDMOREPARAMS, "WHO");
+		return ;
+	}
+	if ( !usr.isRegistered() )
+	{
+		send_error( usr, ERR_NOTREGISTERED, "WHO" );
 		return ;
 	}
 

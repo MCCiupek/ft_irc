@@ -9,13 +9,12 @@ Server::Server(string port, string pwd) :
 		_host(DEFAULT_HOST),
 		_servinfo(NULL),
 		_users(),
+		_usr_buf(),
 		_irc_operators(),
 		_motd("")
 {
 	time_t now = time(0);
-	_creation_date = ctime(&now);
-	pop_back(_creation_date);
-	
+	_creation_date = pop_back(ctime(&now));
 }
 
 Server::Server(string port, string pwd, string host=DEFAULT_HOST, string motd="",
@@ -26,10 +25,12 @@ Server::Server(string port, string pwd, string host=DEFAULT_HOST, string motd=""
 		_host(host),
 		_servinfo(NULL),
 		_users(),
+		_usr_buf(),
 		_motd(motd)
 {
 	time_t now = time(0);
-	_creation_date = ctime(&now);
+	_creation_date = pop_back(ctime(&now));
+
 	vector<string>	cred = ft_split(operators, "|");
 
 	for (vector<string>::iterator it = cred.begin(); it != cred.end(); ++it)
@@ -40,9 +41,7 @@ Server::Server(string port, string pwd, string host=DEFAULT_HOST, string motd=""
 	}
 }
 
-Server::~Server() {
-	
-}
+Server::~Server() {}
 
 Server 						&Server::operator=(Server const & src) {
 
@@ -209,15 +208,14 @@ int				Server::sendData( int fd ) {
 	return 0;
 }
 
-vector<string>  get_next_command( char *buf )
+vector<string>  get_next_command( string &usr_buf, string buf )
 {
-	static string   buffer = "";
-	string			s(buffer + buf);
+	string			s(usr_buf + buf);
 
 	// Multiple commands on one line
 	if (count(s.begin(), s.end(), '\n') > 0)
 	{
-		buffer = "";
+		usr_buf = "";
 		vector<string> tmp = ft_split(s, "\n");
 		
 		// Delete \r in case of connection from irssi
@@ -228,7 +226,7 @@ vector<string>  get_next_command( char *buf )
 		return tmp;
 	}
 	else
-		buffer += buf;
+		usr_buf += buf;
 
 	return vector<string>();
 }
@@ -257,9 +255,9 @@ int				Server::receiveData( int i ) {
 		return 1;
 	}
 
-	cout << "buf = " << buf << endl;
+	cout << "[" << i << "] buf = " << buf << endl;
 
-	vector<string>  v = get_next_command(buf);
+	vector<string>  v = get_next_command(_usr_buf[i], buf);
 	if (!v.empty())
 		v.pop_back(); // Delete last empty line
 

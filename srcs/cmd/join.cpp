@@ -126,18 +126,12 @@ int		join_channel( string channel, string key, User &usr, Server &srv ) {
 void		join( vector<string> args, User &usr, Server &srv ) {
 
 	vector<string>	chans;
-	
+
 	if ( args.size() < 1 ) {
 		send_error( usr, ERR_NEEDMOREPARAMS, "JOIN" );
 		return ;
 	}
 	
-	// if ( args[0] == "0" ) {
-	// 	//Leave all channels the user is currently a member of.
-	// 	usr.leaveAllChans();
-	// 	return;
-	// }
-
 	chans = ft_split(args[0], ",");
 
 	vector<string>	keys(chans.size());
