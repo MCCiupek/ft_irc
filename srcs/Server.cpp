@@ -312,8 +312,8 @@ bool				Server::add_to_pfds(int newfd)
 
 void				Server::del_from_pfds(int fd)
 {
+	_poll[fd] = _poll[_fd_count - 1];
 	close(fd);
-	_poll[fd] = _poll[_fd_count];
 	_fd_count--;
 }
 
@@ -344,9 +344,13 @@ void				Server::run() {
 					this->acceptConn();
 					// Add new fd that made the connection (Up to 5)
 					if ( add_to_pfds(_newfd) ) {
+						// add_to_pfds(_newfd);
 						// Create new user
 						cout << BOLDCYAN << "new fd: " << _newfd << RESET << endl;
-						cout << BOLDCYAN << "map: " << _users[_newfd] << RESET << endl;
+						if ( _users.find(_newfd) != _users.end() )
+							cout << BOLDCYAN << "map: " << _users[_newfd] << RESET << endl;
+						else
+							cout << BOLDCYAN << "end " << RESET << endl;
 						_users[_newfd] = User(_newfd);
 						break ;
 					}
@@ -439,11 +443,17 @@ void				Server::deleteChannel( Channel * channel ) {
 
 void				Server::deleteUser( User * u ) {
 
-	for ( map<int, User>::const_iterator it = _users.begin(); it != _users.end(); ++it ) {
-		if ( (it->second).getNick() == u->getNick() ) {
-			cout << "Erasing user " << u->getNick() << endl;
-			_users.erase(it);
-			return ;
-		}
-	}
+	std::map<int, User>::iterator it;
+
+	it = _users.find(u->getFd());
+	cout << "Erasing user " << u->getNick() << endl;
+	_users.erase(it);
+
+	// for ( map<int, User>::const_iterator it = _users.begin(); it != _users.end(); ++it ) {
+	// 	if ( (it->second).getNick() == u->getNick() ) {
+	// 		cout << "Erasing user " << u->getNick() << endl;
+	// 		_users.erase(it);
+	// 		return ;
+	// 	}
+	// }
 }
