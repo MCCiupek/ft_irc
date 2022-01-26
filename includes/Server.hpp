@@ -27,6 +27,7 @@ class Server {
 		struct addrinfo			*_servinfo;
 		struct pollfd			_poll[MAXCLI];
 		map<int, User>			_users;
+		map<int, string>		_usr_buf;
 		vector<Channel*>		_channels;
 		map<string, string>		_irc_operators;
 		string					_motd;

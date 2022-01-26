@@ -23,44 +23,10 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 	string	cmd = args[0];
 
 	transform(cmd.begin(), cmd.end(), cmd.begin(), ::toupper);
-	//if (!is_upper(cmd))
-	//	cmd = to_upper(cmd);
-
-	// Remove \n at the end of command
-	//if (args.size() == 1)
-	//	cmd.erase(cmd.end() - 1);
 	
-	for (size_t i = 0; i < args.size(); i++) {
-		// if (back(args[i]) == '\r')
-		// 	cout << "\\r" << endl;
-		// else
-		// 	cout << back(args[i]) << endl;
+	for (size_t i = 0; i < args.size(); i++) 
 		if (back(args[i]) == '\r')
 			args[i] = pop_back(args[i]);
-		// if (back(args[i]) == '\r')
-		// 	cout << "\\r" << endl;
-		// else
-		// 	cout << back(args[i]) << endl;
-	}
-		// if (args[i].back() == '\r')
-		// 	args[i].pop_back();
-
-	// for (size_t i = 0; i < args.size(); i++) {
-	// 	for (size_t j = 0; j < args[i].size(); j++) {
-	// 		if (args[i][j] == '\n')
-	// 			cout << YELLOW << "\\n" << RESET;
-	// 		else if (args[i][j] == '\r')
-	// 			cout << YELLOW << "\\r" << RESET;
-	// 		else
-	// 			cout << YELLOW << args[i][j] << RESET;
-	// 	}
-	// 	cout << " ";
-	// }
-	// cout << endl;
-
-	
-	//cout << cmd << endl;
-	//args[args.size() - 1].erase(args[args.size() - 1].end() - 1);
 
 	map<string, FnPtr>	m;
 
