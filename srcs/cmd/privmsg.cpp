@@ -32,12 +32,7 @@ void		send_to_all_in_chan( Channel * Chan, string txt, User &usr ) {
 	vector<User*> users = Chan->getMembers();
 	for ( size_t i = 0; i < users.size(); i++ ) {
 		if (users[i]->getNick() != usr.getNick()) {
-			//string msg = txt + "\r\n";
-			//send(users[i]->getFd(), &msg, msg.length(), 0);
 			send_notice(usr, *users[i], NTC_PRIVMSG(Chan->getName(), txt));
-			//send(users[i]->getFd(), &msg[0], msg.size(), 0);
-			//if ( users[i]->getIsAway() )
-			//	send_reply(usr, 301, RPL_AWAY(users[i]->getNick(), users[i]->getAwayMsg()));
 		}
 	}
 }
@@ -45,17 +40,11 @@ void		send_to_all_in_chan( Channel * Chan, string txt, User &usr ) {
 void		send_privmsg_to_usr( string recv, string txt, User &usr, Server &srv ) {
 	
 	User *	receiver;
-	//string	msg;
 
 	receiver = srv.getUserByNick(recv);
 	if ( !receiver )
 		return send_error(usr, ERR_NOSUCHNICK, recv);
-	//msg = txt + "\r\n";
-	//send(receiver->getFd(), &msg, msg.length(), 0);
 	send_notice(usr, *receiver, NTC_PRIVMSG(receiver->getNick(), txt));
-	//send(receiver->getFd(), &msg[0], msg.size(), 0);
-	//if ( receiver->getIsAway() )
-	//	send_reply(usr, 301, RPL_AWAY(receiver->getNick(), receiver->getAwayMsg()));
 }
 
 void		send_privmsg_to_chan( string recv, string txt, User &usr, Server &srv ) {

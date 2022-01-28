@@ -63,7 +63,6 @@ void		kick( vector<string> args, User &usr, Server &srv ) {
 
 		// if channel doesnt exists
 		if ( cnl == NULL ) {
-			// TODO: mask?
 			send_error( usr, ERR_NOSUCHCHANNEL, chans[i] );
 			continue ;
 		}
@@ -102,16 +101,6 @@ void		kick( vector<string> args, User &usr, Server &srv ) {
 			}
 		
 			victim->deleteChannel(cnl);
-
-			// TODO: PUT THE FOLLOWING CODE IN USER::DELETECHANNEL() >>>>>>>>>>>>>>>>>
-			// if channel is user's current channel
-			if ( victim->getCurrChan()->getName() == cnl->getName() ) {
-				if ( victim->getChannels().size() > 0 )
-					victim->setCurrChan(victim->getChannels().back());
-				else
-					victim->setCurrChan(NULL);
-			}
-			// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 			// Delete chan if usr leaving is the last usr in chan
 			if (cnl->getNbMembers() == 0)

@@ -85,6 +85,8 @@
 # define ERR_UMODEUNKNOWNFLAG	501
 # define ERR_USERSDONTMATCH		502
 
+# define ERR_SERVERISFULL(host) ("ERROR :Closing link: (unknown@" + host + ") [No more connections allowed from your host via this connect class (local)]\r\n")
+
 
 class eExc : public exception {
 	

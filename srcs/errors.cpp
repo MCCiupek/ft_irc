@@ -57,12 +57,6 @@ void    send_error( User u, int errn, string arg )
 		throw eExc(strerror(errno));
 }
 
-// void    send_reply( int fd, string msg )
-// {
-// 	if ( send(fd, &msg[0], msg.size(), 0) == -1 )
-// 		throw eExc(strerror(errno));
-// }
-
 void    send_reply( User u, int rpln, string reply )
 {
 	ostringstream s;

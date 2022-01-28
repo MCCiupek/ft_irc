@@ -70,16 +70,8 @@ Channel::Channel(string name, string key, string topic, User * usr, string mode)
 	if ( topic != "" )
 		_has_topic = true;
 
-	//_channel_oper = usr;
-
-	//_members.push_back(usr);
 	addMember(usr);
 	addOper(usr);
-	//_oper.push_back(usr);
-
-	/*string usr_mode = usr->getMode();
-	if (usr_mode.find('o') == string::npos)
-		usr->setMode(usr_mode + "o");*/
 }
 
 Channel::~Channel() {
@@ -130,10 +122,6 @@ vector<User*> const	&Channel::getMembers() const {
 vector<User*> const	&Channel::getOper() const {
 	return _oper;
 }
-
-/*User *				Channel::getOperator( void ) {
-	return _channel_oper;
-}*/
 
 string const		&Channel::getMode( void ) const {
 	return _mode;
@@ -246,12 +234,6 @@ void				Channel::deleteOper( User * usr ) {
 	}
 }
 
-/*void				Channel::ban( string to_ban, string key ) {
-
-	if ( _banned.find(key) != _banned.end() )
-		_banned[key].push_back(to_ban);
-}*/
-
 void				Channel::ban( string mask ) {
 	_banned_mask.push_back(mask);
 }
@@ -259,8 +241,6 @@ void				Channel::ban( string mask ) {
 void				Channel::unban( string mask ) {
 	
 	for ( size_t i = 0; i < _banned_mask.size(); i++ ) {
-		cout << "mask: " << mask << endl;
-		cout << "_banned_mask: " << _banned_mask[i] << endl;
 		if ( mask == _banned_mask[i] )
 			_banned_mask.erase(_banned_mask.begin() + i);
 	}
@@ -272,12 +252,6 @@ bool				Channel::isBanned( User const & usr ) {
 		if ( ft_match(usr.fci(), _banned_mask[i]) )
 			return true;
 	}
-	/*if ( find( _banned["nick"].begin(), _banned["nick"].end(), usr.getNick()) != _banned["nick"].end() )
-		return true;
-	if ( find( _banned["user"].begin(), _banned["user"].end(), usr.getUsername()) != _banned["user"].end() )
-		return true;
-	if ( find( _banned["host"].begin(), _banned["host"].end(), usr.getHostname()) != _banned["host"].end() )
-		return true;*/
 	return false;
 }
 

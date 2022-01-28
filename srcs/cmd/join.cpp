@@ -49,7 +49,6 @@ int		create_channel( string channel, string key, User &u, Server &srv ) {
 
 	send_reply(u, 353, RPL_NAMREPLY(new_channel->getName(), new_channel->getMembersList()));
 	send_reply(u, 366, RPL_ENDOFNAMES(new_channel->getName()));
-	//send_reply(u, 329, RPL_CREATIONTIME(new_channel->getName(), new_channel->getCreationDate()));
 	return 0;
 }
 

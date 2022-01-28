@@ -38,7 +38,7 @@ void	user( vector<string> args, User &usr, Server &srv )
 	if (!usr.getNick().empty())
 	{
 		cout << GREEN << "User #" << usr.getFd() << " registred as " << usr.getNick() << RESET << endl;
-		cout << usr << endl;
+		// cout << usr << endl;
 		messageoftheday(srv, usr);
 	}
 }

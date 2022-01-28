@@ -36,7 +36,7 @@
 void		part( vector<string> args, User &usr, Server &srv ) {
 
 	vector<string>	chans;
-	string			part_msg;// = usr.getNick() + " left channel";
+	string			part_msg;
 	Channel *		cnl;
 	
 	if ( args.size() < 1 ) {
@@ -76,16 +76,6 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 		}
 	
 		usr.deleteChannel(cnl);
-
-		// TODO: PUT THE FOLLOWING CODE IN USER::DELETECHANNEL() >>>>>>>>>>>>>>>>>
-		// if channel is user's current channel
-		// if ( usr.getCurrChan()->getName() == cnl->getName() ) {
-		// 	if ( usr.getChannels().size() > 0 )
-		// 		usr.setCurrChan(usr.getChannels().back());
-		// 	else
-		// 		usr.setCurrChan(NULL);
-		// }
-		// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 		// Delete chan if usr leaving is the last usr in chan
 		if (cnl->getNbMembers() == 0)

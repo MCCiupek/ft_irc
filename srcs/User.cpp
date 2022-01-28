@@ -189,6 +189,8 @@ void					User::setCurrChan( Channel *c )
 	_curr_chan = c;
 	if (_curr_chan)
 		cout << MAGENTA << getNick() << "'s current channel set to " << getCurrChan()->getName() << RESET << endl;
+	else
+		cout << MAGENTA << getNick() << " isnt on any channel" << RESET << endl;
 }
 
 /*								MEMBERS FUNCTIONS							*/
@@ -233,7 +235,7 @@ void				User::addMode( string mode )
 
 void				User::addChannel( Channel * channel ) {
 	
-	if (_channels.size() < 10)
+	if (_channels.size() < MAX_CHAN_PER_USR)
 	{
 		cout << MAGENTA << this->getNick() << " joined channel " << channel->getName() << RESET << endl;
 		_channels.push_back(channel);
@@ -272,20 +274,15 @@ void				User::leaveAllChans( void ) {
 	while ( !(_channels.empty()) ) {
 		
 		vector<Channel*>::iterator	chan = _channels.begin();
-		
-		//(*chan)->deleteOper(this);
-		//(*chan)->deleteMember(this);
-		//cout << MAGENTA << this->getNick() << " left channel " << (*chan)->getName() << RESET << endl;
 		deleteChannel( *chan );
-		//_channels.erase(chan);
 	}
 
 }
 
 bool				User::isRegisteredToChan( Channel &c )
 {
-	cout << "isregistered to chan" << endl;
-	cout << _channels.size() << endl;
+	// cout << "isregistered to chan" << endl;
+	// cout << _channels.size() << endl;
 
 	for (vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it )
 	{

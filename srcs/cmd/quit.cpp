@@ -57,7 +57,7 @@ void		quit( vector<string> args, User &usr, Server &srv )
 	string	msg;
 
 	if (args.size() > 0)
-		args[0] = &args[0][1];	// Delete ':' at the beginning of the message
+		args[0] = &args[0][1];
 
 	msg = ft_join(args, " ", 0);
 

@@ -28,7 +28,7 @@ void		nick( vector<string> args, User &usr, Server &srv )
 {
 	ostringstream s;
 
-	cout << args[0] << endl;
+	// cout << args[0] << endl;
 
 	if (args.size() == 0)
 	{
@@ -40,17 +40,12 @@ void		nick( vector<string> args, User &usr, Server &srv )
 		send_error(usr, ERR_ERRONEUSNICKNAME, implode(args.begin() + 1, args.end()));
 		return ;
 	}
-	//args[0].pop_back(); --> C++11
-	//args[0].erase(args[0].end() - 1); // mc: ajout du -1 pour supprimer le dernier char et pas le string::npos
 	if (srv.is_registered(usr) && usr.getNick() == args[0])
 		return ;
 
-	// map<int, User*>	usrs = srv.getUsers();
 	vector<User*>	usrs = srv.getUsers();
 
-	// for (map<int, User*>::iterator it = usrs.begin(); it != usrs.end(); it++)
 	for (vector<User*>::iterator it = usrs.begin(); it != usrs.end(); it++)
-		// if (it->second->getNick() == args[0])
 		if ((*it)->getNick() == args[0])
 		{
 			send_error(usr, ERR_NICKNAMEINUSE, args[0]);
@@ -66,7 +61,7 @@ void		nick( vector<string> args, User &usr, Server &srv )
 		if (usr.getIsSet() && usr.getNick().empty())
 		{
 			cout << GREEN << "User #" << usr.getFd() << " registred as " << args[0] << RESET << endl;
-			usr.setNick(args[0]); // mc: Set nick before MOTD bc nick is needed in RPL 001
+			usr.setNick(args[0]);
 			messageoftheday(srv, usr);
 		}
 		send_notice(usr, usr, NTC_NICK(args[0]));

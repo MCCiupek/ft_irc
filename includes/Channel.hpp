@@ -90,7 +90,6 @@ class Channel {
 		void					deleteModerator( User * usr );
 		void					addOper( User * usr );
 		void					deleteOper( User * usr );
-		//void					ban( string to_ban, string key );
 		bool					isBanned( User const & usr );
 		void					invite( User * usr );
 		bool					isInvited( User const & usr );

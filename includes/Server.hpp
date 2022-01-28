@@ -26,7 +26,6 @@ class Server {
 		struct addrinfo 		_hints;
 		struct addrinfo			*_servinfo;
 		struct pollfd			_poll[MAXCLI];
-		//map<int, User*>			_users;
 		vector<User*>			_users;
 		map<int, string>		_usr_buf;
 		vector<Channel*>		_channels;
@@ -66,7 +65,6 @@ class Server {
 		string const 				&getPort( void ) const;
 		string const 				&getPassword( void ) const;
 		string const 				&getHost( void ) const;
-		//map<int, User*> const		&getUsers( void ) const;
 		vector<User*> const			&getUsers( void ) const;
 		vector<Channel*> const		&getChannels( void ) const;
 		vector<string> const		getChannelsNames( void ) const;
