@@ -72,7 +72,8 @@ string const 				&Server::getHost() const {
 	return _host;
 }
 
-map<int, User> const 		&Server::getUsers() const {
+//map<int, User*> const 		&Server::getUsers() const {
+vector<User*> const 		&Server::getUsers() const {
 	return _users;
 }
 
@@ -236,20 +237,22 @@ int				Server::receiveData( int i ) {
 	char    		buf[BUFSIZE];
 	int 			nbytes;
 	ostringstream	s;
-	string			nick = _users[_poll[i].fd].getNick();
+	//string			nick;// = _users[_poll[i].fd]->getNick();
 
-	cout << getIRCOperators().size() << endl;
+	//nick = _users[i]->getNick();
+	//cout << "getIRCOperators().size(): " << getIRCOperators().size() << endl;
 
-	if (nick == "") {
-		s << "Client #" << _poll[i].fd;
-		nick = s.str();
-	}
+	// if (nick == "") {
+	// 	s << "Client #" << _poll[i].fd;
+	// 	nick = s.str();
+	// }
 	memset(buf, 0, BUFSIZE);
 	nbytes = recv(_poll[i].fd, buf, BUFSIZE - 1, 0);
 	if (nbytes <= 0) {
 		if (!nbytes)
-			cout << BOLDWHITE << "❌ Client #" << _poll[i].fd << " gone away" << RESET << endl;
-		del_from_pfds(i);
+			cout << BOLDWHITE << "❌ --- Client #" << _poll[i].fd << " gone away" << RESET << endl;
+		//cout << "del from fds" << endl;
+		//del_from_pfds(i);
 		if (nbytes < 0)
 			throw eExc(strerror(errno));
 		return 1;
@@ -266,7 +269,8 @@ int				Server::receiveData( int i ) {
 
 	if (v.size() > 0)
 		for (vector<string>::iterator it = v.begin(); it != v.end(); it++)
-			parsing(ft_split(*it, " "), _users[_poll[i].fd], *this);
+			//parsing(ft_split(*it, " "), *_users[_poll[i].fd], *this);
+			parsing(ft_split(*it, " "), *_users[i - 1], *this);
 
 	// cout << nick << ": " << buf;
 	return 0;
@@ -300,7 +304,7 @@ bool				Server::add_to_pfds(int newfd)
 	// 	_poll = (struct pollfd *)realloc(_poll, sizeof(*_poll) * (*fd_size));
 	// }
 
-	if (_fd_count == MAXCLI) {
+	if (_fd_count == MAXCLI + 1) {
 		cout << RED << "Max number of clients reached" << RESET << endl;
 		return false;
 	}
@@ -312,9 +316,32 @@ bool				Server::add_to_pfds(int newfd)
 
 void				Server::del_from_pfds(int fd)
 {
-	_poll[fd] = _poll[_fd_count - 1];
+	//cout << "del_from_pfds BF: " << _users.size() << endl;
+
+	size_t idx = 0;
+	//for (vector<User*>::iterator it = _users.begin(); it != _users.end(); ++it)
+	while ( idx < _users.size() ) {
+		if (_users[idx]->getFd() == fd)
+			break;
+		idx++;
+	}
+	
+	if (idx == _users.size() )
+		return ;
+	
+	//_poll[fd] = _poll[_fd_count - 1];
+	cout << "_poll[idx = " << idx << "].fd = " << _poll[idx].fd << endl;
+	cout << "_poll[_fd_count = " << _fd_count << "].fd = " << _poll[_fd_count].fd << endl;
+	cout << "_poll[idx].events = " << _poll[idx].events << endl;
+	cout << "_poll[_fd_count].events = " << _poll[_fd_count].events << endl;
+	_poll[idx] = _poll[_fd_count]; // _fd_count sans "- 1" pcq on a 1 fd pour le server + un fd pour chaque client
+	_poll[idx].events = POLLIN;
+	cout << "del_from_pfds af chqnge poll: " << _users.size() << endl;
 	close(fd);
+	cout << "del_from_pfds af closing fd: " << _users.size() << endl;
 	_fd_count--;
+	cout << "del_from_pfds END: " << _users.size() << endl;
+
 }
 
 void				Server::run() {
@@ -334,26 +361,34 @@ void				Server::run() {
 			throw eExc(strerror(errno));
 
 		//cout << "fd_count = " << _fd_count << endl;
-
+		//cout << "bn users: " << _users.size() << endl;
 		for ( int i = 0; i < _fd_count; i++ ) {
 			// If something happened on fd i
+			cout << "i = " << i << endl;
+			cout << "_poll[i].fd == _sockfd; = " << (_poll[i].fd == _sockfd) << endl;
+			cout << "_poll[i].events = POLLIN = " << (_poll[i].events == POLLIN) << endl;
+			//cout << "_poll[i].revents = " << _poll[i].revents << endl;
 			if ( _poll[i].revents & POLLIN ) {
 				// New connection / New user
-				if ( _poll[i].fd == _sockfd )
-				{
+				if ( _poll[i].fd == _sockfd ) {
 					this->acceptConn();
 					// Add new fd that made the connection (Up to 5)
 					if ( add_to_pfds(_newfd) ) {
 						// add_to_pfds(_newfd);
 						// Create new user
 						cout << BOLDCYAN << "new fd: " << _newfd << RESET << endl;
-						if ( _users.find(_newfd) != _users.end() )
-							cout << BOLDCYAN << "map: " << _users[_newfd] << RESET << endl;
-						else
-							cout << BOLDCYAN << "end " << RESET << endl;
-						_users[_newfd] = User(_newfd);
-						break ;
+						cout << _users.size() << endl;
+						// for (map<int, User*>::const_iterator it = _users.begin(); it != _users.end(); ++it)
+						// 	cout << "{" << it->first << ": " << it->second << "}" << endl;
+						// if ( _users.find(_newfd) != _users.end() )
+						// 	cout << BOLDCYAN << "map: " << _users[_newfd] << RESET << endl;
+						// else
+						// 	cout << BOLDCYAN << "end " << RESET << endl;
+						//_users[_newfd] = new User(_newfd);
+						_users.push_back(new User(_newfd));
+						//break ;
 					}
+					break;
 				}
 				else
 					this->receiveData(i);
@@ -363,13 +398,20 @@ void				Server::run() {
 }
 
 //	If fd was registered
-bool					Server::is_registered( User usr )
+bool					Server::is_registered( User & usr )
 {
 	cout << YELLOW << "users: " << _users.size() << RESET << endl;
 
-	for (map<int, User>::const_iterator it = _users.begin(); it != _users.end(); ++it) {
-		cout << YELLOW << "\tuser[" << (it->second).getFd() << "]: " << (it->second).getNick() << RESET << endl;
-		if ((it->second).getFd() == usr.getFd())
+	// std::map<int, User*>::iterator it;
+
+	// it = _users.find(usr.getFd());
+	// if (it != _users.end() )
+	// 	return true;
+	// return false;
+
+	for (vector<User*>::const_iterator it = _users.begin(); it != _users.end(); ++it) {
+		cout << YELLOW << "\tuser[" << (*it)->getFd() << "]: " << (*it)->getNick() << RESET << endl;
+		if ((*it)->getFd() == usr.getFd())
 			return true;
 	}
 	
@@ -418,8 +460,14 @@ Channel *				Server::getChannelByKey( string key ) {
 
 User *				Server::getUserByNick( string nick ) {
 
-	for (map<int, User>::iterator it = _users.begin(); it != _users.end(); ++it) {
-		User * usr = &it->second;
+	// for (map<int, User*>::iterator it = _users.begin(); it != _users.end(); ++it) {
+	// 	User * usr = it->second;
+	// 	if ( usr->getNick() == nick )
+	// 		return usr;
+	// }
+	// return NULL;
+	for (vector<User*>::iterator it = _users.begin(); it != _users.end(); ++it) {
+		User * usr = *it;
 		if ( usr->getNick() == nick )
 			return usr;
 	}
@@ -435,6 +483,7 @@ void				Server::deleteChannel( Channel * channel ) {
 
 	for ( vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); it++ ) {
 		if ( (*it)->getName() == channel->getName() ) {
+			delete *it;
 			_channels.erase(it);
 			return ;
 		}
@@ -443,17 +492,33 @@ void				Server::deleteChannel( Channel * channel ) {
 
 void				Server::deleteUser( User * u ) {
 
-	std::map<int, User>::iterator it;
+	// std::map<int, User*>::iterator it;
 
-	it = _users.find(u->getFd());
-	cout << "Erasing user " << u->getNick() << endl;
-	_users.erase(it);
+	// for (map<int, User*>::const_iterator it = _users.begin(); it != _users.end(); it++)
+	// 	cout << "BF {" << it->first << ": " << it->second << "}" << endl;
 
-	// for ( map<int, User>::const_iterator it = _users.begin(); it != _users.end(); ++it ) {
-	// 	if ( (it->second).getNick() == u->getNick() ) {
-	// 		cout << "Erasing user " << u->getNick() << endl;
-	// 		_users.erase(it);
-	// 		return ;
-	// 	}
+	// it = _users.find(u->getFd());
+	// cout << "Erasing user " << u->getNick() << endl;
+	// if ( it != _users.end() ) {
+	// 	delete it->second;
+	// 	_users.erase(it);
 	// }
+
+	// for (map<int, User*>::const_iterator it = _users.begin(); it != _users.end(); it++)
+	// 	cout << "AF {" << it->first << ": " << it->second << "}" << endl;
+
+	cout << "BF: " << _users.size() << endl;
+
+	for ( vector<User*>::const_iterator it = _users.begin(); it != _users.end(); ++it ) {
+		if ( (*it)->getNick() == u->getNick() ) {
+			cout << "Erasing user " << u->getNick() << endl;
+			delete *it;
+			_users.erase(it);
+			cout << "AF: " << _users.size() << endl;
+
+			return ;
+		}
+	}
+
+	
 }

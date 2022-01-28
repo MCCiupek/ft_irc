@@ -78,8 +78,9 @@ void		quit( vector<string> args, User &usr, Server &srv )
 
 	int fd = usr.getFd();
 
-	srv.deleteUser( &usr );
+	
 	srv.del_from_pfds(fd);
+	srv.deleteUser( &usr );
 	
 	cout << BOLDWHITE << "❌ Client #" << fd << " gone away" << RESET << endl;
 }

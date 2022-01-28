@@ -45,10 +45,13 @@ void		nick( vector<string> args, User &usr, Server &srv )
 	if (srv.is_registered(usr) && usr.getNick() == args[0])
 		return ;
 
-	map<int, User>	usrs = srv.getUsers();
+	// map<int, User*>	usrs = srv.getUsers();
+	vector<User*>	usrs = srv.getUsers();
 
-	for (map<int, User>::iterator it = usrs.begin(); it != usrs.end(); it++)
-		if (it->second.getNick() == args[0])
+	// for (map<int, User*>::iterator it = usrs.begin(); it != usrs.end(); it++)
+	for (vector<User*>::iterator it = usrs.begin(); it != usrs.end(); it++)
+		// if (it->second->getNick() == args[0])
+		if ((*it)->getNick() == args[0])
 		{
 			send_error(usr, ERR_NICKNAMEINUSE, args[0]);
 			return ;

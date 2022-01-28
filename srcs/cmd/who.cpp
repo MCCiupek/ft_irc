@@ -92,11 +92,11 @@ static int		who_user( const vector<string> args, User &usr, Server &srv, bool wi
 	// Works only if is only <name> or <name> + <channel> (<channel> is ignored)
 	if ( args.size() == 1 || (args.size() == 2 && args[1][0] == '#') )
 	{
-		map<int, User>	users = srv.getUsers();
+		map<int, User*>	users = srv.getUsers();
 
-		for ( map<int, User>::iterator it = users.begin(); it != users.end(); ++it )
+		for ( map<int, User*>::iterator it = users.begin(); it != users.end(); ++it )
 		{
-			User u = it->second;
+			User u = *it->second;
 
 			// irssi syntax :<server> 352 <user> <*|u.curr_channel> <u.realname> <u.hostname> <u.servername>
 			//									 <u.nickname> <H|G>[*][@|+] :<hopcount> <u.realname>

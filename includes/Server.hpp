@@ -26,7 +26,8 @@ class Server {
 		struct addrinfo 		_hints;
 		struct addrinfo			*_servinfo;
 		struct pollfd			_poll[MAXCLI];
-		map<int, User>			_users;
+		//map<int, User*>			_users;
+		vector<User*>			_users;
 		map<int, string>		_usr_buf;
 		vector<Channel*>		_channels;
 		map<string, string>		_irc_operators;
@@ -65,7 +66,8 @@ class Server {
 		string const 				&getPort( void ) const;
 		string const 				&getPassword( void ) const;
 		string const 				&getHost( void ) const;
-		map<int, User> const		&getUsers( void ) const;
+		//map<int, User*> const		&getUsers( void ) const;
+		vector<User*> const			&getUsers( void ) const;
 		vector<Channel*> const		&getChannels( void ) const;
 		vector<string> const		getChannelsNames( void ) const;
 		string const				&getMotd( void ) const;
@@ -76,7 +78,7 @@ class Server {
 
 		void					initConn( void );
 		void					run( void );
-		bool					is_registered( User usr );
+		bool					is_registered( User &usr );
 		bool					username_isIRCOper( string usr_name );
 		bool					isIRCOperator( string usr_name, string pswd );
 		Channel *				getChannelByName( string channel );
