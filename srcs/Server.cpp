@@ -318,15 +318,15 @@ void				Server::del_from_pfds(int fd)
 {
 	//cout << "del_from_pfds BF: " << _users.size() << endl;
 
-	size_t idx = 0;
+	int idx = 0;
 	//for (vector<User*>::iterator it = _users.begin(); it != _users.end(); ++it)
-	while ( idx < _users.size() ) {
-		if (_users[idx]->getFd() == fd)
+	while ( idx < _fd_count) {
+		if (_poll[idx].fd == fd)
 			break;
 		idx++;
 	}
 	
-	if (idx == _users.size() )
+	if (idx == _fd_count )
 		return ;
 	
 	//_poll[fd] = _poll[_fd_count - 1];
@@ -337,8 +337,8 @@ void				Server::del_from_pfds(int fd)
 	cout << "_poll[_fd_count = " << _fd_count << "].fd = " << _poll[_fd_count - 1].fd << endl;
 	cout << "_poll[idx].events = " << _poll[idx].events << endl;
 	cout << "_poll[_fd_count].events = " << _poll[_fd_count].events << endl;
-	_poll[idx + 1] = _poll[_fd_count - 1]; // _fd_count sans "- 1" pcq on a 1 fd pour le server + un fd pour chaque client
-	_poll[idx + 1].events = POLLIN;
+	_poll[idx] = _poll[_fd_count - 1]; // _fd_count sans "- 1" pcq on a 1 fd pour le server + un fd pour chaque client
+	_poll[idx].events = POLLIN;
 	cout << "del_from_pfds af chqnge poll: " << _users.size() << endl;
 	close(fd);
 	cout << "del_from_pfds af closing fd: " << _users.size() << endl;
