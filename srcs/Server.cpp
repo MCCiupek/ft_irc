@@ -242,7 +242,7 @@ int				Server::receiveData( int i ) {
 	if (nbytes <= 0) {
 		if (!nbytes)
 			cout << BOLDWHITE << "❌ --- Client #" << _poll[i].fd << " gone away" << RESET << endl;
-		del_from_pfds(i);
+		del_from_pfds(_poll[i].fd);
 		if (nbytes < 0)
 			throw eExc(strerror(errno));
 		return 1;
