@@ -27,11 +27,11 @@ IRC client programs connect to an IRC server to access a specific channel. IRC s
 ## Handled commands
 
 - [ ] Connection
-  - [ ] PASS
+  - [x] PASS
   - [x] NICK
   - [x] USER
   - [ ] [SERVER]
-  - [ ] OPER
+  - [x] OPER
   - [x] QUIT
   - [ ] [SQUIT]
 - [ ] Channel operations
@@ -57,7 +57,7 @@ IRC client programs connect to an IRC server to access a specific channel. IRC s
   - [x] PRIVMSG
   - [x] NOTICE
 - [ ] User
-  - [ ] WHO
+  - [x] WHO
   - [ ] WHOIS
   - [ ] WHOWAS
 - [ ] Miscellaneous

@@ -76,7 +76,7 @@ endif
 
 all:			$(NAME)
 
-$(NAME) :		echoCL $(OBJS) $(HEADERS) echoOK echoCS 
+$(NAME) :		echoCL $(OBJS) $(HEADERS) echoCS 
 				$(CC) $(FLAGS) $(FSANITIZE) $(OS) $(OBJS) -o $(NAME)
 
 %.o: %.cpp
@@ -122,10 +122,29 @@ WHITE = \033[0;37m
 ###########################ECHO
 echoCL:
 	printf "\n$(YELLOW)===> Compiling $(RED)$(NAME)$(NC)\n"
-echoOK:
-	printf "$(GREEN) OK$(NC)\n"
+
 echoCS :
-	printf "$(GREEN)===> Compilation Success$(NC)\n"
+	@printf "\r"
+	@printf "$(GREEN)"
+	@printf "  ___   __                                              \n"
+	@printf " /'___\/\ \__          __                \n"
+	@printf "/\ \__/\ \ ,_\        /\_\  _ __   ___   \n"
+	@printf "\ \ ,__\\\\\ \ \/        \/\ \/\''__\/'___\ \n"
+	@printf " \ \ \_/ \ \ \_        \ \ \ \ \//\ \__/ \n"
+	@printf "  \/_/    \/__/  _______\/_/\/_/ \/____/ \n"
+	@printf "                /\______\                0\n"
+	@printf "                \/______/                \n"
+	@printf "$(WHITE)"
+	@printf "  ___                  _                _             \n"
+	@printf " | _ )_  _    _ __  __(_)_  _ _ __  ___| |__          \n"
+	@printf " | _ \ || |  | '  \/ _| | || | '_ \/ -_) / /          \n"
+	@printf " |___/\_, |  |_|_|_\__|_|\_,_| .__/\___|_\_\          \n"
+	@printf "      |__/                   |_|                      \n"
+	@printf "               _    __                     _   _   _  \n"
+	@printf "  __ _ _ _  __| |  / _|_ __  __ _ _ _  ___| |_| |_(_) \n"
+	@printf " / _' | ' \/ _' | |  _| '  \/ _' | ' \/ -_)  _|  _| | \n"
+	@printf " \__,_|_||_\__,_| |_| |_|_|_\__,_|_||_\___|\__|\__|_| \n\n"
+
 echoCLEAN :
 	printf "$(PURPLE)$(NAME) ===> Cleaning$(NC)\n"
 echoFCLEAN :

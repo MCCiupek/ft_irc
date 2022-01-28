@@ -286,7 +286,7 @@ void				Server::acceptConn() {
 
 bool				Server::add_to_pfds(int newfd)
 {
-	if (_fd_count == MAXCLI) {
+	if (_fd_count == MAXCLI + 1) {
 		cout << RED << "Max number of clients reached" << RESET << endl;
 		string msg = ERR_SERVERISFULL(_host);
 		send(newfd, &msg[0], msg.size(), 0);
