@@ -304,7 +304,7 @@ bool				Server::add_to_pfds(int newfd)
 	// 	_poll = (struct pollfd *)realloc(_poll, sizeof(*_poll) * (*fd_size));
 	// }
 
-	if (_fd_count == MAXCLI + 1) {
+	if (_fd_count == MAXCLI) {
 		cout << RED << "Max number of clients reached" << RESET << endl;
 		return false;
 	}
@@ -330,12 +330,15 @@ void				Server::del_from_pfds(int fd)
 		return ;
 	
 	//_poll[fd] = _poll[_fd_count - 1];
+	for (int i = 0; i < _fd_count; i++)
+		cout << _poll[i].fd << " ";
+	cout << endl;
 	cout << "_poll[idx = " << idx << "].fd = " << _poll[idx].fd << endl;
-	cout << "_poll[_fd_count = " << _fd_count << "].fd = " << _poll[_fd_count].fd << endl;
+	cout << "_poll[_fd_count = " << _fd_count << "].fd = " << _poll[_fd_count - 1].fd << endl;
 	cout << "_poll[idx].events = " << _poll[idx].events << endl;
 	cout << "_poll[_fd_count].events = " << _poll[_fd_count].events << endl;
-	_poll[idx] = _poll[_fd_count]; // _fd_count sans "- 1" pcq on a 1 fd pour le server + un fd pour chaque client
-	_poll[idx].events = POLLIN;
+	_poll[idx + 1] = _poll[_fd_count - 1]; // _fd_count sans "- 1" pcq on a 1 fd pour le server + un fd pour chaque client
+	_poll[idx + 1].events = POLLIN;
 	cout << "del_from_pfds af chqnge poll: " << _users.size() << endl;
 	close(fd);
 	cout << "del_from_pfds af closing fd: " << _users.size() << endl;
@@ -364,9 +367,9 @@ void				Server::run() {
 		//cout << "bn users: " << _users.size() << endl;
 		for ( int i = 0; i < _fd_count; i++ ) {
 			// If something happened on fd i
-			cout << "i = " << i << endl;
-			cout << "_poll[i].fd == _sockfd; = " << (_poll[i].fd == _sockfd) << endl;
-			cout << "_poll[i].events = POLLIN = " << (_poll[i].events == POLLIN) << endl;
+			//cout << "i = " << i << endl;
+			//cout << "_poll[i].fd == _sockfd; = " << (_poll[i].fd == _sockfd) << endl;
+			//cout << "_poll[i].events = POLLIN = " << (_poll[i].events == POLLIN) << endl;
 			//cout << "_poll[i].revents = " << _poll[i].revents << endl;
 			if ( _poll[i].revents & POLLIN ) {
 				// New connection / New user
@@ -386,9 +389,9 @@ void				Server::run() {
 						// 	cout << BOLDCYAN << "end " << RESET << endl;
 						//_users[_newfd] = new User(_newfd);
 						_users.push_back(new User(_newfd));
-						//break ;
+						break ;
 					}
-					break;
+					//break;
 				}
 				else
 					this->receiveData(i);

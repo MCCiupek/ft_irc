@@ -92,20 +92,20 @@ static int		who_user( const vector<string> args, User &usr, Server &srv, bool wi
 	// Works only if is only <name> or <name> + <channel> (<channel> is ignored)
 	if ( args.size() == 1 || (args.size() == 2 && args[1][0] == '#') )
 	{
-		map<int, User*>	users = srv.getUsers();
+		vector<User*>	users = srv.getUsers();
 
-		for ( map<int, User*>::iterator it = users.begin(); it != users.end(); ++it )
+		for ( vector<User*>::iterator it = users.begin(); it != users.end(); ++it )
 		{
-			User u = *it->second;
+			User * u = *it;
 
 			// irssi syntax :<server> 352 <user> <*|u.curr_channel> <u.realname> <u.hostname> <u.servername>
 			//									 <u.nickname> <H|G>[*][@|+] :<hopcount> <u.realname>
-			if ( (u.getNick() == args[0] || u.getHostname() == args[0] || u.getServername() == args[0]
-				|| u.getRealName() == args[0] ))
+			if ( (u->getNick() == args[0] || u->getHostname() == args[0] || u->getServername() == args[0]
+				|| u->getRealName() == args[0] ))
 			{
-				send_reply(usr, 352, RPL_WHOREPLY((u.getCurrChan() ? u.getCurrChan()->getName() : "*"),
-					u.getUsername(), u.getHostname(), u.getServername(), u.getNick(),
-					(u.isIRCOper() ? "*" : ""), (u.isChanOper() ? "@" : ""), u.getRealName()));
+				send_reply(usr, 352, RPL_WHOREPLY((u->getCurrChan() ? u->getCurrChan()->getName() : "*"),
+					u->getUsername(), u->getHostname(), u->getServername(), u->getNick(),
+					(u->isIRCOper() ? "*" : ""), (u->isChanOper() ? "@" : ""), u->getRealName()));
 			}
 		}
 	}
