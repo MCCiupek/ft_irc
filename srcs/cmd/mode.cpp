@@ -277,7 +277,6 @@ void		cnl_mode( vector<string> args, User &u, Server &srv ) {
 		send_notice_channel(u, cnl, NTC_CHANMODE(cnl->getName(), args[1]));
 }
 
-	//args[2] = args[2].substr(0, args[2].length()-1);
 void		usr_mode( vector<string> args, User &u, Server &srv ) {
 
 	string	usr_mode = u.getMode();
@@ -295,21 +294,26 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 	string mode = args[1].substr(1, args[1].length() - 1);
 
 	if (u.getNick() != args[0]) {
-		send_error(u, ERR_USERSDONTMATCH, args[0]);
+		send_error(u, ERR_USERSDONTMATCH, "");
 		return ;
 	}
 
 	for (size_t i = 0; i < mode.size(); i++) {
 		if ( knw_mode.find(mode[i]) == string::npos ) {
-			send_error(u, ERR_UNKNOWNMODE, mode);
+			send_error(u, ERR_UNKNOWNMODE, &mode[i]);
 			return ;
 		}
 	}
 
+	string	to_add = "";
+
 	if ( flag == '+' ) {
 		for (size_t i = 0; i < mode.size(); i++) {
-			if ( usr_mode.find(mode[i]) == string::npos && mode[i] != 'o')
-				usr_mode += mode[i];
+			cout << mode[i] << endl;
+			if (( usr_mode.find(mode[i]) == string::npos) && mode[i] != 'o')
+				to_add += mode[i];
+			else if (mode[i] == 'o' && u.isIRCOper()) // IRC operator
+				to_add += mode[i];
 		}
 	}
 	else if ( flag == '-' ) {
@@ -322,8 +326,10 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 	else
 		return send_error(u, ERR_UMODEUNKNOWNFLAG, args[1]);
 
-	u.setMode(usr_mode);
-	send_notice(u, u, NTC_MODE(u.getNick(), args[1]));
+	if (to_add.size()) {
+		u.addMode(to_add);
+		send_notice(u, u, NTC_MODE(u.getNick(), flag + to_add));
+	}
 }
 
 void		mode( vector<string> args, User &usr, Server &srv )

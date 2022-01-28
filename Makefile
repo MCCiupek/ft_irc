@@ -13,7 +13,7 @@
 CC				=		clang++
 
 FLAGS			=		-Wall -Wextra -Werror -std=c++98
-FSANITIZE		=		-fsanitize=address -g3
+# FSANITIZE		=		-fsanitize=address -g3
 
 RM				=		rm -rf
 
@@ -126,14 +126,14 @@ echoCL:
 echoCS :
 	@printf "\r"
 	@printf "$(GREEN)"
-	@printf "  ___   __                                              \n"
-	@printf " /'___\/\ \__          __                \n"
-	@printf "/\ \__/\ \ ,_\        /\_\  _ __   ___   \n"
-	@printf "\ \ ,__\\\\\ \ \/        \/\ \/\''__\/'___\ \n"
-	@printf " \ \ \_/ \ \ \_        \ \ \ \ \//\ \__/ \n"
-	@printf "  \/_/    \/__/  _______\/_/\/_/ \/____/ \n"
-	@printf "                /\______\                0\n"
-	@printf "                \/______/                \n"
+	@printf "  ___   __                                            \n"
+	@printf " /'___\/\ \__          __                             \n"
+	@printf "/\ \__/\ \ ,_\        /\_\  _ __   ___                \n"
+	@printf "\ \ ,__\\\\\ \ \/        \/\ \/\''__\/'___\           \n"
+	@printf " \ \ \_/ \ \ \_        \ \ \ \ \//\ \__/              \n"
+	@printf "  \/_/    \/__/  _______\/_/\/_/ \/____/              \n"
+	@printf "                /\______\                             \n"
+	@printf "                \/______/                             \n"
 	@printf "$(WHITE)"
 	@printf "  ___                  _                _             \n"
 	@printf " | _ )_  _    _ __  __(_)_  _ _ __  ___| |__          \n"

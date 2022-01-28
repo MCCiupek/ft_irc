@@ -205,7 +205,7 @@ bool				User::isRegistered( void ) const
 
 bool				User::isIRCOper( void ) const
 {
-	return _mode.find('o') == string::npos;
+	return !(_mode.find('o') == string::npos);
 }
 
 bool				User::isChanOper( void ) const
@@ -230,7 +230,7 @@ string const		User::fci( void ) const
 
 void				User::addMode( string mode )
 {
-	_mode + mode;
+	_mode = _mode + mode;
 }
 
 void				User::addChannel( Channel * channel ) {

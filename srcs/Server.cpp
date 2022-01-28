@@ -241,8 +241,9 @@ int				Server::receiveData( int i ) {
 	nbytes = recv(_poll[i].fd, buf, BUFSIZE - 1, 0);
 	if (nbytes <= 0) {
 		if (!nbytes)
-			cout << BOLDWHITE << "❌ --- Client #" << _poll[i].fd << " gone away" << RESET << endl;
+			cout << BOLDWHITE << "❌ Client #" << _poll[i].fd << " gone away" << RESET << endl;
 		del_from_pfds(_poll[i].fd);
+		deleteUser( _users[i - 1] );
 		if (nbytes < 0)
 			throw eExc(strerror(errno));
 		return 1;
@@ -250,12 +251,12 @@ int				Server::receiveData( int i ) {
 
 	// cout << "[" << i << "] buf = " << buf << endl;
 
-	vector<string>  v = get_next_command(_usr_buf[i], buf);
+	vector<string>  v = get_next_command(_usr_buf[i - 1], buf);
 	if (!v.empty())
 		v.pop_back(); // Delete last empty line
 
 	// for (vector<string>::iterator it = v.begin(); it != v.end(); it++)
-	//	cout << "vec " << *it << endl;
+	// 	cout << "vec " << *it << endl;
 
 	if (v.size() > 0)
 		for (vector<string>::iterator it = v.begin(); it != v.end(); it++)
@@ -442,15 +443,18 @@ void				Server::deleteChannel( Channel * channel ) {
 void				Server::deleteUser( User * u ) {
 
 	// cout << "BF: " << _users.size() << endl;
+	int i = 0;
 
 	for ( vector<User*>::const_iterator it = _users.begin(); it != _users.end(); ++it ) {
 		if ( (*it)->getNick() == u->getNick() ) {
 			// cout << "Erasing user " << u->getNick() << endl;
+			_usr_buf[i] = "";
 			delete *it;
 			_users.erase(it);
-			// cout << "AF: " << _users.size() << endl;
+			_usr_buf[i] = _usr_buf[_users.size() - 1];
 			return ;
 		}
+		i++;
 	}
 
 	
