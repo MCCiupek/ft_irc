@@ -7,7 +7,7 @@ static bool				valid_param( string name, string value )
 	if ((name == "PORT" && !is_digit(value)) || (name == "NAME" && !is_alpha(value))
 		|| (name == "HOST" && !inet_pton(AF_INET, value.c_str(), buf)))
 		return  false;
-	if (name == "PORT" || name == "NAME" || name == "PASS" ||
+	if (name == "PORT" || name == "NAME" || name == "SRV_PWD" ||
 		name == "MOTD" || name == "OPER" || name == "HOST")
 		return true;
 	

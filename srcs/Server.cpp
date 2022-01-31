@@ -260,7 +260,12 @@ int				Server::receiveData( int i ) {
 
 	if (v.size() > 0)
 		for (vector<string>::iterator it = v.begin(); it != v.end(); it++)
-			parsing(ft_split(*it, " "), *_users[i - 1], *this);
+			if (parsing(ft_split(*it, " "), *_users[i - 1], *this) == -1) {
+				cout << BOLDWHITE << "❌ Client #" << _poll[i].fd << " gone away" << RESET << endl;
+				del_from_pfds(_poll[i].fd);
+				deleteUser( _users[i - 1] );
+				return 1;
+			}
 
 	return 0;
 }
@@ -445,7 +450,7 @@ void				Server::deleteUser( User * u ) {
 	// cout << "BF: " << _users.size() << endl;
 	int i = 0;
 
-	for ( vector<User*>::const_iterator it = _users.begin(); it != _users.end(); ++it ) {
+	for ( vector<User*>::iterator it = _users.begin(); it != _users.end(); ++it ) {
 		if ( (*it)->getNick() == u->getNick() ) {
 			// cout << "Erasing user " << u->getNick() << endl;
 			_usr_buf[i] = "";

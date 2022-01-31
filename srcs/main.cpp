@@ -10,12 +10,12 @@ int main( int argc, char *argv[] ) {
 		p = parser( argc, argv );
 		// Had to copy initConn() and run() two times because of the scope
 		if ( p.size() > 2 ) {
-			Server ircserv(p["PORT"], p["PWD"], p["HOST"], p["MOTD"], p["OPER"]);
+			Server ircserv(p["PORT"], p["SRV_PWD"], p["HOST"], p["MOTD"], p["OPER"]);
 			ircserv.initConn();
 			ircserv.run();
 		}
 		else {
-			Server ircserv(p["PORT"], p["PWD"]);
+			Server ircserv(p["PORT"], p["SRV_PWD"]);
 			ircserv.initConn();
 			ircserv.run();	
 		}

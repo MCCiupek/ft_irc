@@ -26,6 +26,7 @@ class User
 		bool				_ping_status;
 		bool				_isset;			// If USER command is been used
 		bool				_isIRCOper;		// If OPER command is been used
+		bool				_isAuth;
 		Channel				*_curr_chan;	// Last joined channel
 		vector<Channel*>	_channels;		// Max chans 10
 		
@@ -55,6 +56,7 @@ class User
 		time_t 	*				getLastAct( void ) const;
 		bool const				&getPingStatus( void ) const;
 		bool const				&getIsSet( void ) const;
+		bool const				&isAuth( void ) const;
 		vector<Channel*>		getChans( void ) const;
 		bool const				&getIsIRCOper( void ) const;
 		Channel					*getCurrChan( void ) const;
@@ -73,6 +75,7 @@ class User
 		void					setLastAct( time_t last_act );
 		void					setPingStatus( bool ping_status );
 		void					setIsSet( bool isset );
+		void					setIsAuth( bool isauth );
 		void					setIsIRCOper( bool isIRCOper );
 		void					setCurrChan( Channel *c );
 

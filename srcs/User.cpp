@@ -2,14 +2,14 @@
 
 User::User( void ) : _fd(-1), _nick(""), _username(""), _hostname(""),
 			_servername(""), _realname(""), _mode(""), _passwd(""), 
-			_ping_status(false), _isset(false), _isIRCOper(false),
+			_ping_status(false), _isset(false), _isIRCOper(false), _isAuth(false),
 			_curr_chan(NULL), _channels()
 {
 }
 
 User::User( int fd ) : _fd(fd), _nick(""), _username(""), _hostname(""),
 	_servername(""), _realname(""), _mode(""), _passwd(""), _ping_status(false),
-	_isset(false),  _isIRCOper(false), _curr_chan(NULL), _channels()
+	_isset(false),  _isIRCOper(false), _isAuth(false), _curr_chan(NULL), _channels()
 {
 }
 
@@ -17,7 +17,7 @@ User::User( int fd, string nick, string username, string hostname,
 	string servername, string realname, string mode, bool ping_status ) :
 	_fd(fd), _nick(nick), _username(username), _hostname(hostname), _servername(servername),
 	_realname(realname), _mode(mode), _ping_status(ping_status), _isset(false),
-	_isIRCOper(false), _curr_chan(NULL), _channels()
+	_isIRCOper(false), _isAuth(false), _curr_chan(NULL), _channels()
 {
 }
 
@@ -102,6 +102,11 @@ bool const				&User::getIsSet( void ) const
 	return _isset;
 }
 
+bool const				&User::isAuth( void ) const
+{
+	return _isAuth;
+}
+
 vector<Channel*>		User::getChans( void ) const
 {
 	return _channels;
@@ -178,6 +183,12 @@ void					User::setIsSet( bool isset )
 {
 	_isset = isset;
 }
+
+void					User::setIsAuth( bool isauth )
+{
+	_isAuth = isauth;
+}
+
 
 void					User::setIsIRCOper( bool isIRCOper )
 {
