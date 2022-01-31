@@ -41,24 +41,19 @@ bool		cnl_is_visible_to_usr( Channel * cnl, User &usr ) {
 void		print_other_names( User &usr, Server &srv ) {
 	
 	vector<string>		names;
-	// map<int, User*>		users = srv.getUsers();
 	vector<User*>		users = srv.getUsers();
 	vector<Channel*>	chans;
 	string				chan_name = "*";
 	size_t j;
 
-	// for (map<int, User*>::iterator it = users.begin(); it != users.end(); it++) {
 	for (vector<User*>::iterator it = users.begin(); it != users.end(); it++) {
-		// if ((it->second)->isVisible()) {
 		if ((*it)->isVisible()) {
-			// chans = (it->second)->getChans();
 			chans = (*it)->getChans();
 			for (j = 0; j < chans.size(); j++) {
 				if ( cnl_is_visible_to_usr(chans[j], usr) )
 					break ;
 			}
 			if (j == chans.size())
-				// names.push_back( (it->second)->getNick() );
 				names.push_back( (*it)->getNick() );
 		}
 	}
@@ -71,28 +66,48 @@ void		print_other_names( User &usr, Server &srv ) {
 void		print_chan_names( string channel, User &usr, Server &srv ){
 	
 	Channel *		cnl;
+	string			reply;
+	vector<User*>	members;
 
 	cnl = srv.getChannelByName( channel );
 	if ( cnl == NULL )
 		return ;
-	if ( !cnl->isOnChann(usr) && (cnl->isPrivate() || cnl->isSecret()) )
+	if ( !cnl->isOnChann(usr) && cnl->isSecret() )
 		return ;
-	send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), cnl->getMembersList()));
-	send_reply(usr, 366, RPL_ENDOFNAMES(cnl->getName()));
+	if ( cnl->isOnChann(usr) )
+		return send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), cnl->getMembersList()));
+	members = cnl->getMembers();
+	for ( size_t i = 0; i < cnl->getNbMembers(); i++ ) {
+		if ( cnl->isOper(*members[i]) && members[i]->isVisible() )
+			reply += "@";
+		if ( members[i]->isVisible() )
+			reply += members[i]->getNick();
+		if ( i < members.size() - 1 )
+			reply += " ";
+	}
+	send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), trim(reply, " ")));
 }
 
 void		names( vector<string> args, User &usr, Server &srv ) {
 
 	vector<string>	chans;
+	string msg = "ERROR :Not joined to any channel\r\n";
 
-	if ( args.size() < 2 )
+	if ( args.size() < 1 )
 		chans = srv.getChannelsNames();
 	else
-		chans = ft_split(args[1], ",");
+		chans = ft_split(args[0], ",");
 
-	for (size_t i = 0; i < chans.size(); i++)
+	if ( args.size() < 1 ) {
+		send(usr.getFd(), &msg[0], msg.size(), 0);
+		return ;
+	}
+
+	for (size_t i = 0; i < chans.size(); i++) {
 		print_chan_names(chans[i], usr, srv);
+		send_reply(usr, 366, RPL_ENDOFNAMES(chans[i]));
+	}
 	
-	if ( args.size() < 2 )
+	if ( args.size() < 1 )
 		print_other_names(usr, srv);
 }
