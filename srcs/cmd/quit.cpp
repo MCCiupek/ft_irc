@@ -49,9 +49,6 @@
 	QUIT :Gone to have lunch        ; Preferred message format
 */
 
-// [client:8000]QUIT :vaffanculo a tutti
-// [server:6667]:deb_user_!deb_user@127.0.0.1 QUIT :Quit: vaffanculo a tutti
-
 void		quit( vector<string> args, User &usr, Server &srv )
 {
 	string	msg;

@@ -41,24 +41,19 @@ bool		cnl_is_visible_to_usr( Channel * cnl, User &usr ) {
 void		print_other_names( User &usr, Server &srv ) {
 	
 	vector<string>		names;
-	// map<int, User*>		users = srv.getUsers();
 	vector<User*>		users = srv.getUsers();
 	vector<Channel*>	chans;
 	string				chan_name = "*";
 	size_t j;
 
-	// for (map<int, User*>::iterator it = users.begin(); it != users.end(); it++) {
 	for (vector<User*>::iterator it = users.begin(); it != users.end(); it++) {
-		// if ((it->second)->isVisible()) {
 		if ((*it)->isVisible()) {
-			// chans = (it->second)->getChans();
 			chans = (*it)->getChans();
 			for (j = 0; j < chans.size(); j++) {
 				if ( cnl_is_visible_to_usr(chans[j], usr) )
 					break ;
 			}
 			if (j == chans.size())
-				// names.push_back( (it->second)->getNick() );
 				names.push_back( (*it)->getNick() );
 		}
 	}

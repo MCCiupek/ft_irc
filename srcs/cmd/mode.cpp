@@ -329,7 +329,6 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 void		mode( vector<string> args, User &usr, Server &srv )
 {
 	string mask = "#";
-	//string mask = "#&!+";
 
 	if (args.size() < 1) {
 		send_error(usr, ERR_NEEDMOREPARAMS, "MODE");
