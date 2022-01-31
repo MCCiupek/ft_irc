@@ -57,7 +57,7 @@ void		send_notice_to_chan( string recv, string txt, User &usr, Server &srv ) {
 
 void		send_notice( string recv, string txt, User &usr, Server &srv ) {
 
-	string 	mask = "#&+!";
+	string 	mask = "#";//&+!";
 	
 	if ( txt.length() == 0 )
 		return send_error(usr, ERR_NOTEXTTOSEND, recv);

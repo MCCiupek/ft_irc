@@ -252,7 +252,7 @@ string				User::addMode( string mode )
 {
 	string	to_add = "";
 
-	cout << "oper = " << isIRCOper() << endl;
+	// cout << "oper = " << isIRCOper() << endl;
 
 	for (size_t i = 0; i < mode.size(); i++) {
 		if (( _mode.find(mode[i]) == string::npos) && mode[i] != 'o')

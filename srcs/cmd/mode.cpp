@@ -277,13 +277,15 @@ void		cnl_mode( vector<string> args, User &u, Server &srv ) {
 		send_notice_channel(u, cnl, NTC_CHANMODE(cnl->getName(), args[1]));
 }
 
-static void	usr_oper(User &usr, User &target, char flag)
+static void	usr_oper(User &usr, User * target, char flag, string nick)
 {
-	target.setIsIRCOper((flag == '+') ? true : false);
-	send_notice(usr, usr, NTC_MODE(target.getNick(), flag + "o"));
-	send_notice(usr, target, NTC_MODE(target.getNick(), flag + "o"));
+	if ( !target )
+		return send_error(usr, ERR_NOSUCHNICK, nick);
+	target->setIsIRCOper((flag == '+') ? true : false);
+	send_notice(usr, usr, NTC_MODE(target->getNick(), flag + "o"));
+	send_notice(usr, *target, NTC_MODE(target->getNick(), flag + "o"));
 	if (flag == '+')
-		send_reply( target, 381, ":You are now an IRC operator\r\n");
+		send_reply( *target, 381, ":You are now an IRC operator\r\n");
 }
 
 void		usr_mode( vector<string> args, User &u, Server &srv ) {
@@ -302,7 +304,7 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 
 	if (u.getNick() != args[0]) {
 		if (u.isIRCOper() && (flag == '+' || flag == '-') && mode == "o")
-			usr_oper(u, *(srv.getUserByNick(args[0])), flag);
+			usr_oper(u, srv.getUserByNick(args[0]), flag, args[0]);
 		else
 			send_error(u, ERR_USERSDONTMATCH, "");
 		return ;
@@ -326,8 +328,8 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 
 void		mode( vector<string> args, User &usr, Server &srv )
 {
-	
-	string mask = "#&!+";
+	string mask = "#";
+	//string mask = "#&!+";
 
 	if (args.size() < 1) {
 		send_error(usr, ERR_NEEDMOREPARAMS, "MODE");
