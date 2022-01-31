@@ -26,7 +26,6 @@ class Channel {
 		vector<User*>					_moderators;
 		map< string,vector<string> >	_banned;
 		vector<string>					_banned_mask;
-        //User*							_channel_oper;
 		vector<User*>					_oper;
 		string							_mode;
 		size_t							_limit;
@@ -62,7 +61,6 @@ class Channel {
 		bool const 				&getHasTopic( void ) const;
 		vector<User*> const 	&getMembers( void ) const;
 		vector<User*> const		&getOper( void ) const;
-		//User *				getOperator( void );
 		string const			&getMode( void ) const;
 		size_t					getLimit( void ) const;
 		string const			getCreationDate( void ) const;

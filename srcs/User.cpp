@@ -252,8 +252,6 @@ string				User::addMode( string mode )
 {
 	string	to_add = "";
 
-	// cout << "oper = " << isIRCOper() << endl;
-
 	for (size_t i = 0; i < mode.size(); i++) {
 		if (( _mode.find(mode[i]) == string::npos) && mode[i] != 'o')
 			to_add += mode[i];
@@ -330,9 +328,6 @@ void				User::leaveAllChans( void ) {
 
 bool				User::isRegisteredToChan( Channel &c )
 {
-	// cout << "isregistered to chan" << endl;
-	// cout << _channels.size() << endl;
-
 	for (vector<Channel*>::iterator it = _channels.begin(); it != _channels.end(); ++it )
 	{
 		if ((*it)->getName() == c.getName())

@@ -190,8 +190,8 @@ void				Server::initConn() {
 	}
 	this->listenHost();
 
-	std::cout << BOLDGREEN  << "Server init success!!" << RESET << std::endl;
-	std::cout << YELLOW << "Listening for clients ..." << RESET << std::endl;
+	cout << BOLDGREEN  << "Server init success!!" << RESET << endl;
+	cout << YELLOW << "Listening for clients ..." << RESET << endl;
 }
 
 int				Server::sendData( int fd ) {
@@ -249,14 +249,9 @@ int				Server::receiveData( int i ) {
 		return 1;
 	}
 
-	// cout << "[" << i << "] buf = " << buf << endl;
-
 	vector<string>  v = get_next_command(_usr_buf[i - 1], buf);
 	if (!v.empty())
 		v.pop_back(); // Delete last empty line
-
-	// for (vector<string>::iterator it = v.begin(); it != v.end(); it++)
-	// 	cout << "vec " << *it << endl;
 
 	if (v.size() > 0)
 		for (vector<string>::iterator it = v.begin(); it != v.end(); it++)
@@ -303,8 +298,6 @@ bool				Server::add_to_pfds(int newfd)
 
 void				Server::del_from_pfds(int fd)
 {
-	//cout << "del_from_pfds BF: " << _users.size() << endl;
-
 	int idx = 0;
 	while ( idx < _fd_count) {
 		if (_poll[idx].fd == fd)
@@ -315,13 +308,6 @@ void				Server::del_from_pfds(int fd)
 	if (idx == _fd_count )
 		return ;
 	
-	// for (int i = 0; i < _fd_count; i++)
-	// 	cout << _poll[i].fd << " ";
-	// cout << endl;
-	// cout << "_poll[idx = " << idx << "].fd = " << _poll[idx].fd << endl;
-	// cout << "_poll[_fd_count = " << _fd_count << "].fd = " << _poll[_fd_count - 1].fd << endl;
-	// cout << "_poll[idx].events = " << _poll[idx].events << endl;
-	// cout << "_poll[_fd_count].events = " << _poll[_fd_count].events << endl;
 	_poll[idx] = _poll[_fd_count - 1];
 	_poll[idx].events = POLLIN;
 	close(fd);
@@ -351,8 +337,6 @@ void				Server::run() {
 					// Add new fd that made the connection (Up to 5)
 					if ( add_to_pfds(_newfd) ) {
 						// Create new user
-						// cout << BOLDCYAN << "new fd: " << _newfd << RESET << endl;
-						// cout << _users.size() << endl;
 						_users.push_back(new User(_newfd));
 						break ;
 					}
@@ -367,10 +351,7 @@ void				Server::run() {
 //	If fd was registered
 bool					Server::is_registered( User & usr )
 {
-	// cout << YELLOW << "users: " << _users.size() << RESET << endl;
-
 	for (vector<User*>::const_iterator it = _users.begin(); it != _users.end(); ++it) {
-		// cout << YELLOW << "\tuser[" << (*it)->getFd() << "]: " << (*it)->getNick() << RESET << endl;
 		if ((*it)->getFd() == usr.getFd())
 			return true;
 	}
@@ -444,12 +425,10 @@ void				Server::deleteChannel( Channel * channel ) {
 
 void				Server::deleteUser( User * u ) {
 
-	// cout << "BF: " << _users.size() << endl;
 	int i = 0;
 
 	for ( vector<User*>::iterator it = _users.begin(); it != _users.end(); ++it ) {
 		if ( (*it)->getNick() == u->getNick() ) {
-			// cout << "Erasing user " << u->getNick() << endl;
 			_usr_buf[i] = "";
 			delete *it;
 			_users.erase(it);

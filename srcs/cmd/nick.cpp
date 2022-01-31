@@ -28,8 +28,6 @@ void		nick( vector<string> args, User &usr, Server &srv )
 {
 	ostringstream s;
 
-	// cout << args[0] << endl;
-
 	if (args.size() == 0)
 	{
 		send_error(usr, ERR_NEEDMOREPARAMS, "NICK");

@@ -36,8 +36,6 @@ void		send_notice_to_usr( string recv, string txt, User &usr, Server &srv ) {
 	if ( !receiver )
 		return send_error(usr, ERR_NOSUCHNICK, recv);
 	send_notice(usr, *receiver, NTC_NOTICE(receiver->getNick(), txt));
-	//if ( receiver->getIsAway() )
-	//	send_reply(usr, 301, RPL_AWAY(receiver->getNick(), receiver->getAwayMsg()));
 }
 
 void		send_notice_to_chan( string recv, string txt, User &usr, Server &srv ) {
@@ -57,7 +55,7 @@ void		send_notice_to_chan( string recv, string txt, User &usr, Server &srv ) {
 
 void		send_notice( string recv, string txt, User &usr, Server &srv ) {
 
-	string 	mask = "#";//&+!";
+	string 	mask = "#";
 	
 	if ( txt.length() == 0 )
 		return send_error(usr, ERR_NOTEXTTOSEND, recv);

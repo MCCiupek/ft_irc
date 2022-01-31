@@ -1,34 +1,6 @@
 #include "headers.hpp"
 
 /*
-	Syntax:
-		WHO [ <nick> | <channel> | **]
-
-	Parameters:
-	    The channel name or output filter; if no arguments are given, the current
-	    channel will be used.
-
-	Description:
-	    Displays information about users in the specified channel. If you specify a
-	    filter, all the users whose nick, userhost or realname matches the filter
-	    will be returned.
-	    If the channel is secret and you are not on it, you will not receive any
-	    output.
-	    Common flags:
-	        H:    The user is available.
-	        G:    The user is away.
-	        *:    The user is an IRC operator.
-	        @:    The user is a channel operator.
-	        +:    The user is a channel voice.
-	
-	Examples:
-	    /WHO
-	    /WHO #irssi
-	    /WHO bob
-	    /WHO sar*
-*/
-
-/*
 	Command: WHO
 
 	Parameters: [<name> [<o>]]
@@ -76,14 +48,6 @@
 		4. In response to a query for a list of channels, send ONE RPL_WHOREPLY, 
 		   of the form: :servername 315 user #c1,#c2 :End of /WHO list.
 */
-
-// [client:8000]WHO #42
-
-// [server:6667]:mfirc 352 fmanetti #42 fmanetti localhost :Fabrizio fmanetti H *@ :0 MANETTI
-
-// [server:6667]:mfirc 352 fmanetti #42 fmanetti localhost :Fabrizio fmanetti H *@ :0 MANETTI
-
-// [server:6667]:mfirc 315 fmanetti #42 :End of /WHO list
 
 static int		who_user( const vector<string> args, User &usr, Server &srv, bool wild )
 {
@@ -171,8 +135,6 @@ int				who_wildcard( vector<string> args, User &usr, Server &srv)
 }
 
 void			who( vector<string> args, User &usr, Server &srv ) {
-
-	// TODO: handle multiple <name> calls
 
 	if (args.size() == 0)
 	{
