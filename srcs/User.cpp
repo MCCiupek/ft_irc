@@ -182,6 +182,10 @@ void					User::setIsSet( bool isset )
 void					User::setIsIRCOper( bool isIRCOper )
 {
 	_isIRCOper = isIRCOper;
+	if (isIRCOper)
+		addMode("o");
+	else
+		rmMode("o");
 }
 
 void					User::setCurrChan( Channel *c )
@@ -205,7 +209,7 @@ bool				User::isRegistered( void ) const
 
 bool				User::isIRCOper( void ) const
 {
-	return !(_mode.find('o') == string::npos);
+	return _isIRCOper;
 }
 
 bool				User::isChanOper( void ) const
@@ -228,9 +232,38 @@ string const		User::fci( void ) const
 	return _nick + "!" + _username + "@" + _hostname;
 }
 
-void				User::addMode( string mode )
+string				User::addMode( string mode )
 {
-	_mode = _mode + mode;
+	string	to_add = "";
+
+	cout << "oper = " << isIRCOper() << endl;
+
+	for (size_t i = 0; i < mode.size(); i++) {
+		if (( _mode.find(mode[i]) == string::npos) && mode[i] != 'o')
+			to_add += mode[i];
+		else if (mode[i] == 'o' && isIRCOper()) // IRC operator
+			to_add += mode[i];
+	}
+
+	_mode += to_add;
+
+	return (to_add);
+}
+
+string				User::rmMode( string mode )
+{
+	string	removed = "";
+
+	for (size_t i = 0; i < mode.size(); i++) {
+		size_t to_remove = _mode.find(mode[i]);
+		if ( to_remove != string::npos )
+		{
+			_mode.erase(_mode.begin() + to_remove);
+			removed += mode[i];
+		}
+	}
+
+	return (removed);
 }
 
 void				User::addChannel( Channel * channel ) {

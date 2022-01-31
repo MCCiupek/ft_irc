@@ -38,7 +38,7 @@ void    define_errors( void )
 	err[ERR_BADCHANMASK] = " :The given channel mask was invalid";
 	err[ERR_CHANOPRIVSNEEDED] = " :You're not channel operator";
 	err[ERR_UMODEUNKNOWNFLAG] = " :Unknown MODE flag";
-	err[ERR_USERSDONTMATCH] = " :Can't change mode for other users";
+	err[ERR_USERSDONTMATCH] = " :Can't change mode for other users not being IRC operator";
 	err[ERR_NOOPERHOST] = " :No O-lines for your host";
 	err[ERR_PASSWDMISMATCH] = " :Password incorrect";
 }

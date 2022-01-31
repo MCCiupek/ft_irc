@@ -277,12 +277,19 @@ void		cnl_mode( vector<string> args, User &u, Server &srv ) {
 		send_notice_channel(u, cnl, NTC_CHANMODE(cnl->getName(), args[1]));
 }
 
+static void	usr_oper(User &usr, User &target, char flag)
+{
+	target.setIsIRCOper((flag == '+') ? true : false);
+	send_notice(usr, usr, NTC_MODE(target.getNick(), flag + "o"));
+	send_notice(usr, target, NTC_MODE(target.getNick(), flag + "o"));
+	if (flag == '+')
+		send_reply( target, 381, ":You are now an IRC operator\r\n");
+}
+
 void		usr_mode( vector<string> args, User &u, Server &srv ) {
 
 	string	usr_mode = u.getMode();
 	string	knw_mode = AVAILABLE_USER_MODES;
-
-	(void)srv;
 
 	if (args.size() < 1)
 		return send_error(u, ERR_NEEDMOREPARAMS, "MODE");
@@ -294,7 +301,10 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 	string mode = args[1].substr(1, args[1].length() - 1);
 
 	if (u.getNick() != args[0]) {
-		send_error(u, ERR_USERSDONTMATCH, "");
+		if (u.isIRCOper() && (flag == '+' || flag == '-') && mode == "o")
+			usr_oper(u, *(srv.getUserByNick(args[0])), flag);
+		else
+			send_error(u, ERR_USERSDONTMATCH, "");
 		return ;
 	}
 
@@ -305,31 +315,13 @@ void		usr_mode( vector<string> args, User &u, Server &srv ) {
 		}
 	}
 
-	string	to_add = "";
-
-	if ( flag == '+' ) {
-		for (size_t i = 0; i < mode.size(); i++) {
-			cout << mode[i] << endl;
-			if (( usr_mode.find(mode[i]) == string::npos) && mode[i] != 'o')
-				to_add += mode[i];
-			else if (mode[i] == 'o' && u.isIRCOper()) // IRC operator
-				to_add += mode[i];
-		}
-	}
-	else if ( flag == '-' ) {
-		for (size_t i = 0; i < mode.size(); i++) {
-			size_t to_remove = usr_mode.find(mode[i]);
-			if ( to_remove != string::npos )
-				usr_mode.erase(usr_mode.begin() + to_remove);
-		}
-	}
-	else
+	if (flag != '+' && flag != '-')
 		return send_error(u, ERR_UMODEUNKNOWNFLAG, args[1]);
 
-	if (to_add.size()) {
-		u.addMode(to_add);
-		send_notice(u, u, NTC_MODE(u.getNick(), flag + to_add));
-	}
+	if (flag == '+')
+		send_notice(u, u, NTC_MODE(u.getNick(), flag + u.addMode(mode)));
+	else if (flag == '-') 
+		send_notice(u, u, NTC_MODE(u.getNick(), flag + u.rmMode(mode)));
 }
 
 void		mode( vector<string> args, User &usr, Server &srv )

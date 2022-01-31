@@ -84,7 +84,8 @@ class User
 		bool					isChanOper( void ) const;
 		bool 					isVisible( void ) const;
 		string const			fci( void ) const;
-		void					addMode( string mode );
+		string					addMode( string mode );
+		string					rmMode( string mode );
 		void					addChannel( Channel * channel );
 		void					deleteChannel( Channel * channel );
 		void					leaveAllChans( void );

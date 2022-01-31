@@ -13,7 +13,7 @@
 CC				=		clang++
 
 FLAGS			=		-Wall -Wextra -Werror -std=c++98
-# FSANITIZE		=		-fsanitize=address -g3
+FSANITIZE		=		-fsanitize=address -g3
 
 RM				=		rm -rf
 
@@ -77,10 +77,13 @@ endif
 all:			$(NAME)
 
 $(NAME) :		echoCL $(OBJS) $(HEADERS) echoCS 
+				$(CC) $(FLAGS) $(OS) $(OBJS) -o $(NAME)
+
+san:			echoCLsan $(OBJS) $(HEADERS) echoCS
 				$(CC) $(FLAGS) $(FSANITIZE) $(OS) $(OBJS) -o $(NAME)
 
 %.o: %.cpp
-				$(CC) $(FLAGS) $(FSANITIZE) $(OS) -I $(DIR_HEADERS) -c $< -o $@
+				$(CC) $(FLAGS) $(OS) -I $(DIR_HEADERS) -c $< -o $@
 				printf "$(GREEN)██"
 
 norme:			fclean
@@ -122,6 +125,9 @@ WHITE = \033[0;37m
 ###########################ECHO
 echoCL:
 	printf "\n$(YELLOW)===> Compiling $(RED)$(NAME)$(NC)\n"
+
+echoCLsan:
+	printf "\n$(YELLOW)===> Compiling with fsanitize $(RED)$(NAME)$(NC)\n"
 
 echoCS :
 	@printf "\r"

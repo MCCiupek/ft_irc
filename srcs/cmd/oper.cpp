@@ -45,7 +45,6 @@ void		oper( vector<string> args, User &usr, Server &srv )
 			return ;
 		}
 		usr.setIsIRCOper(true);
-		usr.addMode("o");
 		send_notice(usr, usr, NTC_MODE(usr.getNick(), "+o"));
 		send_reply( usr, 381, ":You are now an IRC operator\r\n");
 	}
