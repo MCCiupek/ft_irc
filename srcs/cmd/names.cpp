@@ -85,7 +85,8 @@ void		print_chan_names( string channel, User &usr, Server &srv ){
 		if ( i < members.size() - 1 )
 			reply += " ";
 	}
-	send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), trim(reply, " ")));
+	if ( trim(reply, " ") != "" )
+		send_reply(usr, 353, RPL_NAMREPLY(cnl->getName(), trim(reply, " ")));
 }
 
 void		names( vector<string> args, User &usr, Server &srv ) {
