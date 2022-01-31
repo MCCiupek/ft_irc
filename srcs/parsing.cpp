@@ -18,23 +18,6 @@ map<string, string>		parser( int n_params, char *params[] ) {
 	return res;
 }
 
-bool			check_pass( vector<string> args, User &usr, Server &srv ) {
-
-	cout << "usr reg: " << usr.isRegistered() << endl;
-	cout << "args[0]: " << args[0] << endl;
-	cout << "args[1]: " << args[1] << endl;
-
-	transform(args[0].begin(), args[0].end(), args[0].begin(), ::toupper);
-
-	if ( !usr.isRegistered() && args[0] != "CAP" && args[0] != "PASS" )
-		return false;
-	if ( args[0] == "PASS" && args[1] != srv.getPassword() )
-		return false;
-	if ( args[0] == "PASS" && args[1] == srv.getPassword() )
-		usr.setIsAuth(true);
-	return true;
-}
-
 int						parsing( vector<string> args, User &usr, Server &srv )
 {
 	string	cmd = args[0];
@@ -65,12 +48,6 @@ int						parsing( vector<string> args, User &usr, Server &srv )
 	m["NOTICE"] = notice;
 	m["INVITE"] = invite;
 	m["OPER"] = oper;
-
-	if ( !usr.isAuth() && srv.getPassword() != "" && !check_pass( args, usr, srv ) ) {
-		string	msg = "Wrong password";
-		send_notice(usr, usr, NTC_QUIT(msg));
-		return -1;
-	}
 
 	// Call function
 	if ( m.count(cmd) > 0 ) {

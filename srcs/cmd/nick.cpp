@@ -60,6 +60,10 @@ void		nick( vector<string> args, User &usr, Server &srv )
 			cout << MAGENTA << usr.getNick() << ": Nick changed to " << args[0] << RESET << endl;
 		if (usr.getIsSet() && usr.getNick().empty())
 		{
+			if (srv.getPassword() != "")
+				if (!check_password(usr, srv))
+					return;
+
 			cout << GREEN << "User #" << usr.getFd() << " registred as " << args[0] << RESET << endl;
 			usr.setNick(args[0]);
 			messageoftheday(srv, usr);

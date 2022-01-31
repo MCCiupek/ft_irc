@@ -53,10 +53,11 @@ class User
 		string const			&getServername( void ) const;
 		string const			&getRealName( void ) const;
 		string const			&getMode( void ) const;
+		string const			&getPasswd( void ) const;
 		time_t 	*				getLastAct( void ) const;
 		bool const				&getPingStatus( void ) const;
 		bool const				&getIsSet( void ) const;
-		bool const				&isAuth( void ) const;
+		bool const				&getIsAuth( void ) const;
 		vector<Channel*>		getChans( void ) const;
 		bool const				&getIsIRCOper( void ) const;
 		Channel					*getCurrChan( void ) const;

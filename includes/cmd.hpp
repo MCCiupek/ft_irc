@@ -23,4 +23,6 @@ void		kick( vector<string> args, User &usr, Server &srv );
 void		invite( vector<string> args, User &usr, Server &srv );
 void		oper( vector<string> args, User &usr, Server &srv );
 
+bool		check_password( User &usr, Server &srv );
+
 #endif

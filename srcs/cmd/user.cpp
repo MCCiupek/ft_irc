@@ -37,8 +37,11 @@ void	user( vector<string> args, User &usr, Server &srv )
 
 	if (!usr.getNick().empty())
 	{
+		if (srv.getPassword() != "")
+			if (!check_password(usr, srv))
+				return;
+		
 		cout << GREEN << "User #" << usr.getFd() << " registred as " << usr.getNick() << RESET << endl;
-		// cout << usr << endl;
 		messageoftheday(srv, usr);
 	}
 }

@@ -87,7 +87,12 @@ string const			&User::getMode( void ) const
 	return _mode;
 }
 
-time_t 	*				User::getLastAct( void ) const
+string const			&User::getPasswd( void ) const
+{
+	return _passwd;
+}
+
+time_t 					*User::getLastAct( void ) const
 {
 	return _last_act;
 }
@@ -102,7 +107,7 @@ bool const				&User::getIsSet( void ) const
 	return _isset;
 }
 
-bool const				&User::isAuth( void ) const
+bool const				&User::getIsAuth( void ) const
 {
 	return _isAuth;
 }
