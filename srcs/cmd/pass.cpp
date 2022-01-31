@@ -42,10 +42,10 @@ bool		check_password( User &usr, Server &srv )
 
 	if ( send(usr.getFd(), &msg[0], msg.size(), 0) == -1 )
 		throw eExc(strerror(errno));
-	
+
+	cout << BOLDWHITE << "❌ Client #" << usr.getFd() << " gone away" << RESET << endl;	
 	srv.del_from_pfds(usr.getFd());
 	srv.deleteUser( &usr );
-	cout << BOLDWHITE << "❌ Client #" << usr.getFd() << " gone away" << RESET << endl;
 
 	return false;
 }

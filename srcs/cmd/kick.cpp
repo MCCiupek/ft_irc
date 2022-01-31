@@ -83,7 +83,7 @@ void		kick( vector<string> args, User &usr, Server &srv ) {
 
 			victim = srv.getUserByNick(victims[j]);
 
-			// if victim is not a vilid nick
+			// if victim is not a valid nick
 			if ( !victim ) {
 				send_error( usr, ERR_NOSUCHNICK, victims[j] );
 				continue ;

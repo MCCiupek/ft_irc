@@ -65,14 +65,15 @@ void		part( vector<string> args, User &usr, Server &srv ) {
 			continue ;
 		}
 
-		//send_to_all_in_chan(cnl, part_msg, usr);
-
 		vector<User*> usrs = cnl->getMembers();
 		for (size_t j = 0; j < usrs.size(); j++) {
 			if ( args.size() == 1 )
 				send_notice(usr, *usrs[j], NTC_PART(cnl->getName()));
-			else
+			else if (part_msg[0] == ':')
 				send_notice(usr, *usrs[j], NTC_PART_MSG(cnl->getName(), &part_msg[1]));
+			else
+				send_notice(usr, *usrs[j], NTC_PART_MSG(cnl->getName(), part_msg));
+
 		}
 	
 		usr.deleteChannel(cnl);
